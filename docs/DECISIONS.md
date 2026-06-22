@@ -143,3 +143,9 @@
 - 原因：自动化移动视口能稳定检查完整流程、横向溢出、刷新恢复、结果页和分享链路；但 iPhone Safari、Android Chrome 的下载和浏览器工具栏行为仍需要真实设备确认。
 - 替代方案：只依赖 Playwright E2E，或把本机 Chromium 验收等同于真机验收。
 - 影响：新增 `docs/MOBILE_QA_REPORT.md` 记录本机证据；`docs/RELEASE_1_0.md` 仍保留真实手机验收作为发布前确认项。
+
+- 日期：2026-06-22
+- 决策：保留 GitHub Actions workflow，并将推送失败记录为 GitHub 凭据权限问题。
+- 原因：远程拒绝信息明确指出当前 OAuth App 缺少 `workflow` scope；移除 `.github/workflows/ci.yml` 虽可绕过推送限制，但会降低 1.0 交接和远程验收质量。
+- 替代方案：删除 workflow 后推送，或重写历史拆出 CI 配置。
+- 影响：本地继续保留 CI 配置；远程首跑需要使用具备 `workflow` scope 的 GitHub 凭据重新推送。

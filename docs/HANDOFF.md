@@ -113,6 +113,7 @@ pnpm check
 - `docs/USER_FEEDBACK_PLAN.md`：1.0 发布前真实用户反馈和阈值复核执行指南。
 - `docs/MOBILE_QA_CHECKLIST.md`：1.0 发布前真实手机浏览器验收清单。
 - `docs/MOBILE_QA_REPORT.md`：本机移动端浏览器验收记录。
+- `docs/REMOTE_CI_STATUS.md`：远程推送和 GitHub Actions 首跑状态记录。
 - `playwright.config.ts`：端到端测试配置，会在 `127.0.0.1:3100` 启动独立测试服务。
 - `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、脏缓存恢复、PNG 下载、无本地结果、无效分享链接、提交 API、分享链接和移动端核心控件。
 - `.github/workflows/ci.yml`：CI 工作流，使用 Node.js 22、pnpm 11.5.3、Playwright Chromium 和 `pnpm check`。
@@ -146,7 +147,7 @@ pnpm check
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片 PNG 已有桌面端 E2E 下载校验和本机移动端 Chromium 验收；移动端不同浏览器下载行为可能表现不同，仍需要真机验收。
 - 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、无本地结果、无效分享链接、提交 API 和非法答案值；仍可继续扩展更多边界输入。
-- CI 已配置但尚未在远程仓库实际跑过，首次 push 后需要检查 Actions 日志。
+- CI 已配置但尚未在远程仓库实际跑过；最近一次推送被 GitHub 拒绝，因为当前 OAuth 凭据缺少 `workflow` scope，见 `docs/REMOTE_CI_STATUS.md`。
 - Human 层级和阶段阈值已用 12 个模拟画像完成第一轮校准，仍需要真实用户或产品团队样例继续复核。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
 
@@ -157,7 +158,7 @@ pnpm check
 3. 按 `docs/USER_FEEDBACK_PLAN.md` 组织 3 到 5 位真实用户反馈，并把结论回填到 `docs/CONTENT_REVIEW.md` 和 `docs/SCORING_CALIBRATION.md`。
 4. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；第一轮模拟画像校准见 `docs/SCORING_CALIBRATION.md`。
 5. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
-6. 推送远程后观察首次 CI 运行，并继续扩展更细的边界输入端到端测试。
+6. 使用具备 `workflow` scope 的 GitHub 凭据推送远程后观察首次 CI 运行，并继续扩展更细的边界输入端到端测试。
 7. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 8. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 9. 实现复测记录。

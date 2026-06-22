@@ -246,3 +246,15 @@
 - 修改文件：`.gitignore`、`docs/MOBILE_QA_REPORT.md`、`README.md`、`docs/PRD.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/MOBILE_QA_CHECKLIST.md`、`scripts/validate-data.mjs`、`docs/DEVELOPMENT_LOG.md`、`docs/DECISIONS.md`。
 - 当前风险：本机 Chromium 不能替代真实 iPhone Safari 和 Android Chrome，移动端下载行为仍需真机确认。
 - 下一步建议：按 `docs/MOBILE_QA_CHECKLIST.md` 做真实设备验收，并把结果回填到 `docs/MOBILE_QA_REPORT.md`。
+
+### 远程 CI 推送状态
+
+- 完成：检查远程仓库，确认 `origin` 指向 `https://github.com/wpppc2022/human3.0-.git`，本地 `main` 领先远程 12 个提交。
+- 完成：执行 `git fetch origin main`，确认远程没有新提交，本地只是单向领先。
+- 完成：尝试执行 `git push origin main` 触发远程 CI。
+- 结果：GitHub 拒绝推送，原因是当前 OAuth 凭据缺少 `workflow` scope，不能创建或更新 `.github/workflows/ci.yml`。
+- 完成：新增 `docs/REMOTE_CI_STATUS.md`，记录推送目标、失败原因、判断和下一步授权处理方式。
+- 完成：运行 `pnpm check`，数据校验、26 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`docs/REMOTE_CI_STATUS.md`、`README.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/PRD.md`、`docs/TODO.md`、`scripts/validate-data.mjs`、`docs/DEVELOPMENT_LOG.md`、`docs/DECISIONS.md`。
+- 当前风险：远程 CI 首跑仍未完成，需要使用具备 `workflow` scope 的 GitHub 凭据重新推送。
+- 下一步建议：重新授权 GitHub 凭据后执行 `git push origin main`，再观察 Actions 首次运行。
