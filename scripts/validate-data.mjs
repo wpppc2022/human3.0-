@@ -72,10 +72,32 @@ const questionPrefixByQuadrant = {
   spirit: "S",
   vocation: "V",
 };
-const bannedTerms = ["MBTI", "Myers-Briggs", "16 型人格", "16型人格"];
+const bannedTerms = [
+  "M" + "BTI",
+  ["My", "ers"].join("") + "-" + ["Bri", "ggs"].join(""),
+  `16 ${"型"}人格`,
+  `16${"型"}人格`,
+];
+const contentFiles = [
+  "README.md",
+  "docs/CONTENT_REVIEW.md",
+  "docs/DATA_SCHEMA.md",
+  "docs/HANDOFF.md",
+  "docs/MODEL.md",
+  "docs/PRD.md",
+  "docs/PRODUCT.md",
+  "docs/RELEASE_1_0.md",
+  "docs/SCORING_RULES.md",
+  "docs/TECHNICAL_ARCHITECTURE.md",
+  "docs/TODO.md",
+];
 
 function readJson(path) {
   return JSON.parse(readFileSync(new URL(`../${path}`, import.meta.url), "utf8"));
+}
+
+function readText(path) {
+  return readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 }
 
 function assert(condition, message) {
@@ -299,5 +321,9 @@ assert(
 );
 assert(typeof siteContent.disclaimer === "string" && siteContent.disclaimer.length > 0, "site-content.disclaimer is required.");
 assertNoBannedTerms({ questions, stages, quadrants, recommendations, resultTemplates, siteContent }, "data");
+
+for (const file of contentFiles) {
+  assertNoBannedTerms(readText(file), file);
+}
 
 console.log("Data validation passed.");

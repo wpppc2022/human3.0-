@@ -4,10 +4,10 @@
 
 ## P0
 
-- 完成一次人工题目审校，确认题干语气、反向题比例和敏感表述。
+- 找 3 到 5 位真实用户完成题目和结果阅读反馈。
 - 用真实手机浏览器检查答题页和结果页。
 - 确认 Human 层级和阶段阈值是否符合产品直觉。
-- 审校免费结果系统文案：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action。
+- 根据真实用户反馈继续审校免费结果系统文案：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action。
 - 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
 
 ## P1

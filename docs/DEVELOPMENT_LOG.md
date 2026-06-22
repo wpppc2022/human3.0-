@@ -202,3 +202,15 @@
 - 修改文件：`lib/storage.ts`、`tests/e2e/assessment-flow.spec.ts`、`tests/share-link.test.ts`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：还可以继续扩展更多 API 边界，例如非 JSON 请求体、额外字段和极端答案组合。
 - 下一步建议：进入题目与结果文案审校，或继续补 API 和分享链接边界测试。
+
+### 1.0 候选口径和内容审校
+
+- 完成：新增 `docs/RELEASE_1_0.md`，定义 1.0 候选版范围、发布门槛、当前状态和发布判定。
+- 完成：新增 `docs/CONTENT_REVIEW.md`，记录题库、结果模板、行动建议和敏感边界审校结论。
+- 完成：从 README、PRD 和 HANDOFF 中移除受保护人格测试名称与模仿式定位，改为独立的自我发展评估定位。
+- 完成：将首页状态从“静态 MVP”更新为“1.0 候选”。
+- 完成：将 `Human 2.2` 的 Metatype 从固定身份感较强的表达调整为 `The System in Motion`。
+- 完成：增强 `scripts/validate-data.mjs`，将 README 和核心 docs 纳入受保护名称检查。
+- 修改文件：`README.md`、`data/site-content.json`、`data/result-templates.json`、`docs/PRD.md`、`docs/HANDOFF.md`、`docs/PRODUCT.md`、`docs/TODO.md`、`docs/RELEASE_1_0.md`、`docs/CONTENT_REVIEW.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`、`scripts/validate-data.mjs`。
+- 当前风险：内容已完成内部审校，但还需要真实用户阅读反馈和阶段阈值样例校准。
+- 下一步建议：准备 10 到 20 个样例答案，对阶段阈值进行产品直觉校准。
