@@ -34,7 +34,7 @@
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
 - `pnpm check` 通过，已串联数据校验、单元测试、代码检查、生产构建和端到端测试。
-- GitHub Actions CI 已配置，等待推送到远程仓库后观察首次运行。
+- GitHub Actions CI 已配置并已在远程触发首跑；首跑失败点是 pnpm 11 构建脚本审批配置，已在 `pnpm-workspace.yaml` 修复并等待下一次远程 CI 确认。
 - 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
 - 浏览器结果页检查通过：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action 和分享卡片可见，且不展示原始分数。
 - 移动端 390px 宽度检查通过：首页、答题页、结果页无横向溢出。
@@ -147,7 +147,7 @@ pnpm check
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片 PNG 已有桌面端 E2E 下载校验和本机移动端 Chromium 验收；移动端不同浏览器下载行为可能表现不同，仍需要真机验收。
 - 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、无本地结果、无效分享链接、提交 API 和非法答案值；仍可继续扩展更多边界输入。
-- CI 已配置但尚未在远程仓库实际跑过；最近一次推送被 GitHub 拒绝，因为当前 OAuth 凭据缺少 `workflow` scope，见 `docs/REMOTE_CI_STATUS.md`。
+- GitHub CLI 已补齐 `workflow` scope，远程 `main` 已同步；首次 GitHub Actions CI 已触发但失败，原因和修复见 `docs/REMOTE_CI_STATUS.md`。
 - Human 层级和阶段阈值已用 12 个模拟画像完成第一轮校准，仍需要真实用户或产品团队样例继续复核。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
 
@@ -158,7 +158,7 @@ pnpm check
 3. 按 `docs/USER_FEEDBACK_PLAN.md` 组织 3 到 5 位真实用户反馈，并把结论回填到 `docs/CONTENT_REVIEW.md` 和 `docs/SCORING_CALIBRATION.md`。
 4. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；第一轮模拟画像校准见 `docs/SCORING_CALIBRATION.md`。
 5. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
-6. 使用具备 `workflow` scope 的 GitHub 凭据推送远程后观察首次 CI 运行，并继续扩展更细的边界输入端到端测试。
+6. 推送当前 CI 修复后观察新的 GitHub Actions 运行，并继续扩展更细的边界输入端到端测试。
 7. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 8. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 9. 实现复测记录。

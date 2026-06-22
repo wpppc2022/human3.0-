@@ -258,3 +258,16 @@
 - 修改文件：`docs/REMOTE_CI_STATUS.md`、`README.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/PRD.md`、`docs/TODO.md`、`scripts/validate-data.mjs`、`docs/DEVELOPMENT_LOG.md`、`docs/DECISIONS.md`。
 - 当前风险：远程 CI 首跑仍未完成，需要使用具备 `workflow` scope 的 GitHub 凭据重新推送。
 - 下一步建议：重新授权 GitHub 凭据后执行 `git push origin main`，再观察 Actions 首次运行。
+
+### 远程 CI 首跑和 pnpm 构建脚本修复
+
+- 完成：通过 GitHub CLI 重新授权，确认当前 token scope 包含 `workflow`。
+- 完成：成功推送本地 `main` 到 `origin/main`，远程同步到 `d6e872e`。
+- 完成：GitHub Actions `CI` 首跑已触发，run id 为 `27962391803`。
+- 结果：首跑在 `pnpm install --frozen-lockfile` 阶段失败，原因是 pnpm 11 拒绝未审批的 `sharp` 和 `unrs-resolver` 构建脚本。
+- 完成：修正 `pnpm-workspace.yaml`，明确允许 `sharp` 和 `unrs-resolver` 构建。
+- 完成：运行 `pnpm install --frozen-lockfile` 通过。
+- 完成：运行 `pnpm check`，数据校验、26 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`pnpm-workspace.yaml`、`docs/REMOTE_CI_STATUS.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：需要推送本次 CI 修复并观察新的 GitHub Actions 运行结果。
+- 下一步建议：推送修复后执行 `gh run watch`，确认新的 `CI` run 通过。
