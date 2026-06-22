@@ -12,10 +12,36 @@ export function ResultSummary({ result }: { result: BuiltResult }) {
         <h1 className="text-3xl font-semibold leading-tight sm:text-4xl">
           {result.title}
         </h1>
-        <p className="font-mono text-sm text-primary">{result.metatype}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge className="w-fit">{result.shareCard.chineseName}</Badge>
+          <p className="font-mono text-sm text-primary">{result.metatype}</p>
+        </div>
+        <p className="max-w-3xl text-xl leading-8 text-foreground">
+          {result.shareInsight}
+        </p>
         <p className="max-w-3xl text-lg leading-8 text-muted-foreground">
           {result.headline}
         </p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="rounded-md border bg-card p-4">
+          <p className="text-sm text-muted-foreground">主导象限</p>
+          <p className="mt-2 font-medium">
+            {result.dominantQuadrant.englishName} / {result.dominantQuadrant.name}
+          </p>
+        </div>
+        <div className="rounded-md border bg-card p-4">
+          <p className="text-sm text-muted-foreground">主要限制</p>
+          <p className="mt-2 font-medium">
+            {result.weakQuadrant.englishName} / {result.weakQuadrant.name}
+          </p>
+        </div>
+        <div className="rounded-md border border-primary/30 bg-card p-4">
+          <p className="text-sm text-muted-foreground">先做这一步</p>
+          <p className="mt-2 text-sm leading-7">
+            {result.recommendations.immediateAction}
+          </p>
+        </div>
       </div>
       <Card className="bg-card">
         <CardContent className="space-y-4 pt-6 leading-8">

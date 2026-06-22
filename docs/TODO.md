@@ -4,6 +4,7 @@
 
 ## P0
 
+- 让产品、内容或非技术评审成员阅读 `docs/QUESTION_BANK_SCORING_TABLE.md`，确认题库、反向题和公式解释是否清楚。
 - 按 `docs/USER_FEEDBACK_PLAN.md` 找 3 到 5 位真实用户完成题目和结果阅读反馈。
 - 按 `docs/MOBILE_QA_CHECKLIST.md` 用真实 iPhone Safari 和 Android Chrome 检查答题页和结果页。
 - 按 `docs/USER_FEEDBACK_PLAN.md` 用真实用户或产品团队样例继续复核 Human 层级和阶段阈值。

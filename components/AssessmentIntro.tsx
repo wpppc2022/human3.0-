@@ -13,6 +13,8 @@ const icons = {
   vocation: BriefcaseBusiness,
 } as const;
 
+const trustItems = ["48 道题", "约 5-8 分钟", "无需登录", "结果不显示原始分数"];
+
 export function AssessmentIntro({
   content,
   quadrants,
@@ -38,12 +40,27 @@ export function AssessmentIntro({
           <p className="max-w-2xl leading-8 text-foreground/80">
             {content.intro}
           </p>
-          <Button asChild size="lg" className="h-12 px-5">
-            <Link href="/assessment">
-              开始评估
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-2" aria-label="评估说明">
+            {trustItems.map((item) => (
+              <span
+                key={item}
+                className="rounded-full border bg-card px-3 py-1 text-sm text-muted-foreground"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button asChild size="lg" className="h-12 px-5">
+              <Link href="/assessment">
+                开始评估
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+            </Button>
+            <p className="text-sm leading-6 text-muted-foreground">
+              答题进度会保存在当前浏览器，可中途刷新后继续。
+            </p>
+          </div>
         </div>
 
         <Card className="border-primary/20 bg-card">

@@ -38,6 +38,7 @@ export function AssessmentFlow() {
   const currentQuestion = questions[currentIndex];
   const progress = ((currentIndex + 1) / questions.length) * 100;
   const selected = answers[currentQuestion.id];
+  const isLastQuestion = currentIndex === questions.length - 1;
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -110,19 +111,37 @@ export function AssessmentFlow() {
         />
       </div>
 
-      <div className="mt-6 flex items-center justify-between gap-3">
+      <div className="mt-4 rounded-md border bg-card px-4 py-3 text-sm leading-6 text-muted-foreground">
+        {selected
+          ? isLastQuestion
+            ? "已选择。点击下方按钮生成你的当前画像。"
+            : "已选择。可以继续下一题，进度会自动保存。"
+          : "请选择一个最接近当前状态的选项，再继续下一题。"}
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-3">
         <Button
           type="button"
           variant="outline"
           onClick={() => setCurrentIndex((index) => Math.max(0, index - 1))}
           disabled={currentIndex === 0}
+          className="h-11 min-w-24"
         >
           上一题
         </Button>
-        <Button type="button" onClick={goNext} disabled={!selected}>
-          {currentIndex === questions.length - 1 ? "查看结果" : "下一题"}
+        <Button
+          type="button"
+          onClick={goNext}
+          disabled={!selected}
+          className="h-11 min-w-28"
+          aria-describedby="assessment-action-hint"
+        >
+          {isLastQuestion ? "生成结果" : "下一题"}
         </Button>
       </div>
+      <p id="assessment-action-hint" className="sr-only">
+        {selected ? "当前题已选择，可以继续。" : "当前题尚未选择，下一步按钮不可用。"}
+      </p>
     </main>
   );
 }

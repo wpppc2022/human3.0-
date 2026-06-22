@@ -34,11 +34,14 @@ test("home page starts the assessment", async ({ page }) => {
     page.getByRole("heading", { name: "Human 3.0 自我发展评估" }),
   ).toBeVisible();
   await expect(page.getByText("这不是人格标签，也不是心理诊断。")).toBeVisible();
+  await expect(page.getByText("48 道题")).toBeVisible();
+  await expect(page.getByText("无需登录")).toBeVisible();
 
   await page.getByRole("link", { name: /开始评估/ }).click();
 
   await expect(page).toHaveURL(/\/assessment$/);
   await expect(page.getByText("1 / 48")).toBeVisible();
+  await expect(page.getByText("请选择一个最接近当前状态的选项")).toBeVisible();
   await expect(page.getByRole("button", { name: "下一题" })).toBeDisabled();
 });
 
@@ -116,13 +119,17 @@ test("user can complete assessment, view result, and open share link", async ({
 
   for (let index = 0; index < 48; index += 1) {
     await expect(page.getByText(`${index + 1} / 48`)).toBeVisible();
-    await answerCurrentQuestion(page, index === 47 ? "查看结果" : "下一题");
+    await answerCurrentQuestion(page, index === 47 ? "生成结果" : "下一题");
   }
 
   await expect(page).toHaveURL(/\/result$/);
   await expect(page.getByText("你的 Human 3.0 当前画像")).toBeVisible();
+  await expect(page.getByText("主导象限")).toBeVisible();
+  await expect(page.getByText("主要限制", { exact: true })).toBeVisible();
+  await expect(page.getByText("先做这一步")).toBeVisible();
   await expect(page.getByText("Lifestyle Archetype")).toBeVisible();
   await expect(page.getByText("Core Problem")).toBeVisible();
+  await expect(page.getByText("别人眼中的你")).toBeVisible();
   await expect(page.getByText("Immediate Next Action")).toBeVisible();
   await expect(page.locator("body")).not.toContainText(
     /rawScore|averageScore|平均分|原始分数|失衡分/,
@@ -138,6 +145,7 @@ test("user can complete assessment, view result, and open share link", async ({
   );
   expect(downloadPath).not.toBeNull();
   await expectPngFile(downloadPath as string);
+  await expect(page.getByText("保存或分享结果")).toBeVisible();
 
   const shareInput = page.getByLabel("结果链接");
   await expect(shareInput).toHaveValue(/\/result\/share\?a=v1\.[1-5]{48}$/);

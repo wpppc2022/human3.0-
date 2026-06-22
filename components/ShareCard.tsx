@@ -59,24 +59,37 @@ export function ShareCard({ result }: { result: BuiltResult }) {
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold">分享卡片</h2>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => downloadShareCardImage(result)}
-        >
-          <Download className="size-4" aria-hidden="true" />
-          下载 PNG
-        </Button>
-        <Button type="button" variant="outline" onClick={copyShareLink}>
-          {copyState === "copied" ? (
-            <Check className="size-4" aria-hidden="true" />
-          ) : (
-            <Copy className="size-4" aria-hidden="true" />
-          )}
-          {copyState === "copied" ? "已复制" : "复制链接"}
-        </Button>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <h2 className="text-xl font-semibold">保存或分享结果</h2>
+          <p className="text-sm leading-6 text-muted-foreground">
+            下载图片适合发给朋友；复制链接可以让别人打开同一份结果。
+          </p>
+        </div>
+        <div className="grid gap-2 sm:flex sm:items-center">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => downloadShareCardImage(result)}
+            className="w-full sm:w-auto"
+          >
+            <Download className="size-4" aria-hidden="true" />
+            下载 PNG
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={copyShareLink}
+            className="w-full sm:w-auto"
+          >
+            {copyState === "copied" ? (
+              <Check className="size-4" aria-hidden="true" />
+            ) : (
+              <Copy className="size-4" aria-hidden="true" />
+            )}
+            {copyState === "copied" ? "已复制" : "复制链接"}
+          </Button>
+        </div>
       </div>
       <Card className="max-w-xl border-primary/20 bg-card">
         <CardContent className="space-y-6 p-6">
@@ -87,17 +100,23 @@ export function ShareCard({ result }: { result: BuiltResult }) {
             </span>
           </div>
           <div className="space-y-3">
+            <p className="text-sm font-medium text-primary">
+              {result.shareCard.chineseName}
+            </p>
             <p className="font-mono text-sm text-primary">
               {result.shareCard.metatype}
             </p>
             <h3 className="text-2xl font-semibold">{result.shareCard.title}</h3>
             <p className="leading-8 text-muted-foreground">
-              {result.shareCard.oneLiner}
+              {result.shareCard.insight}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <span className="rounded-full border px-3 py-1 text-sm">
-              主导象限：{result.shareCard.dominantQuadrant}
+              最强支点：{result.shareCard.dominantQuadrant}
+            </span>
+            <span className="rounded-full border px-3 py-1 text-sm">
+              当前卡点：{result.shareCard.weakQuadrant}
             </span>
             {result.shareCard.keywords.map((keyword) => (
               <span

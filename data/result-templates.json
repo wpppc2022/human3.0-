@@ -1,92 +1,164 @@
 [
   {
     "stage": "1.1",
-    "titlePattern": "{dominant}主导的失调观察者",
+    "titlePattern": "{dominant}很敏锐、{weak}还没跟上的安静警报型",
     "metatype": "The Quiet Alarm",
-    "lifestyleArchetype": "被默认路径推着走的警觉者",
-    "summary": "你已经感觉到当前生活系统有不顺的地方，但还没有形成稳定的自我判断和行动支撑。",
-    "coreProblem": "你真正卡住的不是缺少答案，而是还没有把“不对劲”的感受翻译成一个可以处理的系统问题。",
-    "crossQuadrantDynamics": "{dominant}让你能先看见问题，但{weak}还没有跟上，所以你容易一边警觉，一边继续被旧节奏推着走。",
+    "chineseName": "安静警报型",
+    "lifestyleArchetype": "被默认节奏推着走的警觉者",
+    "summary": "你已经听见生活里有些地方不太对劲，只是这些信号还没有被整理成清楚的判断和行动。",
+    "coreProblem": "你卡住的不是缺少答案，而是还没有把“不对劲”的感觉翻译成一个可以处理的小问题。",
+    "crossQuadrantDynamics": "{dominant}让你先听见变化的信号，但{weak}还没跟上，所以你容易一边警觉，一边继续被旧节奏带着走。",
+    "shareInsight": "你不是太敏感，而是已经先一步听见生活系统的杂音。",
+    "friendPerspective": {
+      "impression": "你看起来还在照常生活，但熟悉你的人会发现，你其实已经开始对很多默认安排起疑。",
+      "collaborationTip": "和你讨论时，先帮你把感受落成一个小问题，比直接催你改变更有用。",
+      "misunderstoodAs": "你容易被误会成想太多，其实你是在捕捉那些还没被说清楚的不对劲。",
+      "conversationStarter": "你最近最常感觉“不太对劲”的，是生活里的哪一块？"
+    },
     "keywords": ["觉察", "停顿", "基础重建"]
   },
   {
     "stage": "1.2",
-    "titlePattern": "{dominant}主导的不确定转向者",
+    "titlePattern": "{dominant}开始转向、{weak}还在观望的迟疑转向型",
     "metatype": "The Hesitant Switcher",
+    "chineseName": "迟疑转向型",
     "lifestyleArchetype": "开始怀疑旧脚本的转向者",
-    "summary": "你正在怀疑一些默认路径，但新的方法、节律和方向还没有真正落地。",
-    "coreProblem": "你已经不完全相信旧规则，但还没有建立足够小、足够安全的新行动来替代它。",
+    "summary": "你已经不完全相信过去那套默认路径，但新的节奏还不够小、不够稳，所以转向会显得反复。",
+    "coreProblem": "你需要的不是一次大决定，而是一个足够安全、足够小的新动作，用来替代旧习惯。",
     "crossQuadrantDynamics": "{dominant}正在帮你产生转向冲动，但{weak}的不稳定会把这种冲动拉回观望和反复确认。",
+    "shareInsight": "你已经不完全相信旧路，只是新路还没小到足够开始。",
+    "friendPerspective": {
+      "impression": "你像是站在两种生活之间，一边知道旧路不合适，一边还在确认新路是否可靠。",
+      "collaborationTip": "给你一个可试、可退、可复盘的小选择，比要求你立刻坚定更有效。",
+      "misunderstoodAs": "你容易被误会成犹豫，其实你是在为真正的转向寻找安全边界。",
+      "conversationStarter": "如果只允许你改一个很小的旧节奏，你会先改哪一个？"
+    },
     "keywords": ["怀疑", "试探", "边界"]
   },
   {
     "stage": "1.3",
-    "titlePattern": "{dominant}主导的觉醒行动者",
+    "titlePattern": "{dominant}已经启动、{weak}需要接住的初醒行动者",
     "metatype": "The First Mover",
+    "chineseName": "初醒行动者",
     "lifestyleArchetype": "看见新可能的初行动者",
-    "summary": "你看见了新的可能性，也开始尝试调整，只是行动系统还需要更稳。",
-    "coreProblem": "你需要把新想法变成可重复的小动作，否则觉醒感会很快被日常惯性稀释。",
+    "summary": "你已经看见新的可能，也开始做出调整。接下来真正重要的是，让这些尝试变得可重复。",
+    "coreProblem": "你需要把新想法变成稳定的小动作，否则觉醒感很容易被日常惯性稀释。",
     "crossQuadrantDynamics": "{dominant}已经开始提供新的支点，但{weak}仍会让行动断续，导致你知道方向却不容易持续。",
+    "shareInsight": "你看见了新的可能，但真正改变要从一个可重复的小动作开始。",
+    "friendPerspective": {
+      "impression": "你身上已经有一种想动起来的气息，只是新节奏还需要更多现实支撑。",
+      "collaborationTip": "和你一起做一个小而明确的约定，会比讨论宏大方向更能帮你前进。",
+      "misunderstoodAs": "你容易被误会成三分钟热度，其实你是在把刚醒来的方向感变成日常能力。",
+      "conversationStarter": "你最近哪一个小动作，最像是在走向新的自己？"
+    },
     "keywords": ["觉醒", "小步", "秩序"]
   },
   {
     "stage": "2.1",
-    "titlePattern": "{dominant}主导的失调探索者",
+    "titlePattern": "{dominant}很想突破、{weak}正在耗能的躁动探索者",
     "metatype": "The Restless Explorer",
+    "chineseName": "躁动探索者",
     "lifestyleArchetype": "想做自己但能量分散的探索者",
-    "summary": "你想建立自己的路径，但当前探索容易分散，需要先让关键支点稳定下来。",
-    "coreProblem": "你不是没有自我意识，而是探索太多、支撑太少，导致每个方向都消耗你。",
+    "summary": "你想走出默认路径，也愿意探索自己的方式。现在最需要的是收束能量，而不是继续打开更多方向。",
+    "coreProblem": "你不是没有自我意识，而是探索太多、支撑太少，导致每个方向都在消耗你。",
     "crossQuadrantDynamics": "{dominant}让你有能力突破默认路径，但{weak}会让探索缺少承托，容易从自由变成耗散。",
+    "shareInsight": "你不是没有自我，而是同时打开了太多条路。",
+    "friendPerspective": {
+      "impression": "你看起来有很多想法和可能性，但也容易在多个方向之间被拉扯。",
+      "collaborationTip": "帮你收束到一个本周能完成的版本，比继续给你新建议更有价值。",
+      "misunderstoodAs": "你容易被误会成不稳定，其实你是在寻找真正属于自己的路径。",
+      "conversationStarter": "如果这个月只能保留一个探索方向，你最舍不得放下哪个？"
+    },
     "keywords": ["探索", "耗散", "收束"]
   },
   {
     "stage": "2.2",
-    "titlePattern": "{dominant}主导的不确定探索者",
-    "metatype": "The System in Motion",
+    "titlePattern": "{dominant}已经升级、{weak}还在旧节奏里的未完成自我",
+    "metatype": "The Unfinished Self",
+    "chineseName": "未完成自我",
     "lifestyleArchetype": "正在重组生活系统的探索者",
-    "summary": "你正在从默认路径转向自我路径，但四个象限之间还没有稳定协同。",
-    "coreProblem": "你的核心卡点是系统不一致：某些部分已经想升级，另一些部分还停留在旧节奏里。",
+    "summary": "你正在从默认路径转向自己的路径，但不同部分还没有完全对齐，所以会同时感到清醒和摇摆。",
+    "coreProblem": "你的核心卡点是节奏不一致：某些部分已经想升级，另一些部分还在用旧方式保护你。",
     "crossQuadrantDynamics": "{dominant}是你当前最强的推进器，但{weak}会制造拖拽感，让你在改变和回到旧模式之间摇摆。",
+    "shareInsight": "你的一部分已经升级，另一部分还在用旧节奏保护你。",
+    "friendPerspective": {
+      "impression": "你像是在重装自己的生活系统，外表可能还正常运转，里面已经换了很多零件。",
+      "collaborationTip": "和你协作时，先确认你真正想保留什么、放下什么，再谈下一步会更顺。",
+      "misunderstoodAs": "你容易被误会成反复，其实你是在让不同版本的自己重新对齐。",
+      "conversationStarter": "现在的你，哪一部分已经变了，但生活还没来得及跟上？"
+    },
     "keywords": ["探索", "重组", "校准"]
   },
   {
     "stage": "2.3",
-    "titlePattern": "{dominant}主导的发现实践者",
+    "titlePattern": "{dominant}开始成形、{weak}等待补位的成形建造者",
     "metatype": "The Emerging Builder",
+    "chineseName": "成形建造者",
     "lifestyleArchetype": "把自我探索落成方法的人",
-    "summary": "你开始形成自己的方法和节奏，下一步是把局部能力整合成系统。",
+    "summary": "你开始把自己的探索变成方法和节奏。下一步不是再找答案，而是让这些方法互相连接。",
     "coreProblem": "你已经有一些有效实践，但还需要把它们连接起来，避免每个能力只在局部发挥作用。",
     "crossQuadrantDynamics": "{dominant}正在形成稳定优势，只要补上{weak}，你的方法就更容易从局部经验变成长期系统。",
+    "shareInsight": "你已经不只是在寻找自己，而是在把自己落成方法。",
+    "friendPerspective": {
+      "impression": "你身上开始出现一种稳定的个人方法，不再只是想法多，而是能做出东西。",
+      "collaborationTip": "给你真实反馈和明确使用场景，会比单纯鼓励更能帮你把方法打磨出来。",
+      "misunderstoodAs": "你容易被误会成还在试，其实有些东西已经开始成为你的长期能力。",
+      "conversationStarter": "最近哪件事最能代表你正在形成的新方法？"
+    },
     "keywords": ["方法", "作品", "稳定"]
   },
   {
     "stage": "3.1",
-    "titlePattern": "{dominant}主导的失衡整合者",
+    "titlePattern": "{dominant}承担太多、{weak}需要补位的倾斜整合者",
     "metatype": "The Tilted Integrator",
+    "chineseName": "倾斜整合者",
     "lifestyleArchetype": "已有系统能力但某处倾斜的整合者",
-    "summary": "你已经有一定系统能力，但当前最弱象限正在限制整体协同。",
-    "coreProblem": "你需要处理的不是从零开始，而是一个高能力系统里的局部失衡。",
+    "summary": "你已经有一定系统能力，但当前有一块支点没有跟上，导致整体运转出现偏载。",
+    "coreProblem": "你需要处理的不是从零开始，而是一个高能力系统里被过度使用和被忽略的部分。",
     "crossQuadrantDynamics": "{dominant}已经能承担很多复杂任务，但{weak}的滞后会让整个系统出现偏载。",
+    "shareInsight": "你不是能力不够，而是某个支点正在替整个系统承担太多。",
+    "friendPerspective": {
+      "impression": "你看起来很能扛事，但真正的问题可能不是做不到，而是某一块长期承担太多。",
+      "collaborationTip": "和你协作时，帮你看见哪里过载、哪里该交还给系统，会比继续加目标更有用。",
+      "misunderstoodAs": "你容易被误会成需要更努力，其实你更需要重新分配支撑点。",
+      "conversationStarter": "你现在最常靠哪一种能力硬扛所有问题？"
+    },
     "keywords": ["整合", "修复", "平衡"]
   },
   {
     "stage": "3.2",
-    "titlePattern": "{dominant}主导的重组整合者",
+    "titlePattern": "{dominant}进入复杂度、{weak}等待重连的系统重建者",
     "metatype": "The System Rebuilder",
+    "chineseName": "系统重建者",
     "lifestyleArchetype": "进入更高复杂度的重组者",
-    "summary": "你正在处理更高复杂度的人生系统，需要重组各象限之间的配合方式。",
-    "coreProblem": "旧系统并非失败，而是承载不了新的复杂度；你需要重新设计协同方式。",
+    "summary": "你正在处理更高复杂度的人生系统。旧方法不是没用，而是需要被重新连接和升级。",
+    "coreProblem": "旧系统并非失败，而是承载不了新的复杂度；你需要重新设计各部分的协同方式。",
     "crossQuadrantDynamics": "{dominant}让你能进入更复杂的问题层级，但{weak}提示你系统里仍有一处需要重新布线。",
+    "shareInsight": "旧系统不是失败了，只是它已经装不下现在的你。",
+    "friendPerspective": {
+      "impression": "你不是在简单换目标，而是在重建一套更能承载自己的生活系统。",
+      "collaborationTip": "和你讨论时，先看整体结构，再谈单点优化，会更接近你真正的问题。",
+      "misunderstoodAs": "你容易被误会成想太复杂，其实你面对的问题确实已经进入更高复杂度。",
+      "conversationStarter": "你现在最想重建的，不是目标，而是哪一套生活结构？"
+    },
     "keywords": ["复杂度", "重组", "协同"]
   },
   {
     "stage": "3.3",
-    "titlePattern": "{dominant}主导的协同整合者",
+    "titlePattern": "{dominant}稳定牵引、{weak}持续照看的协同运转者",
     "metatype": "The Coherent Operator",
+    "chineseName": "协同运转者",
     "lifestyleArchetype": "四象限开始协同运转的系统实践者",
-    "summary": "你的认知、身体、意义和事业已经开始形成稳定协同，可以围绕长期方向继续迭代。",
+    "summary": "你的认知、身体、意义和事业已经开始形成稳定协同。接下来要做的是持续校准，而不是追求永远完美。",
     "coreProblem": "你当前的重点不是补洞，而是保持系统诚实：持续观察哪里正在被过度使用，哪里需要下一轮升级。",
     "crossQuadrantDynamics": "{dominant}与其他象限已经有较好协同，继续照看{weak}会让系统更稳定、更长期。",
+    "shareInsight": "你正在从解决问题，进入持续设计自己生活系统的阶段。",
+    "friendPerspective": {
+      "impression": "你给人的感觉不是单点很强，而是越来越能让生活里的几个重要部分一起运转。",
+      "collaborationTip": "和你协作时，尊重你的长期节奏和系统边界，比制造短期刺激更有效。",
+      "misunderstoodAs": "你容易被误会成已经不需要调整，其实你只是在用更安静的方式持续迭代。",
+      "conversationStarter": "你现在最想长期照看的，是哪一个已经有效的生活系统？"
+    },
     "keywords": ["协同", "长期", "迭代"]
   }
 ]

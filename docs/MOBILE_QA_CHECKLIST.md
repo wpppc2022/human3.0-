@@ -1,5 +1,13 @@
 # Mobile QA Checklist
 
+公网测试地址：
+
+```text
+https://human3-0-phi.vercel.app/
+```
+
+可直接执行的总入口见 `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md`。
+
 ## 目标
 
 本文件用于 1.0 发布前的真实手机浏览器检查。Playwright 已覆盖移动视口，但正式发布前仍需要真实设备确认触摸、键盘、下载和分享体验。
@@ -17,10 +25,24 @@
 
 ## 测试准备
 
-1. 本地或预览环境运行最新版项目。
+1. 打开公网测试地址：`https://human3-0-phi.vercel.app/`。
 2. 确认 `pnpm check` 已通过。
 3. 使用无痕窗口或清理浏览器缓存后开始。
 4. 每个设备完成一次完整评估。
+5. 每台设备至少保留 4 张截图：首页、答题页、结果页、分享卡片或分享链接页。
+
+截图命名建议：
+
+```text
+iphone-safari-01-home.png
+iphone-safari-02-assessment.png
+iphone-safari-03-result.png
+iphone-safari-04-share.png
+android-chrome-01-home.png
+android-chrome-02-assessment.png
+android-chrome-03-result.png
+android-chrome-04-share.png
+```
 
 ## 首页检查
 
@@ -63,6 +85,21 @@
 3. 在设备 B 或无痕窗口打开链接。
 4. 确认结果页能重建报告。
 5. 确认页面不展示原始分数。
+
+## PNG 下载行为记录
+
+移动浏览器可能表现不同，不要求每个平台都显示为传统文件下载。记录实际行为即可。
+
+| device | browser | png_action | success | notes |
+| --- | --- | --- | --- | --- |
+| iPhone | Safari | 打开图片预览 / 保存到照片 / 下载文件 / 触发分享面板 | 待测 | 记录实际表现 |
+| Android | Chrome | 打开图片预览 / 保存到相册 / 下载文件 / 触发分享面板 | 待测 | 记录实际表现 |
+
+## 分享链接跨设备记录
+
+| source_device | source_browser | target_device | target_browser | copied_link_opens | result_rebuilt | raw_scores_hidden | notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| iPhone | Safari | Android | Chrome | 待测 | 待测 | 待测 | 记录实际表现 |
 
 ## 失败记录模板
 

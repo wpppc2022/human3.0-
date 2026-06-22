@@ -64,10 +64,18 @@ export interface ResultTemplate {
   stage: HumanStageId;
   titlePattern: string;
   metatype: string;
+  chineseName: string;
   lifestyleArchetype: string;
   summary: string;
   coreProblem: string;
   crossQuadrantDynamics: string;
+  shareInsight: string;
+  friendPerspective: {
+    impression: string;
+    collaborationTip: string;
+    misunderstoodAs: string;
+    conversationStarter: string;
+  };
   keywords: string[];
 }
 
@@ -109,6 +117,8 @@ export interface BuiltResult {
   summary: string;
   coreProblem: string;
   crossQuadrantDynamics: string;
+  shareInsight: string;
+  friendPerspective: ResultTemplate["friendPerspective"];
   primaryBlock: string;
   dominantQuadrant: QuadrantDefinition;
   weakQuadrant: QuadrantDefinition;
@@ -122,9 +132,11 @@ export interface BuiltResult {
   shareCard: {
     stageCode: HumanStageId;
     title: string;
+    chineseName: string;
     metatype: string;
     dominantQuadrant: string;
-    oneLiner: string;
+    weakQuadrant: string;
+    insight: string;
     keywords: string[];
     siteName: string;
   };

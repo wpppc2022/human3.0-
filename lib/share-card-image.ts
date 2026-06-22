@@ -125,19 +125,24 @@ export function buildShareCardImage(result: BuiltResult) {
   context.fillText(result.shareCard.stageCode, CARD_PADDING, 190);
 
   context.fillStyle = "#24473f";
-  context.font = '42px "SFMono-Regular", "SF Mono", Consolas, monospace';
-  context.fillText(result.shareCard.metatype, CARD_PADDING, 290);
+  context.font =
+    '54px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
+  context.fillText(result.shareCard.chineseName, CARD_PADDING, 286);
+
+  context.fillStyle = "#6b705c";
+  context.font = '32px "SFMono-Regular", "SF Mono", Consolas, monospace';
+  context.fillText(result.shareCard.metatype, CARD_PADDING, 340);
 
   context.fillStyle = "#1f2d2a";
   context.font =
-    '68px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
+    '58px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
   const titleEndY = drawWrappedText({
     context,
     text: result.shareCard.title,
     x: CARD_PADDING,
-    y: 390,
+    y: 440,
     maxWidth: CARD_WIDTH - CARD_PADDING * 2,
-    lineHeight: 88,
+    lineHeight: 76,
     maxLines: 3,
   });
 
@@ -146,7 +151,7 @@ export function buildShareCardImage(result: BuiltResult) {
     '38px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
   drawWrappedText({
     context,
-    text: result.shareCard.oneLiner,
+    text: result.shareCard.insight,
     x: CARD_PADDING,
     y: titleEndY + 60,
     maxWidth: CARD_WIDTH - CARD_PADDING * 2,
@@ -158,9 +163,14 @@ export function buildShareCardImage(result: BuiltResult) {
   context.font =
     '34px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
   context.fillText(
-    `主导象限：${result.shareCard.dominantQuadrant}`,
+    `最强支点：${result.shareCard.dominantQuadrant}`,
     CARD_PADDING,
-    1038,
+    1000,
+  );
+  context.fillText(
+    `当前卡点：${result.shareCard.weakQuadrant}`,
+    CARD_PADDING,
+    1054,
   );
 
   let pillX = CARD_PADDING;

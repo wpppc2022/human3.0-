@@ -45,14 +45,23 @@ const recommendationFields = [
   "thirtyDays",
 ];
 const templateFields = [
+  "chineseName",
   "coreProblem",
   "crossQuadrantDynamics",
+  "friendPerspective",
   "keywords",
   "lifestyleArchetype",
   "metatype",
+  "shareInsight",
   "stage",
   "summary",
   "titlePattern",
+];
+const friendPerspectiveFields = [
+  "collaborationTip",
+  "conversationStarter",
+  "impression",
+  "misunderstoodAs",
 ];
 const siteContentFields = [
   "badge",
@@ -88,6 +97,7 @@ const contentFiles = [
   "docs/MODEL.md",
   "docs/PRD.md",
   "docs/PRODUCT.md",
+  "docs/QUESTION_BANK_SCORING_TABLE.md",
   "docs/RELEASE_1_0.md",
   "docs/REMOTE_CI_STATUS.md",
   "docs/SCORING_CALIBRATION.md",
@@ -242,10 +252,12 @@ for (const template of resultTemplates) {
   for (const key of [
     "titlePattern",
     "metatype",
+    "chineseName",
     "lifestyleArchetype",
     "summary",
     "coreProblem",
     "crossQuadrantDynamics",
+    "shareInsight",
   ]) {
     assert(
       typeof template[key] === "string" && template[key].length > 0,
@@ -263,6 +275,17 @@ for (const template of resultTemplates) {
     `Template ${template.stage}.keywords must contain exactly 3 keywords for the share card.`,
   );
   assertStringArray(template.keywords, `Template ${template.stage}.keywords`, 3);
+  assertFields(
+    template.friendPerspective,
+    friendPerspectiveFields,
+    `Template ${template.stage}.friendPerspective`,
+  );
+  for (const key of friendPerspectiveFields) {
+    assertString(
+      template.friendPerspective[key],
+      `Template ${template.stage}.friendPerspective.${key}`,
+    );
+  }
 }
 
 assert(Array.isArray(quadrants), "quadrants.json must be an array.");

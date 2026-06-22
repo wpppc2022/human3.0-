@@ -20,6 +20,7 @@
 - 免费结果系统：已加入 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 24 小时 Immediate Next Action。
 - 分享卡片下载：已支持在浏览器生成 PNG 并下载。
 - 静态分享链接：已支持复制 `/result/share?a=...`，通过 URL 中的答案码重建同一份结果。
+- 体验细节：已补充首页信任提示、答题页保存/选择提示、结果页顶部速览、分享入口说明和异常状态操作入口。
 - API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
 - 测试和校验：已有核心计分测试、结果生成测试、分享链接测试、Playwright 端到端测试和严格数据校验命令。
 - CI：已新增 GitHub Actions，在 push、pull request 和手动触发时运行 `pnpm check`。
@@ -38,7 +39,7 @@
 - 公网测试链接：`https://human3-0-phi.vercel.app/`，由 Vercel 从 GitHub `main` 部署，可用于手机和真实用户测试。
 - 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
 - 浏览器结果页检查通过：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action 和分享卡片可见，且不展示原始分数。
-- 移动端 390px 宽度检查通过：首页、答题页、结果页无横向溢出。
+- 移动端 390px 宽度检查通过：首页、答题页、结果页和分享页无横向溢出；结果速览和分享入口可见。
 
 ## 如何运行
 
@@ -115,7 +116,9 @@ pnpm check
 - `app/api/submit/route.ts`：未来提交接口。
 - `scripts/validate-data.mjs`：严格检查数据文件结构、覆盖范围、重复项、模板占位符和禁止使用的受保护人格测试名称。
 - `docs/RELEASE_1_0.md`：1.0 候选发布清单和验收口径。
+- `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md`：外部验收执行包，包含公网链接、真实用户反馈 checklist、真机 QA checklist、记录表和阻塞标准。
 - `docs/CONTENT_REVIEW.md`：题目、结果文案和敏感边界审校记录。
+- `docs/QUESTION_BANK_SCORING_TABLE.md`：48 道题、反向题、分数映射和核心公式，供产品、内容和非技术评审快速核对模型口径。
 - `docs/SCORING_CALIBRATION.md`：12 个样例画像的阶段阈值校准记录。
 - `docs/USER_FEEDBACK_PLAN.md`：1.0 发布前真实用户反馈和阈值复核执行指南。
 - `docs/MOBILE_QA_CHECKLIST.md`：1.0 发布前真实手机浏览器验收清单。
@@ -162,10 +165,12 @@ pnpm check
 
 1. 先阅读 `docs/PRD.md`，确认当前产品方向和需求状态。
 2. 阅读 `docs/RELEASE_1_0.md`，确认 1.0 候选版验收口径。
-3. 按 `docs/USER_FEEDBACK_PLAN.md` 组织 3 到 5 位真实用户反馈，并把结论回填到 `docs/CONTENT_REVIEW.md` 和 `docs/SCORING_CALIBRATION.md`。
-4. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；第一轮模拟画像校准见 `docs/SCORING_CALIBRATION.md`。
-5. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
-6. 继续扩展更细的边界输入端到端测试。
-7. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
-8. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
-9. 实现复测记录。
+3. 阅读 `docs/QUESTION_BANK_SCORING_TABLE.md`，让产品、内容或非技术评审先确认题库、反向题和公式解释是否清楚。
+4. 按 `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md` 组织外部验收，公网测试地址为 `https://human3-0-phi.vercel.app/`。
+5. 按 `docs/USER_FEEDBACK_PLAN.md` 组织 3 到 5 位真实用户反馈，并把结论回填到 `docs/CONTENT_REVIEW.md` 和 `docs/SCORING_CALIBRATION.md`。
+6. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；第一轮模拟画像校准见 `docs/SCORING_CALIBRATION.md`。
+7. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
+8. 继续扩展更细的边界输入端到端测试。
+9. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
+10. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
+11. 实现复测记录。

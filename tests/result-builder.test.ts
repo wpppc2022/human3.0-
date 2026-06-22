@@ -57,10 +57,13 @@ describe("result builder", () => {
     const result = buildTestResult();
 
     expect(result.metatype).toMatch(/^The /);
+    expect(result.shareCard.chineseName.length).toBeGreaterThan(3);
     expect(result.lifestyleArchetype).toContain("者");
     expect(result.coreProblem.length).toBeGreaterThan(20);
     expect(result.crossQuadrantDynamics).toContain(result.dominantQuadrant.name);
     expect(result.crossQuadrantDynamics).toContain(result.weakQuadrant.name);
+    expect(result.shareInsight.length).toBeGreaterThan(10);
+    expect(result.friendPerspective.conversationStarter).toContain("？");
     expect(result.recommendations.immediateAction.length).toBeGreaterThan(10);
   });
 
@@ -81,9 +84,11 @@ describe("result builder", () => {
     const result = buildTestResult();
 
     expect(result.shareCard.metatype).toBe(result.metatype);
-    expect(result.shareCard.oneLiner).toBe(
+    expect(result.shareCard.insight).toBe(result.shareInsight);
+    expect(result.shareCard.insight).not.toBe(
       result.recommendations.immediateAction,
     );
+    expect(result.shareCard.weakQuadrant).toBe(result.weakQuadrant.name);
     expect(JSON.stringify(result.shareCard)).not.toMatch(/rawScore|averageScore/);
   });
 

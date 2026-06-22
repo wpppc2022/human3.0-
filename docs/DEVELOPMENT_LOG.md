@@ -281,3 +281,17 @@
 - 修改文件：`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：公网链接可用于手机测试，但仍需要按 `docs/MOBILE_QA_CHECKLIST.md` 在真实 iPhone Safari 和 Android Chrome 上完成体验验收。
 - 下一步建议：把公网链接发给 3 到 5 位真实用户，按 `docs/USER_FEEDBACK_PLAN.md` 回收反馈。
+
+### 1.0 候选体验细节打磨
+
+- 完成：首页第一屏新增 48 道题、约 5-8 分钟、无需登录、结果不显示原始分数等信任提示，并说明答题进度会自动保存在当前浏览器。
+- 完成：答题页新增未选择、已选择、最后一题的状态提示，按钮触控尺寸更稳定，最后一步按钮从“查看结果”调整为“生成结果”。
+- 完成：结果页顶部新增主导象限、主要限制和 24 小时行动速览，让用户第一眼知道当前状态、哪里强、哪里卡、下一步做什么。
+- 完成：分享区标题调整为“保存或分享结果”，补充下载图片和复制链接的使用说明，并优化移动端按钮排列。
+- 完成：结果丢失和分享链接失效的空状态增加返回首页入口，文案更清楚说明 localStorage 和旧链接限制。
+- 完成：顺应并行内容升级，将结果模板新增的中文结果名、分享洞察和朋友视角纳入数据校验，并将题库计分表纳入受保护名称扫描。
+- 完成：刷新本机移动端 Chromium 验收报告，确认首页、答题页、结果页、分享页均无横向溢出，结果速览和分享入口可见。
+- 完成：运行 `pnpm check`，数据校验、26 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`components/AssessmentIntro.tsx`、`components/AssessmentFlow.tsx`、`components/ResultSummary.tsx`、`components/ShareCard.tsx`、`components/ResultClient.tsx`、`components/SharedResultClient.tsx`、`scripts/validate-data.mjs`、`tests/e2e/assessment-flow.spec.ts`、`docs/MOBILE_QA_REPORT.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：这些是本地体验打磨和自动化验收，仍需要真实用户反馈和真实手机浏览器验收确认。
+- 下一步建议：把公网链接发给 3 到 5 位真实用户，并按 `docs/USER_FEEDBACK_PLAN.md` 收集反馈。

@@ -57,13 +57,16 @@
 - `stage`：对应阶段。
 - `titlePattern`：结果标题模板，支持 `{dominant}` 和 `{weak}`。
 - `metatype`：有传播性的整体状态名，当前使用英文短名。
+- `chineseName`：分享和结果页使用的中文短名。
 - `lifestyleArchetype`：当前生活方式原型。
 - `summary`：阶段摘要。
 - `coreProblem`：当前最值得解决的根问题。
 - `crossQuadrantDynamics`：象限之间如何互相增强或拖累，支持 `{dominant}` 和 `{weak}`。
+- `shareInsight`：分享卡片使用的一句话洞察，不等同于行动建议。
+- `friendPerspective`：朋友视角模块文案，包含常给人的感觉、协作方式、容易被误解的地方和可讨论问题。
 - `keywords`：分享卡片关键词。
 
-当前数据校验要求：必须覆盖 `1.1` 到 `3.3`；`titlePattern` 必须包含 `{dominant}`；`crossQuadrantDynamics` 必须包含 `{dominant}` 和 `{weak}`；`keywords` 当前固定为 3 个。
+当前数据校验要求：必须覆盖 `1.1` 到 `3.3`；`titlePattern` 必须包含 `{dominant}`；`crossQuadrantDynamics` 必须包含 `{dominant}` 和 `{weak}`；`keywords` 当前固定为 3 个；`friendPerspective` 必须包含四个固定子字段。
 
 ## `data/site-content.json`
 
