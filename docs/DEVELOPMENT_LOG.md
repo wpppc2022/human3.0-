@@ -158,3 +158,14 @@
 - 修改文件：`package.json`、`pnpm-lock.yaml`、`.gitignore`、`playwright.config.ts`、`vitest.config.ts`、`tests/e2e/assessment-flow.spec.ts`、`tests/e2e/mobile.spec.ts`、`docs/`、`README.md`。
 - 当前风险：E2E 目前覆盖核心 happy path，尚未覆盖异常分享链接、无本地结果、下载 PNG 和 API 路由。
 - 下一步建议：把 `pnpm check` 接入 CI，并继续扩展异常路径测试。
+
+### GitHub Actions CI
+
+- 完成：新增 `.github/workflows/ci.yml`，在 push、pull request 和手动触发时运行 CI。
+- 完成：CI 使用 Node.js 22、pnpm 11.5.3、锁文件安装依赖、安装 Playwright Chromium，并执行 `pnpm check`。
+- 完成：为 Playwright 浏览器目录配置 Actions cache，降低后续运行耗时。
+- 完成：在 `package.json` 增加 `packageManager` 字段，固定 pnpm 版本。
+- 完成：同步更新 README、PRD、TECHNICAL_ARCHITECTURE、HANDOFF、TODO 和 DECISIONS。
+- 修改文件：`.github/workflows/ci.yml`、`package.json`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：CI 已配置但尚未在远程仓库实际运行，首次 push 后需要检查 Actions 日志。
+- 下一步建议：推送远程仓库并观察首次 CI 运行；若浏览器安装耗时过长，再拆分 job 或优化缓存策略。

@@ -69,6 +69,7 @@ pnpm validate:data
 ## 项目结构
 
 ```text
+.github/workflows/       GitHub Actions CI
 app/                    页面和 API 路由
 components/             展示组件和客户端交互组件
 data/                   题库、阶段、象限、建议、结果模板
@@ -103,11 +104,12 @@ public/images/          预留图片资源目录
 - `scripts/validate-data.mjs`：严格检查 `data/` 目录结构、题量、阶段覆盖、重复项、模板占位符和禁止使用的受保护人格测试名称。
 - `playwright.config.ts`：端到端测试配置，会在 3100 端口启动独立测试服务。
 - `tests/e2e/`：覆盖首页进入测评、刷新恢复、完整答题、结果页、分享链接和移动端核心控件。
+- `.github/workflows/ci.yml`：GitHub Actions 工作流，推送或 PR 到 `main` 时运行 `pnpm check`。
 
 ## 下一步开发建议
 
 1. 审校 48 道题和 Human 阶段阈值，确认结果分布符合产品直觉。
 2. 审校 Metatype、Lifestyle Archetype、Core Problem 和 Immediate Next Action 文案。
-3. 将 `pnpm check` 接入 CI。
+3. 推送到远程仓库后观察首次 GitHub Actions 运行情况，确认 Playwright 浏览器安装和缓存正常。
 4. 接入 Supabase，让 `/result/[id]` 支持短链接和服务端结果持久化。
 5. 实现复测记录和真实分享链接。

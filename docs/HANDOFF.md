@@ -22,6 +22,7 @@
 - 静态分享链接：已支持复制 `/result/share?a=...`，通过 URL 中的答案码重建同一份结果。
 - API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
 - 测试和校验：已有核心计分测试、结果生成测试、分享链接测试、Playwright 端到端测试和严格数据校验命令。
+- CI：已新增 GitHub Actions，在 push、pull request 和手动触发时运行 `pnpm check`。
 
 最近一次交接审计结果：
 
@@ -32,6 +33,7 @@
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
 - `pnpm check` 通过，已串联数据校验、单元测试、代码检查、生产构建和端到端测试。
+- GitHub Actions CI 已配置，等待推送到远程仓库后观察首次运行。
 - 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
 - 浏览器结果页检查通过：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action 和分享卡片可见，且不展示原始分数。
 - 移动端 390px 宽度检查通过：首页、答题页、结果页无横向溢出。
@@ -106,6 +108,7 @@ pnpm check
 - `scripts/validate-data.mjs`：严格检查数据文件结构、覆盖范围、重复项、模板占位符和禁止使用的受保护人格测试名称。
 - `playwright.config.ts`：端到端测试配置，会在 `127.0.0.1:3100` 启动独立测试服务。
 - `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、分享链接和移动端核心控件。
+- `.github/workflows/ci.yml`：CI 工作流，使用 Node.js 22、pnpm 11.5.3、Playwright Chromium 和 `pnpm check`。
 
 ## 数据文件说明
 
@@ -136,6 +139,7 @@ pnpm check
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片下载依赖浏览器下载行为，移动端不同浏览器可能表现不同，需要真机验收。
 - 端到端测试目前覆盖核心 happy path，尚未覆盖异常链接、下载 PNG 和 API 路由。
+- CI 已配置但尚未在远程仓库实际跑过，首次 push 后需要检查 Actions 日志。
 - Human 层级和阶段阈值是 MVP 默认规则，需要真实样例校准。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
 
@@ -145,7 +149,7 @@ pnpm check
 2. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
 3. 用 10 到 20 个样例答案校准 `lib/scoring.ts` 的层级和阶段阈值。
 4. 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
-5. 把 `pnpm check` 接入 CI，并继续扩展异常路径端到端测试。
+5. 推送远程后观察首次 CI 运行，并继续扩展异常路径端到端测试。
 6. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 7. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 8. 实现复测记录。

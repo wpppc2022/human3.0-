@@ -87,8 +87,26 @@ localStorage key：
 pnpm exec playwright install chromium
 ```
 
+## CI
+
+GitHub Actions 工作流位于 `.github/workflows/ci.yml`。
+
+触发方式：
+
+- push 到 `main`。
+- pull request 到 `main`。
+- 手动触发 `workflow_dispatch`。
+
+CI 使用 Node.js 22 和 pnpm 11.5.3，安装依赖后执行：
+
+```bash
+pnpm exec playwright install --with-deps chromium
+pnpm check
+```
+
+Playwright 浏览器目录会使用 Actions cache 缓存。首次远端运行仍可能耗时较长，需要观察是否能顺利安装系统依赖和 Chromium。
+
 未来建议补充：
 
 - result-builder 快照测试。
-- 将 `pnpm check` 接入 CI。
 - API 路由测试。
