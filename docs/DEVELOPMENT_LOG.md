@@ -271,3 +271,13 @@
 - 修改文件：`pnpm-workspace.yaml`、`docs/REMOTE_CI_STATUS.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：需要推送本次 CI 修复并观察新的 GitHub Actions 运行结果。
 - 下一步建议：推送修复后执行 `gh run watch`，确认新的 `CI` run 通过。
+
+### Vercel 公网测试部署
+
+- 完成：通过 Vercel 从 GitHub `main` 导入项目，项目名为 `human3-0`。
+- 完成：Vercel 识别为 Next.js 项目，根目录为 `./`，未新增业务配置文件。
+- 完成：部署提交 `cd8895b` 成功，公网地址为 `https://human3-0-phi.vercel.app/`。
+- 完成：使用 HTTP 检查确认首页 `/` 和答题页 `/assessment` 均返回 200。
+- 修改文件：`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：公网链接可用于手机测试，但仍需要按 `docs/MOBILE_QA_CHECKLIST.md` 在真实 iPhone Safari 和 Android Chrome 上完成体验验收。
+- 下一步建议：把公网链接发给 3 到 5 位真实用户，按 `docs/USER_FEEDBACK_PLAN.md` 回收反馈。
