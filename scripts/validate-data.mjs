@@ -83,6 +83,7 @@ const contentFiles = [
   "docs/CONTENT_REVIEW.md",
   "docs/DATA_SCHEMA.md",
   "docs/HANDOFF.md",
+  "docs/MOBILE_QA_CHECKLIST.md",
   "docs/MODEL.md",
   "docs/PRD.md",
   "docs/PRODUCT.md",
@@ -91,6 +92,7 @@ const contentFiles = [
   "docs/SCORING_RULES.md",
   "docs/TECHNICAL_ARCHITECTURE.md",
   "docs/TODO.md",
+  "docs/USER_FEEDBACK_PLAN.md",
 ];
 
 function readJson(path) {

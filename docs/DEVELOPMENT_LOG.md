@@ -226,3 +226,13 @@
 - 修改文件：`tests/scoring-calibration.test.ts`、`docs/SCORING_CALIBRATION.md`、`scripts/validate-data.mjs`、`README.md`、`docs/PRD.md`、`docs/SCORING_RULES.md`、`docs/RELEASE_1_0.md`、`docs/CONTENT_REVIEW.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`、`public/images/.gitkeep`。
 - 当前风险：模拟画像只校验产品直觉，不等于真实用户分布；仍需要真实用户或产品团队样例继续复核。
 - 下一步建议：用真实用户反馈和真机浏览器验收推进 1.0 发布确认。
+
+### 1.0 用户反馈和真机验收材料
+
+- 完成：新增 `docs/USER_FEEDBACK_PLAN.md`，定义 1.0 发布前真实用户反馈目标、样本建议、访谈问题、观察记录字段、阈值复核记录和通过标准。
+- 完成：新增 `docs/MOBILE_QA_CHECKLIST.md`，定义 iPhone Safari、Android Chrome 等真实手机浏览器的首页、答题页、结果页、分享链接和 PNG 下载验收清单。
+- 完成：同步更新 README、PRD、RELEASE_1_0、CONTENT_REVIEW、HANDOFF、TODO 和 `scripts/validate-data.mjs`，确保交接时能找到这两份发布前执行材料。
+- 完成：运行 `pnpm check`，数据校验、26 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`docs/USER_FEEDBACK_PLAN.md`、`docs/MOBILE_QA_CHECKLIST.md`、`README.md`、`docs/PRD.md`、`docs/RELEASE_1_0.md`、`docs/CONTENT_REVIEW.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`scripts/validate-data.mjs`、`docs/DEVELOPMENT_LOG.md`、`docs/DECISIONS.md`。
+- 当前风险：真实用户反馈和真实手机验收仍未实际执行，需要用户或测试人员提供外部证据。
+- 下一步建议：按 `docs/USER_FEEDBACK_PLAN.md` 完成 3 到 5 位真实用户反馈，并按 `docs/MOBILE_QA_CHECKLIST.md` 完成真机验收。

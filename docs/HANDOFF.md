@@ -23,6 +23,7 @@
 - API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
 - 测试和校验：已有核心计分测试、结果生成测试、分享链接测试、Playwright 端到端测试和严格数据校验命令。
 - CI：已新增 GitHub Actions，在 push、pull request 和手动触发时运行 `pnpm check`。
+- 1.0 发布前材料：已新增真实用户反馈指南和真机移动端验收清单，但对应外部测试尚未实际执行。
 
 最近一次交接审计结果：
 
@@ -109,6 +110,8 @@ pnpm check
 - `docs/RELEASE_1_0.md`：1.0 候选发布清单和验收口径。
 - `docs/CONTENT_REVIEW.md`：题目、结果文案和敏感边界审校记录。
 - `docs/SCORING_CALIBRATION.md`：12 个样例画像的阶段阈值校准记录。
+- `docs/USER_FEEDBACK_PLAN.md`：1.0 发布前真实用户反馈和阈值复核执行指南。
+- `docs/MOBILE_QA_CHECKLIST.md`：1.0 发布前真实手机浏览器验收清单。
 - `playwright.config.ts`：端到端测试配置，会在 `127.0.0.1:3100` 启动独立测试服务。
 - `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、脏缓存恢复、PNG 下载、无本地结果、无效分享链接、提交 API、分享链接和移动端核心控件。
 - `.github/workflows/ci.yml`：CI 工作流，使用 Node.js 22、pnpm 11.5.3、Playwright Chromium 和 `pnpm check`。
@@ -150,9 +153,9 @@ pnpm check
 
 1. 先阅读 `docs/PRD.md`，确认当前产品方向和需求状态。
 2. 阅读 `docs/RELEASE_1_0.md`，确认 1.0 候选版验收口径。
-3. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
+3. 按 `docs/USER_FEEDBACK_PLAN.md` 组织 3 到 5 位真实用户反馈，并把结论回填到 `docs/CONTENT_REVIEW.md` 和 `docs/SCORING_CALIBRATION.md`。
 4. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；第一轮模拟画像校准见 `docs/SCORING_CALIBRATION.md`。
-5. 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
+5. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实手机浏览器验收，并记录分享卡片 PNG 的移动端下载表现。
 6. 推送远程后观察首次 CI 运行，并继续扩展更细的边界输入端到端测试。
 7. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 8. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。

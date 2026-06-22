@@ -89,6 +89,8 @@ public/images/          预留图片资源目录
 - `docs/RELEASE_1_0.md`：1.0 候选发布清单和验收口径。
 - `docs/CONTENT_REVIEW.md`：题目和结果文案审校记录。
 - `docs/SCORING_CALIBRATION.md`：阶段阈值样例校准记录。
+- `docs/USER_FEEDBACK_PLAN.md`：1.0 发布前真实用户反馈和阈值复核执行指南。
+- `docs/MOBILE_QA_CHECKLIST.md`：1.0 发布前真实手机浏览器验收清单。
 - `data/questions.json`：48 道题，产品人员未来可优先维护这里。
 - `data/stages.json`：Human 1.1 到 Human 3.3 的阶段定义。
 - `data/quadrants.json`：Mind、Body、Spirit、Vocation 四象限定义。
@@ -111,9 +113,10 @@ public/images/          预留图片资源目录
 
 ## 下一步开发建议
 
-1. 找 3 到 5 位真实用户完成题目和结果阅读反馈。
+1. 按 `docs/USER_FEEDBACK_PLAN.md` 找 3 到 5 位真实用户完成题目和结果阅读反馈。
 2. 用真实用户或产品团队样例继续复核 Human 阶段阈值，模拟画像第一轮校准已记录在 `docs/SCORING_CALIBRATION.md`。
 3. 审校 Metatype、Lifestyle Archetype、Core Problem 和 Immediate Next Action 文案。
-4. 推送到远程仓库后观察首次 GitHub Actions 运行情况，确认 Playwright 浏览器安装和缓存正常。
-5. 接入 Supabase，让 `/result/[id]` 支持短链接和服务端结果持久化。
-6. 实现复测记录和真实分享链接。
+4. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实手机浏览器验收。
+5. 推送到远程仓库后观察首次 GitHub Actions 运行情况，确认 Playwright 浏览器安装和缓存正常。
+6. 接入 Supabase，让 `/result/[id]` 支持短链接和服务端结果持久化。
+7. 实现复测记录和真实分享链接。
