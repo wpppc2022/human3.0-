@@ -1,0 +1,30 @@
+[
+  {
+    "id": "mind",
+    "name": "认知",
+    "englishName": "Mind",
+    "description": "理解、判断、学习、问题拆解、信息验证和自我校正。",
+    "measures": ["理解", "判断", "学习", "问题拆解", "信息验证", "自我校正"]
+  },
+  {
+    "id": "body",
+    "name": "身体",
+    "englishName": "Body",
+    "description": "睡眠、饮食、运动、精力、恢复、生活节律，以及身体对目标的支撑。",
+    "measures": ["睡眠", "饮食", "运动", "精力", "恢复", "生活节律"]
+  },
+  {
+    "id": "spirit",
+    "name": "意义",
+    "englishName": "Spirit",
+    "description": "价值、欲望、内在方向、意义感、长期选择，以及是否被外部评价驱动。",
+    "measures": ["价值", "欲望", "内在方向", "意义感", "长期选择", "评价驱动"]
+  },
+  {
+    "id": "vocation",
+    "name": "事业",
+    "englishName": "Vocation",
+    "description": "技能、工作、作品、创造、现实产出和社会价值转化。",
+    "measures": ["技能", "工作", "作品", "创造", "现实产出", "社会价值转化"]
+  }
+]

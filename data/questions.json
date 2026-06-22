@@ -1,0 +1,338 @@
+[
+  {
+    "id": "M01",
+    "quadrant": "mind",
+    "dimension": "structure",
+    "text": "我遇到复杂问题时，会先试着拆解结构，而不是马上找答案。",
+    "reverseScored": false
+  },
+  {
+    "id": "M02",
+    "quadrant": "mind",
+    "dimension": "verification",
+    "text": "看到新信息时，我会下意识确认来源和证据，而不是只看它是否合我心意。",
+    "reverseScored": false
+  },
+  {
+    "id": "M03",
+    "quadrant": "mind",
+    "dimension": "learning",
+    "text": "我能把一次失败或卡住，整理成下次可调整的方法。",
+    "reverseScored": false
+  },
+  {
+    "id": "M04",
+    "quadrant": "mind",
+    "dimension": "attention",
+    "text": "我经常被零碎信息带着走，事后才发现自己没想清楚重点。",
+    "reverseScored": true
+  },
+  {
+    "id": "M05",
+    "quadrant": "mind",
+    "dimension": "judgment",
+    "text": "做重要选择前，我会区分事实、判断和情绪。",
+    "reverseScored": false
+  },
+  {
+    "id": "M06",
+    "quadrant": "mind",
+    "dimension": "reflection",
+    "text": "当别人指出我的盲点时，我能先理解对方在说什么，再决定是否采纳。",
+    "reverseScored": false
+  },
+  {
+    "id": "M07",
+    "quadrant": "mind",
+    "dimension": "decision",
+    "text": "我常常因为想得太多而迟迟不开始。",
+    "reverseScored": true
+  },
+  {
+    "id": "M08",
+    "quadrant": "mind",
+    "dimension": "modeling",
+    "text": "我会给自己的工作和生活建立一些可复用的原则或清单。",
+    "reverseScored": false
+  },
+  {
+    "id": "M09",
+    "quadrant": "mind",
+    "dimension": "self-correction",
+    "text": "如果发现原来的判断错了，我愿意修正，而不是硬撑面子。",
+    "reverseScored": false
+  },
+  {
+    "id": "M10",
+    "quadrant": "mind",
+    "dimension": "clarity",
+    "text": "我经常觉得脑子里很多事搅在一起，很难分出先后。",
+    "reverseScored": true
+  },
+  {
+    "id": "M11",
+    "quadrant": "mind",
+    "dimension": "transfer",
+    "text": "我能把一个领域学到的方法迁移到另一个问题上。",
+    "reverseScored": false
+  },
+  {
+    "id": "M12",
+    "quadrant": "mind",
+    "dimension": "focus",
+    "text": "我能在一段时间内专注处理一个关键问题，而不是同时抓很多线头。",
+    "reverseScored": false
+  },
+  {
+    "id": "B01",
+    "quadrant": "body",
+    "dimension": "sleep",
+    "text": "我大多数时候能保持相对稳定的睡眠和起床时间。",
+    "reverseScored": false
+  },
+  {
+    "id": "B02",
+    "quadrant": "body",
+    "dimension": "energy",
+    "text": "我能察觉自己精力下降的信号，并及时调整节奏。",
+    "reverseScored": false
+  },
+  {
+    "id": "B03",
+    "quadrant": "body",
+    "dimension": "movement",
+    "text": "我的一周里有固定的身体活动或训练安排。",
+    "reverseScored": false
+  },
+  {
+    "id": "B04",
+    "quadrant": "body",
+    "dimension": "recovery",
+    "text": "我常常靠硬扛完成事情，直到身体明显抗议才停下来。",
+    "reverseScored": true
+  },
+  {
+    "id": "B05",
+    "quadrant": "body",
+    "dimension": "nutrition",
+    "text": "我会用饮食、喝水和休息来支持自己，而不是只靠意志力。",
+    "reverseScored": false
+  },
+  {
+    "id": "B06",
+    "quadrant": "body",
+    "dimension": "rhythm",
+    "text": "我知道自己一天中比较适合深度工作的时间段。",
+    "reverseScored": false
+  },
+  {
+    "id": "B07",
+    "quadrant": "body",
+    "dimension": "stress",
+    "text": "压力一大，我的作息、饮食和运动就很容易全部失控。",
+    "reverseScored": true
+  },
+  {
+    "id": "B08",
+    "quadrant": "body",
+    "dimension": "environment",
+    "text": "我会主动整理环境，让身体更容易进入工作、休息或恢复状态。",
+    "reverseScored": false
+  },
+  {
+    "id": "B09",
+    "quadrant": "body",
+    "dimension": "sustainability",
+    "text": "我安排目标时，会考虑自己的体力和恢复能力。",
+    "reverseScored": false
+  },
+  {
+    "id": "B10",
+    "quadrant": "body",
+    "dimension": "awareness",
+    "text": "我常常忽略身体感受，直到效率明显下降。",
+    "reverseScored": true
+  },
+  {
+    "id": "B11",
+    "quadrant": "body",
+    "dimension": "maintenance",
+    "text": "即使忙，我也会保留一些基础生活维护，比如散步、拉伸或规律吃饭。",
+    "reverseScored": false
+  },
+  {
+    "id": "B12",
+    "quadrant": "body",
+    "dimension": "baseline",
+    "text": "我清楚哪些习惯会让自己的状态明显变好或变差。",
+    "reverseScored": false
+  },
+  {
+    "id": "S01",
+    "quadrant": "spirit",
+    "dimension": "values",
+    "text": "我能说出自己现在最看重的几件事，而不是只说别人期待我看重什么。",
+    "reverseScored": false
+  },
+  {
+    "id": "S02",
+    "quadrant": "spirit",
+    "dimension": "direction",
+    "text": "做选择时，我会问这件事是否接近我想过的生活。",
+    "reverseScored": false
+  },
+  {
+    "id": "S03",
+    "quadrant": "spirit",
+    "dimension": "desire",
+    "text": "我能分辨自己真正想要的东西，和只是想证明给别人看的东西。",
+    "reverseScored": false
+  },
+  {
+    "id": "S04",
+    "quadrant": "spirit",
+    "dimension": "external-validation",
+    "text": "如果没有外界认可，我很难判断一件事对自己是否有意义。",
+    "reverseScored": true
+  },
+  {
+    "id": "S05",
+    "quadrant": "spirit",
+    "dimension": "meaning",
+    "text": "我能从日常工作或生活里找到一些让我愿意继续投入的理由。",
+    "reverseScored": false
+  },
+  {
+    "id": "S06",
+    "quadrant": "spirit",
+    "dimension": "long-term",
+    "text": "我愿意为了长期重要的事，放弃一些短期看起来很热闹的机会。",
+    "reverseScored": false
+  },
+  {
+    "id": "S07",
+    "quadrant": "spirit",
+    "dimension": "identity",
+    "text": "我经常根据别人怎么看我，临时改变自己的方向。",
+    "reverseScored": true
+  },
+  {
+    "id": "S08",
+    "quadrant": "spirit",
+    "dimension": "inner-compass",
+    "text": "当身边人选择不同路线时，我仍能听见自己的判断。",
+    "reverseScored": false
+  },
+  {
+    "id": "S09",
+    "quadrant": "spirit",
+    "dimension": "coherence",
+    "text": "我希望自己的时间、关系和工作能逐渐靠近同一个核心方向。",
+    "reverseScored": false
+  },
+  {
+    "id": "S10",
+    "quadrant": "spirit",
+    "dimension": "avoidance",
+    "text": "我常常用忙碌回避真正重要但不好回答的问题。",
+    "reverseScored": true
+  },
+  {
+    "id": "S11",
+    "quadrant": "spirit",
+    "dimension": "choice",
+    "text": "我能接受一些选择暂时不被理解，只要它和我的长期方向一致。",
+    "reverseScored": false
+  },
+  {
+    "id": "S12",
+    "quadrant": "spirit",
+    "dimension": "presence",
+    "text": "我会给自己留出时间，整理感受、欲望和真正想靠近的东西。",
+    "reverseScored": false
+  },
+  {
+    "id": "V01",
+    "quadrant": "vocation",
+    "dimension": "skill",
+    "text": "我清楚自己目前最值得打磨的核心技能是什么。",
+    "reverseScored": false
+  },
+  {
+    "id": "V02",
+    "quadrant": "vocation",
+    "dimension": "output",
+    "text": "我能把想法做成可被别人看见、使用或评价的产出。",
+    "reverseScored": false
+  },
+  {
+    "id": "V03",
+    "quadrant": "vocation",
+    "dimension": "practice",
+    "text": "我有持续练习某项能力的具体安排，而不是只等灵感。",
+    "reverseScored": false
+  },
+  {
+    "id": "V04",
+    "quadrant": "vocation",
+    "dimension": "execution",
+    "text": "我经常想了很多职业或项目方向，但很少真正交付出来。",
+    "reverseScored": true
+  },
+  {
+    "id": "V05",
+    "quadrant": "vocation",
+    "dimension": "market",
+    "text": "我会观察自己的能力如何为别人解决具体问题。",
+    "reverseScored": false
+  },
+  {
+    "id": "V06",
+    "quadrant": "vocation",
+    "dimension": "craft",
+    "text": "我能接受作品从粗糙开始，再通过反馈逐步变好。",
+    "reverseScored": false
+  },
+  {
+    "id": "V07",
+    "quadrant": "vocation",
+    "dimension": "focus",
+    "text": "我很容易被新的机会吸引，导致原本重要的项目不断中断。",
+    "reverseScored": true
+  },
+  {
+    "id": "V08",
+    "quadrant": "vocation",
+    "dimension": "value",
+    "text": "我能描述自己的工作或作品为谁创造了什么价值。",
+    "reverseScored": false
+  },
+  {
+    "id": "V09",
+    "quadrant": "vocation",
+    "dimension": "feedback",
+    "text": "我会主动寻找反馈，而不是只在心里判断自己做得好不好。",
+    "reverseScored": false
+  },
+  {
+    "id": "V10",
+    "quadrant": "vocation",
+    "dimension": "agency",
+    "text": "面对职业不确定时，我通常只是等待外部安排。",
+    "reverseScored": true
+  },
+  {
+    "id": "V11",
+    "quadrant": "vocation",
+    "dimension": "portfolio",
+    "text": "我正在积累能代表自己能力和审美的作品、案例或经历。",
+    "reverseScored": false
+  },
+  {
+    "id": "V12",
+    "quadrant": "vocation",
+    "dimension": "system",
+    "text": "我会定期复盘自己的事业方向、能力增长和现实产出是否一致。",
+    "reverseScored": false
+  }
+]

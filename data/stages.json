@@ -1,0 +1,101 @@
+[
+  {
+    "id": "1.1",
+    "level": "1.0",
+    "phase": "1",
+    "code": "Human 1.1",
+    "name": "失调的顺从者",
+    "phaseName": "Dissonance / 失调期",
+    "levelName": "顺从者",
+    "coreState": "感到生活不对，但仍在按外部路径运行。",
+    "description": "你可能已经察觉到某些安排并不适合自己，但当前系统还主要依赖外部规则和默认路径。"
+  },
+  {
+    "id": "1.2",
+    "level": "1.0",
+    "phase": "2",
+    "code": "Human 1.2",
+    "name": "不确定的顺从者",
+    "phaseName": "Uncertainty / 不确定期",
+    "levelName": "顺从者",
+    "coreState": "开始怀疑默认规则，但还不敢真正改变。",
+    "description": "你正在看见旧模式的局限，但行动上仍容易回到熟悉的安全路径。"
+  },
+  {
+    "id": "1.3",
+    "level": "1.0",
+    "phase": "3",
+    "code": "Human 1.3",
+    "name": "觉醒的顺从者",
+    "phaseName": "Discovery / 发现期",
+    "levelName": "顺从者",
+    "coreState": "看到新可能，但行动系统还弱。",
+    "description": "你已经发现一些新的方向，但还需要把想法转化成稳定的生活和行动结构。"
+  },
+  {
+    "id": "2.1",
+    "level": "2.0",
+    "phase": "1",
+    "code": "Human 2.1",
+    "name": "失调的个体化者",
+    "phaseName": "Dissonance / 失调期",
+    "levelName": "个体化者",
+    "coreState": "想做自己，但容易混乱、反抗或耗散。",
+    "description": "你正在脱离默认路径，但新系统还不稳，容易在探索中消耗过多能量。"
+  },
+  {
+    "id": "2.2",
+    "level": "2.0",
+    "phase": "2",
+    "code": "Human 2.2",
+    "name": "不确定的个体化者",
+    "phaseName": "Uncertainty / 不确定期",
+    "levelName": "个体化者",
+    "coreState": "正在探索自我，但方向和系统不稳定。",
+    "description": "你已经在建立自己的判断和方式，但四个象限之间还没有形成稳定协同。"
+  },
+  {
+    "id": "2.3",
+    "level": "2.0",
+    "phase": "3",
+    "code": "Human 2.3",
+    "name": "发现中的个体化者",
+    "phaseName": "Discovery / 发现期",
+    "levelName": "个体化者",
+    "coreState": "逐渐形成自己的方法、审美和路径。",
+    "description": "你开始拥有自己的方法和节奏，下一步是让这些能力进入更完整的人生系统。"
+  },
+  {
+    "id": "3.1",
+    "level": "3.0",
+    "phase": "1",
+    "code": "Human 3.1",
+    "name": "失调的整合者",
+    "phaseName": "Dissonance / 失调期",
+    "levelName": "整合者",
+    "coreState": "已有系统能力，但某个象限正在失衡。",
+    "description": "你已经具备一定整合能力，但某个关键支点正在拖慢整体运转。"
+  },
+  {
+    "id": "3.2",
+    "level": "3.0",
+    "phase": "2",
+    "code": "Human 3.2",
+    "name": "不确定的整合者",
+    "phaseName": "Uncertainty / 不确定期",
+    "levelName": "整合者",
+    "coreState": "正在重组人生系统，进入更高复杂度。",
+    "description": "你正在处理更复杂的目标、关系和节律，需要重组而不是简单加速。"
+  },
+  {
+    "id": "3.3",
+    "level": "3.0",
+    "phase": "3",
+    "code": "Human 3.3",
+    "name": "发现中的整合者",
+    "phaseName": "Discovery / 发现期",
+    "levelName": "整合者",
+    "coreState": "认知、身体、意义、事业开始协同运转。",
+    "description": "你的四个象限已经形成较稳定的协同，可以围绕长期方向持续迭代。"
+  }
+]

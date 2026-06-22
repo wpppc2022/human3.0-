@@ -1,0 +1,120 @@
+# Handoff
+
+## 项目目标
+
+`human-3-assessment` 是 Human 3.0 自我发展评估网站的静态 MVP。产品目标是帮助用户看见当前人生系统状态：认知、身体、意义与事业如何协同运转，并得到阶段判断、卡点分析和下一步行动建议。
+
+它不是 MBTI、Myers-Briggs 或 16 型人格测试，也不是医学、心理、法律或职业诊断工具。
+
+## 当前完成状态
+
+已完成可用 MVP：
+
+- 首页：产品介绍、四象限简介、结果示例和免责声明。
+- 答题页：48 道题、5 级选项、上一题、下一题、进度条。
+- 本地保存：答题进度刷新后可恢复，最近一次结果保存在 localStorage。
+- 结果页：Human 阶段、中文结果名、主导象限、限制象限、四象限状态、核心判断、主要限制因素、7 天/30 天/90 天建议、静态分享卡片。
+- API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
+- 测试：已有核心计分测试和数据校验命令。
+
+最近一次交接审计结果：
+
+- `pnpm install` 通过。
+- `pnpm validate:data` 通过。
+- `pnpm test` 通过，5 个测试通过。
+- `pnpm lint` 通过。
+- `pnpm build` 通过。
+- 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
+- 移动端 390px 宽度检查通过：首页、答题页、结果页无横向溢出。
+
+## 如何运行
+
+```bash
+pnpm install
+pnpm dev
+```
+
+默认地址：
+
+```text
+http://localhost:3000
+```
+
+验证命令：
+
+```bash
+pnpm validate:data
+pnpm lint
+pnpm test
+pnpm build
+```
+
+环境注意：在当前 Codex 桌面环境里，系统默认路径可能没有 Node。可使用工作区内置 Node/pnpm，或在本机正常安装 Node.js 和 pnpm 后运行以上命令。
+
+## 页面入口
+
+- `/`：首页。
+- `/assessment`：答题页。
+- `/result`：读取当前浏览器最近一次结果。
+- `/result/[id]`：预留分享结果路由，第一版仍读取本地结果。
+- `/api/submit`：预留服务端提交接口。
+
+## 关键业务规则
+
+- 题目共 48 道，Mind、Body、Spirit、Vocation 各 12 道。
+- 每题答案为 1 到 5。
+- `reverseScored = true` 时使用 `6 - answer` 反向计分。
+- 每个象限总分范围为 12 到 60。
+- 结果页不展示原始分数，只展示状态：尚未稳定、正在形成、已有基础、相对成熟。
+- 主导象限是得分最高象限，限制象限是得分最低象限。
+- Human 阶段范围为 Human 1.1 到 Human 3.3。
+- 阶段和建议不是诊断结论，只用于自我理解和个人发展参考。
+
+完整规则见 `docs/SCORING_RULES.md`。
+
+## 关键技术文件
+
+- `lib/types.ts`：核心类型。
+- `lib/scoring.ts`：计分逻辑入口，包含反向计分、象限状态、Human 层级、阶段、主导/限制象限。
+- `lib/result-builder.ts`：结果生成入口，把评分结果和 JSON 文案组合成用户报告。
+- `lib/storage.ts`：localStorage 保存、恢复、清理。
+- `lib/constants.ts`：站点名称、答案选项、象限顺序、状态文案。
+- `lib/supabase.ts`：未来 Supabase 懒初始化入口，目前故意不接入。
+- `components/AssessmentFlow.tsx`：答题流程。
+- `components/ResultClient.tsx`：结果页本地读取。
+- `app/api/submit/route.ts`：未来提交接口。
+
+## 数据文件说明
+
+- `data/questions.json`：题库。产品人员改题优先改这里。
+- `data/stages.json`：Human 1.1 到 Human 3.3 阶段定义。
+- `data/quadrants.json`：四象限定义。
+- `data/recommendations.json`：按限制象限给出的 7 天、30 天、90 天行动建议。
+- `data/result-templates.json`：结果标题模板、摘要和分享关键词。
+- `data/site-content.json`：首页产品文案。
+
+改动数据后运行：
+
+```bash
+pnpm validate:data
+pnpm test
+```
+
+## 已知问题
+
+- `/result/[id]` 还不是真实分享链接，因为第一版没有数据库。
+- localStorage 清除后，答题进度和最近一次结果不可恢复。
+- 分享卡片目前只是静态组件，不能下载图片。
+- 没有端到端自动化测试；本次审计用浏览器做了人工式流程验证。
+- Human 层级和阶段阈值是 MVP 默认规则，需要真实样例校准。
+- 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
+
+## 下一步建议
+
+1. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
+2. 用 10 到 20 个样例答案校准 `lib/scoring.ts` 的层级和阶段阈值。
+3. 为 `lib/result-builder.ts` 增加测试。
+4. 增加端到端测试，覆盖刷新恢复和完整提交。
+5. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
+6. 让 `/result/[id]` 读取数据库结果。
+7. 实现分享卡片下载和复测记录。
