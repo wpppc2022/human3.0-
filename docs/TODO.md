@@ -6,7 +6,7 @@
 
 - 找 3 到 5 位真实用户完成题目和结果阅读反馈。
 - 用真实手机浏览器检查答题页和结果页。
-- 确认 Human 层级和阶段阈值是否符合产品直觉。
+- 用真实用户或产品团队样例继续复核 Human 层级和阶段阈值。
 - 根据真实用户反馈继续审校免费结果系统文案：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action。
 - 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
 

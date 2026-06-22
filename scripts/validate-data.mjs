@@ -87,6 +87,7 @@ const contentFiles = [
   "docs/PRD.md",
   "docs/PRODUCT.md",
   "docs/RELEASE_1_0.md",
+  "docs/SCORING_CALIBRATION.md",
   "docs/SCORING_RULES.md",
   "docs/TECHNICAL_ARCHITECTURE.md",
   "docs/TODO.md",

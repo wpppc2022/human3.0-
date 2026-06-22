@@ -87,6 +87,12 @@ pnpm validate:data
 - `quadrants.json` 是否覆盖四象限。
 - `recommendations.json` 是否支持 24 小时、7 天、30 天、90 天建议。
 
+## 校准样例
+
+当前 1.0 候选版已用 12 个模拟画像校准阶段阈值，覆盖极低、极高、均衡中段、明显单象限短板和高分但失衡等典型组合。
+
+校准记录见 `docs/SCORING_CALIBRATION.md`，可执行测试见 `tests/scoring-calibration.test.ts`。当前结论是：模拟画像结果符合 1.0 候选版产品直觉，暂不调整 `lib/scoring.ts` 阈值；后续仍需用真实用户或产品团队样例继续复核。
+
 ## 测试覆盖
 
 `tests/scoring.test.ts` 覆盖：
@@ -96,3 +102,7 @@ pnpm validate:data
 - 主导象限和限制象限。
 - Human 阶段返回范围。
 - 缺失答案处理。
+
+`tests/scoring-calibration.test.ts` 覆盖：
+
+- 12 个模拟画像的 Human 阶段、主导象限、限制象限和象限状态预期。

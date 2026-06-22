@@ -31,8 +31,8 @@
 
 - 完成：实现反向计分、象限分数、象限状态、Human 层级、阶段、主导象限和限制象限。
 - 修改文件：`lib/scoring.ts`、`lib/types.ts`、`lib/constants.ts`、`tests/scoring.test.ts`。
-- 当前风险：层级和阶段阈值是 MVP 默认阈值，需要产品验证。
-- 下一步建议：用 10-20 个样例答案校准结果分布。
+- 当前风险：层级和阶段阈值已完成模拟画像校准，但仍需要真实用户或产品团队样例继续复核。
+- 下一步建议：在真实样例积累后复核阈值分布，并决定是否把阈值配置化。
 
 ### 第四阶段：首页和答题页
 
@@ -212,5 +212,17 @@
 - 完成：将 `Human 2.2` 的 Metatype 从固定身份感较强的表达调整为 `The System in Motion`。
 - 完成：增强 `scripts/validate-data.mjs`，将 README 和核心 docs 纳入受保护名称检查。
 - 修改文件：`README.md`、`data/site-content.json`、`data/result-templates.json`、`docs/PRD.md`、`docs/HANDOFF.md`、`docs/PRODUCT.md`、`docs/TODO.md`、`docs/RELEASE_1_0.md`、`docs/CONTENT_REVIEW.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`、`scripts/validate-data.mjs`。
-- 当前风险：内容已完成内部审校，但还需要真实用户阅读反馈和阶段阈值样例校准。
-- 下一步建议：准备 10 到 20 个样例答案，对阶段阈值进行产品直觉校准。
+- 当前风险：内容已完成内部审校，但还需要真实用户阅读反馈。
+- 下一步建议：找 3 到 5 位真实用户完成题目和结果阅读反馈，并用反馈继续审校结果文案。
+
+### 阶段阈值样例校准
+
+- 完成：新增 `tests/scoring-calibration.test.ts`，用 12 个模拟画像固化 Human 阶段、主导象限、限制象限和象限状态预期。
+- 完成：新增 `docs/SCORING_CALIBRATION.md`，记录校准目标、样例画像、预期结果和 1.0 候选版结论。
+- 完成：12 个样例覆盖极低、极高、均衡中段、单象限短板和高分但失衡等典型组合；当前结论是暂不调整 `lib/scoring.ts` 阈值。
+- 完成：同步更新 README、PRD、SCORING_RULES、RELEASE_1_0、CONTENT_REVIEW、HANDOFF、TODO、DECISIONS 和数据校验文档扫描。
+- 完成：运行 `pnpm test`，当前 26 个单元测试通过。
+- 完成：运行 `pnpm check`，数据校验、26 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`tests/scoring-calibration.test.ts`、`docs/SCORING_CALIBRATION.md`、`scripts/validate-data.mjs`、`README.md`、`docs/PRD.md`、`docs/SCORING_RULES.md`、`docs/RELEASE_1_0.md`、`docs/CONTENT_REVIEW.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`、`public/images/.gitkeep`。
+- 当前风险：模拟画像只校验产品直觉，不等于真实用户分布；仍需要真实用户或产品团队样例继续复核。
+- 下一步建议：用真实用户反馈和真机浏览器验收推进 1.0 发布确认。
