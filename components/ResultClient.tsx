@@ -8,8 +8,21 @@ import { RecommendationBlock } from "@/components/RecommendationBlock";
 import { ResultSummary } from "@/components/ResultSummary";
 import { ShareCard } from "@/components/ShareCard";
 import { Button } from "@/components/ui/button";
-import { loadResult } from "@/lib/storage";
-import type { BuiltResult } from "@/lib/types";
+import questionsData from "@/data/questions.json";
+import quadrantsData from "@/data/quadrants.json";
+import recommendationsData from "@/data/recommendations.json";
+import templatesData from "@/data/result-templates.json";
+import stagesData from "@/data/stages.json";
+import { buildResult } from "@/lib/result-builder";
+import { loadResult, saveResult } from "@/lib/storage";
+import type {
+  BuiltResult,
+  QuadrantDefinition,
+  Question,
+  RecommendationSet,
+  ResultTemplate,
+  StageDefinition,
+} from "@/lib/types";
 
 export function ResultClient() {
   const [result, setResult] = useState<BuiltResult | null>(null);
@@ -17,7 +30,29 @@ export function ResultClient() {
 
   useEffect(() => {
     queueMicrotask(() => {
-      setResult(loadResult()?.result ?? null);
+      const stored = loadResult();
+      if (!stored) {
+        setResult(null);
+        setIsLoaded(true);
+        return;
+      }
+
+      try {
+        const rebuiltResult = buildResult({
+          id: stored.id,
+          questions: questionsData as Question[],
+          answers: stored.answers,
+          stages: stagesData as StageDefinition[],
+          quadrants: quadrantsData as QuadrantDefinition[],
+          recommendations: recommendationsData as RecommendationSet[],
+          templates: templatesData as ResultTemplate[],
+        });
+
+        saveResult(rebuiltResult, stored.answers);
+        setResult(rebuiltResult);
+      } catch {
+        setResult(null);
+      }
       setIsLoaded(true);
     });
   }, []);

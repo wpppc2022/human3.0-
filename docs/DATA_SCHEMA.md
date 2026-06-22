@@ -35,6 +35,7 @@
 ## `data/recommendations.json`
 
 - `quadrant`：建议对应的限制象限。
+- `immediateAction`：24 小时内可完成的即时行动，用于免费结果页和分享卡片。
 - `sevenDays`：未来 7 天行动建议。
 - `thirtyDays`：未来 30 天行动建议。
 - `ninetyDays`：未来 90 天行动建议。
@@ -43,7 +44,11 @@
 
 - `stage`：对应阶段。
 - `titlePattern`：结果标题模板，支持 `{dominant}` 和 `{weak}`。
+- `metatype`：有传播性的整体状态名，当前使用英文短名。
+- `lifestyleArchetype`：当前生活方式原型。
 - `summary`：阶段摘要。
+- `coreProblem`：当前最值得解决的根问题。
+- `crossQuadrantDynamics`：象限之间如何互相增强或拖累，支持 `{dominant}` 和 `{weak}`。
 - `keywords`：分享卡片关键词。
 
 ## `data/site-content.json`

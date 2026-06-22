@@ -6,14 +6,19 @@
 
 它不是 MBTI、Myers-Briggs 或 16 型人格测试，也不是医学、心理、法律或职业诊断工具。
 
+产品事实来源：后续产品定位、功能状态、需求池和同步规则以 `docs/PRD.md` 为准。本文件只作为 AI 或开发者快速接手摘要。
+
 ## 当前完成状态
 
 已完成可用 MVP：
 
+- Living PRD：`docs/PRD.md` 已建立为单一产品事实来源，用于同步新需求、已完成功能、免费版和付费版规划。
 - 首页：产品介绍、四象限简介、结果示例和免责声明。
 - 答题页：48 道题、5 级选项、上一题、下一题、进度条。
 - 本地保存：答题进度刷新后可恢复，最近一次结果保存在 localStorage。
-- 结果页：Human 阶段、中文结果名、主导象限、限制象限、四象限状态、核心判断、主要限制因素、7 天/30 天/90 天建议、静态分享卡片。
+- 结果页：Human 阶段、中文结果名、主导象限、限制象限、四象限状态、核心判断、主要限制因素、7 天/30 天/90 天建议、分享卡片。
+- 免费结果系统：已加入 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 24 小时 Immediate Next Action。
+- 分享卡片下载：已支持在浏览器生成 PNG 并下载。
 - API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
 - 测试：已有核心计分测试和数据校验命令。
 
@@ -21,10 +26,11 @@
 
 - `pnpm install` 通过。
 - `pnpm validate:data` 通过。
-- `pnpm test` 通过，5 个测试通过。
+- `pnpm test` 通过，10 个测试通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
 - 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
+- 浏览器结果页检查通过：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action 和分享卡片可见，且不展示原始分数。
 - 移动端 390px 宽度检查通过：首页、答题页、结果页无横向溢出。
 
 ## 如何运行
@@ -82,6 +88,8 @@ pnpm build
 - `lib/supabase.ts`：未来 Supabase 懒初始化入口，目前故意不接入。
 - `components/AssessmentFlow.tsx`：答题流程。
 - `components/ResultClient.tsx`：结果页本地读取。
+- `components/ShareCard.tsx`：分享卡片展示和下载入口。
+- `lib/share-card-image.ts`：Canvas 生成 PNG 分享卡片。
 - `app/api/submit/route.ts`：未来提交接口。
 
 ## 数据文件说明
@@ -89,8 +97,8 @@ pnpm build
 - `data/questions.json`：题库。产品人员改题优先改这里。
 - `data/stages.json`：Human 1.1 到 Human 3.3 阶段定义。
 - `data/quadrants.json`：四象限定义。
-- `data/recommendations.json`：按限制象限给出的 7 天、30 天、90 天行动建议。
-- `data/result-templates.json`：结果标题模板、摘要和分享关键词。
+- `data/recommendations.json`：按限制象限给出的 24 小时、7 天、30 天、90 天行动建议。
+- `data/result-templates.json`：结果标题模板、Metatype、生活方式原型、核心问题、象限互动、摘要和分享关键词。
 - `data/site-content.json`：首页产品文案。
 
 改动数据后运行：
@@ -104,17 +112,18 @@ pnpm test
 
 - `/result/[id]` 还不是真实分享链接，因为第一版没有数据库。
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
-- 分享卡片目前只是静态组件，不能下载图片。
+- 分享卡片下载依赖浏览器下载行为，移动端不同浏览器可能表现不同，需要真机验收。
 - 没有端到端自动化测试；本次审计用浏览器做了人工式流程验证。
 - Human 层级和阶段阈值是 MVP 默认规则，需要真实样例校准。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
 
 ## 下一步建议
 
-1. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
-2. 用 10 到 20 个样例答案校准 `lib/scoring.ts` 的层级和阶段阈值。
-3. 为 `lib/result-builder.ts` 增加测试。
-4. 增加端到端测试，覆盖刷新恢复和完整提交。
-5. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
-6. 让 `/result/[id]` 读取数据库结果。
-7. 实现分享卡片下载和复测记录。
+1. 先阅读 `docs/PRD.md`，确认当前产品方向和需求状态。
+2. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
+3. 用 10 到 20 个样例答案校准 `lib/scoring.ts` 的层级和阶段阈值。
+4. 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
+5. 增加端到端测试，覆盖刷新恢复和完整提交。
+6. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
+7. 让 `/result/[id]` 读取数据库结果。
+8. 实现复测记录。

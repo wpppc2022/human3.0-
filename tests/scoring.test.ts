@@ -4,6 +4,7 @@ import questions from "@/data/questions.json";
 import {
   calculateQuadrantScores,
   findDominantAndWeakQuadrants,
+  isAnswerValue,
   normalizeScore,
   scoreAssessment,
 } from "@/lib/scoring";
@@ -19,6 +20,10 @@ function buildAnswers(value: 1 | 2 | 3 | 4 | 5): Answers {
 
 describe("scoring", () => {
   it("reverses scores for reverse-scored questions", () => {
+    expect(isAnswerValue(1)).toBe(true);
+    expect(isAnswerValue(5)).toBe(true);
+    expect(isAnswerValue(0)).toBe(false);
+    expect(isAnswerValue(6)).toBe(false);
     expect(normalizeScore(1, true)).toBe(5);
     expect(normalizeScore(2, true)).toBe(4);
     expect(normalizeScore(3, true)).toBe(3);
@@ -79,6 +84,15 @@ describe("scoring", () => {
 
     expect(() => scoreAssessment(typedQuestions, answers)).toThrow(
       /Missing answers: M01/,
+    );
+  });
+
+  it("throws a clear error when answers are outside 1 to 5", () => {
+    const answers = buildAnswers(4) as Record<string, unknown>;
+    answers.M01 = 6;
+
+    expect(() => scoreAssessment(typedQuestions, answers as Answers)).toThrow(
+      /invalid answers: M01/,
     );
   });
 });

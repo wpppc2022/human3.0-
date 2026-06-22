@@ -11,6 +11,14 @@ export function RecommendationBlock({ result }: { result: BuiltResult }) {
   return (
     <section className="space-y-4">
       <h2 className="text-xl font-semibold">下一步行动</h2>
+      <Card className="border-primary/30 bg-card">
+        <CardHeader>
+          <CardTitle className="text-base">24 小时内</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm leading-7 text-muted-foreground">
+          {result.recommendations.immediateAction}
+        </CardContent>
+      </Card>
       <div className="grid gap-4 lg:grid-cols-3">
         {groups.map((group) => (
           <Card key={group.key} className="bg-card">

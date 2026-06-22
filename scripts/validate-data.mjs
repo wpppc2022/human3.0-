@@ -41,7 +41,7 @@ const questions = readJson("data/questions.json");
 const stages = readJson("data/stages.json");
 const quadrants = readJson("data/quadrants.json");
 const recommendations = readJson("data/recommendations.json");
-readJson("data/result-templates.json");
+const resultTemplates = readJson("data/result-templates.json");
 const siteContent = readJson("data/site-content.json");
 
 assert(Array.isArray(questions), "questions.json must be an array.");
@@ -76,6 +76,32 @@ for (const quadrant of expectedQuadrants) {
 const stageIds = stages.map((stage) => stage.id).sort();
 assert(sameSet(stageIds, expectedStages), "stages.json must cover Human 1.1 through Human 3.3.");
 
+const templateStages = resultTemplates.map((template) => template.stage).sort();
+assert(
+  sameSet(templateStages, expectedStages),
+  "result-templates.json must cover Human 1.1 through Human 3.3.",
+);
+
+for (const template of resultTemplates) {
+  for (const key of [
+    "titlePattern",
+    "metatype",
+    "lifestyleArchetype",
+    "summary",
+    "coreProblem",
+    "crossQuadrantDynamics",
+  ]) {
+    assert(
+      typeof template[key] === "string" && template[key].length > 0,
+      `Template ${template.stage}.${key} is required.`,
+    );
+  }
+  assert(
+    Array.isArray(template.keywords) && template.keywords.length > 0,
+    `Template ${template.stage}.keywords must contain at least one keyword.`,
+  );
+}
+
 const quadrantIds = quadrants.map((quadrant) => quadrant.id).sort();
 assert(
   sameSet(quadrantIds, [...expectedQuadrants].sort()),
@@ -91,6 +117,11 @@ assert(
 );
 
 for (const recommendation of recommendations) {
+  assert(
+    typeof recommendation.immediateAction === "string" &&
+      recommendation.immediateAction.length > 0,
+    `${recommendation.quadrant}.immediateAction is required.`,
+  );
   for (const key of ["sevenDays", "thirtyDays", "ninetyDays"]) {
     assert(
       Array.isArray(recommendation[key]) && recommendation[key].length > 0,

@@ -52,6 +52,16 @@ function getPrimaryBlock(weakQuadrant: QuadrantDefinition) {
   return map[weakQuadrant.id];
 }
 
+function applyQuadrantPlaceholders(
+  text: string,
+  dominantQuadrant: QuadrantDefinition,
+  weakQuadrant: QuadrantDefinition,
+) {
+  return text
+    .replaceAll("{dominant}", dominantQuadrant.name)
+    .replaceAll("{weak}", weakQuadrant.name);
+}
+
 export function buildResult(params: {
   id: string;
   questions: Question[];
@@ -108,13 +118,26 @@ export function buildResult(params: {
     id: params.id,
     stage,
     title: `${stage.code}｜${title}`,
+    metatype: template.metatype,
+    lifestyleArchetype: template.lifestyleArchetype,
     headline: stage.coreState,
     summary,
+    coreProblem: applyQuadrantPlaceholders(
+      template.coreProblem,
+      dominantQuadrant,
+      weakQuadrant,
+    ),
+    crossQuadrantDynamics: applyQuadrantPlaceholders(
+      template.crossQuadrantDynamics,
+      dominantQuadrant,
+      weakQuadrant,
+    ),
     primaryBlock: getPrimaryBlock(weakQuadrant),
     dominantQuadrant,
     weakQuadrant,
     quadrantReports,
     recommendations: {
+      immediateAction: recommendation.immediateAction,
       sevenDays: recommendation.sevenDays,
       thirtyDays: recommendation.thirtyDays,
       ninetyDays: recommendation.ninetyDays,
@@ -122,8 +145,9 @@ export function buildResult(params: {
     shareCard: {
       stageCode: scoring.stage,
       title,
+      metatype: template.metatype,
       dominantQuadrant: dominantQuadrant.name,
-      oneLiner: stage.coreState,
+      oneLiner: recommendation.immediateAction,
       keywords: template.keywords,
       siteName: SITE_NAME,
     },

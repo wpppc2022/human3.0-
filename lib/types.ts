@@ -54,6 +54,7 @@ export interface StageDefinition {
 
 export interface RecommendationSet {
   quadrant: QuadrantId;
+  immediateAction: string;
   sevenDays: string[];
   thirtyDays: string[];
   ninetyDays: string[];
@@ -62,7 +63,11 @@ export interface RecommendationSet {
 export interface ResultTemplate {
   stage: HumanStageId;
   titlePattern: string;
+  metatype: string;
+  lifestyleArchetype: string;
   summary: string;
+  coreProblem: string;
+  crossQuadrantDynamics: string;
   keywords: string[];
 }
 
@@ -97,13 +102,18 @@ export interface BuiltResult {
   id: string;
   stage: StageDefinition;
   title: string;
+  metatype: string;
+  lifestyleArchetype: string;
   headline: string;
   summary: string;
+  coreProblem: string;
+  crossQuadrantDynamics: string;
   primaryBlock: string;
   dominantQuadrant: QuadrantDefinition;
   weakQuadrant: QuadrantDefinition;
   quadrantReports: QuadrantReport[];
   recommendations: {
+    immediateAction: string;
     sevenDays: string[];
     thirtyDays: string[];
     ninetyDays: string[];
@@ -111,6 +121,7 @@ export interface BuiltResult {
   shareCard: {
     stageCode: HumanStageId;
     title: string;
+    metatype: string;
     dominantQuadrant: string;
     oneLiner: string;
     keywords: string[];

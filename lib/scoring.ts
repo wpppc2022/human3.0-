@@ -12,6 +12,10 @@ import type {
   ScoringResult,
 } from "@/lib/types";
 
+export function isAnswerValue(value: unknown): value is AnswerValue {
+  return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 5;
+}
+
 export function normalizeScore(answer: AnswerValue, reverseScored: boolean) {
   return reverseScored ? ((6 - answer) as AnswerValue) : answer;
 }
@@ -34,7 +38,10 @@ export function calculateQuadrantScores(
 
   for (const question of questions) {
     const answer = answers[question.id];
-    if (!answer) continue;
+    if (answer === undefined) continue;
+    if (!isAnswerValue(answer)) {
+      throw new Error(`Invalid answer for question ${question.id}: ${answer}`);
+    }
     totals[question.quadrant] += normalizeScore(
       answer,
       question.reverseScored,
@@ -108,12 +115,25 @@ export function scoreAssessment(
   answers: Answers,
 ): ScoringResult {
   const missingQuestionIds = questions
-    .filter((question) => !answers[question.id])
+    .filter((question) => answers[question.id] === undefined)
+    .map((question) => question.id);
+
+  const invalidAnswerIds = questions
+    .filter((question) => {
+      const answer = answers[question.id];
+      return answer !== undefined && !isAnswerValue(answer);
+    })
     .map((question) => question.id);
 
   if (missingQuestionIds.length > 0) {
     throw new Error(
       `Assessment is incomplete. Missing answers: ${missingQuestionIds.join(", ")}`,
+    );
+  }
+
+  if (invalidAnswerIds.length > 0) {
+    throw new Error(
+      `Assessment has invalid answers: ${invalidAnswerIds.join(", ")}`,
     );
   }
 

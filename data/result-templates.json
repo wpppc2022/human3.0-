@@ -2,55 +2,91 @@
   {
     "stage": "1.1",
     "titlePattern": "{dominant}主导的失调观察者",
+    "metatype": "The Quiet Alarm",
+    "lifestyleArchetype": "被默认路径推着走的警觉者",
     "summary": "你已经感觉到当前生活系统有不顺的地方，但还没有形成稳定的自我判断和行动支撑。",
+    "coreProblem": "你真正卡住的不是缺少答案，而是还没有把“不对劲”的感受翻译成一个可以处理的系统问题。",
+    "crossQuadrantDynamics": "{dominant}让你能先看见问题，但{weak}还没有跟上，所以你容易一边警觉，一边继续被旧节奏推着走。",
     "keywords": ["觉察", "停顿", "基础重建"]
   },
   {
     "stage": "1.2",
     "titlePattern": "{dominant}主导的不确定转向者",
+    "metatype": "The Hesitant Switcher",
+    "lifestyleArchetype": "开始怀疑旧脚本的转向者",
     "summary": "你正在怀疑一些默认路径，但新的方法、节律和方向还没有真正落地。",
+    "coreProblem": "你已经不完全相信旧规则，但还没有建立足够小、足够安全的新行动来替代它。",
+    "crossQuadrantDynamics": "{dominant}正在帮你产生转向冲动，但{weak}的不稳定会把这种冲动拉回观望和反复确认。",
     "keywords": ["怀疑", "试探", "边界"]
   },
   {
     "stage": "1.3",
     "titlePattern": "{dominant}主导的觉醒行动者",
+    "metatype": "The First Mover",
+    "lifestyleArchetype": "看见新可能的初行动者",
     "summary": "你看见了新的可能性，也开始尝试调整，只是行动系统还需要更稳。",
+    "coreProblem": "你需要把新想法变成可重复的小动作，否则觉醒感会很快被日常惯性稀释。",
+    "crossQuadrantDynamics": "{dominant}已经开始提供新的支点，但{weak}仍会让行动断续，导致你知道方向却不容易持续。",
     "keywords": ["觉醒", "小步", "秩序"]
   },
   {
     "stage": "2.1",
     "titlePattern": "{dominant}主导的失调探索者",
+    "metatype": "The Restless Explorer",
+    "lifestyleArchetype": "想做自己但能量分散的探索者",
     "summary": "你想建立自己的路径，但当前探索容易分散，需要先让关键支点稳定下来。",
+    "coreProblem": "你不是没有自我意识，而是探索太多、支撑太少，导致每个方向都消耗你。",
+    "crossQuadrantDynamics": "{dominant}让你有能力突破默认路径，但{weak}会让探索缺少承托，容易从自由变成耗散。",
     "keywords": ["探索", "耗散", "收束"]
   },
   {
     "stage": "2.2",
     "titlePattern": "{dominant}主导的不确定探索者",
+    "metatype": "The Unfinished Self",
+    "lifestyleArchetype": "正在重组生活系统的探索者",
     "summary": "你正在从默认路径转向自我路径，但四个象限之间还没有稳定协同。",
+    "coreProblem": "你的核心卡点是系统不一致：某些部分已经想升级，另一些部分还停留在旧节奏里。",
+    "crossQuadrantDynamics": "{dominant}是你当前最强的推进器，但{weak}会制造拖拽感，让你在改变和回到旧模式之间摇摆。",
     "keywords": ["探索", "重组", "校准"]
   },
   {
     "stage": "2.3",
     "titlePattern": "{dominant}主导的发现实践者",
+    "metatype": "The Emerging Builder",
+    "lifestyleArchetype": "把自我探索落成方法的人",
     "summary": "你开始形成自己的方法和节奏，下一步是把局部能力整合成系统。",
+    "coreProblem": "你已经有一些有效实践，但还需要把它们连接起来，避免每个能力只在局部发挥作用。",
+    "crossQuadrantDynamics": "{dominant}正在形成稳定优势，只要补上{weak}，你的方法就更容易从局部经验变成长期系统。",
     "keywords": ["方法", "作品", "稳定"]
   },
   {
     "stage": "3.1",
     "titlePattern": "{dominant}主导的失衡整合者",
+    "metatype": "The Tilted Integrator",
+    "lifestyleArchetype": "已有系统能力但某处倾斜的整合者",
     "summary": "你已经有一定系统能力，但当前最弱象限正在限制整体协同。",
+    "coreProblem": "你需要处理的不是从零开始，而是一个高能力系统里的局部失衡。",
+    "crossQuadrantDynamics": "{dominant}已经能承担很多复杂任务，但{weak}的滞后会让整个系统出现偏载。",
     "keywords": ["整合", "修复", "平衡"]
   },
   {
     "stage": "3.2",
     "titlePattern": "{dominant}主导的重组整合者",
+    "metatype": "The System Rebuilder",
+    "lifestyleArchetype": "进入更高复杂度的重组者",
     "summary": "你正在处理更高复杂度的人生系统，需要重组各象限之间的配合方式。",
+    "coreProblem": "旧系统并非失败，而是承载不了新的复杂度；你需要重新设计协同方式。",
+    "crossQuadrantDynamics": "{dominant}让你能进入更复杂的问题层级，但{weak}提示你系统里仍有一处需要重新布线。",
     "keywords": ["复杂度", "重组", "协同"]
   },
   {
     "stage": "3.3",
     "titlePattern": "{dominant}主导的协同整合者",
+    "metatype": "The Coherent Operator",
+    "lifestyleArchetype": "四象限开始协同运转的系统实践者",
     "summary": "你的认知、身体、意义和事业已经开始形成稳定协同，可以围绕长期方向继续迭代。",
+    "coreProblem": "你当前的重点不是补洞，而是保持系统诚实：持续观察哪里正在被过度使用，哪里需要下一轮升级。",
+    "crossQuadrantDynamics": "{dominant}与其他象限已经有较好协同，继续照看{weak}会让系统更稳定、更长期。",
     "keywords": ["协同", "长期", "迭代"]
   }
 ]

@@ -7,7 +7,7 @@
 交互页面采用客户端组件：
 
 - `components/AssessmentFlow.tsx`：答题流程、进度恢复、结果生成。
-- `components/ResultClient.tsx`：读取 localStorage 中最近一次结果并渲染。
+- `components/ResultClient.tsx`：读取 localStorage 中最近一次结果的答案，用当前数据模板重建结果并渲染。
 
 展示组件只接收数据并渲染，不包含计分规则。
 
@@ -19,7 +19,7 @@
 - `ResultSummary`：顶部结果和核心判断。
 - `QuadrantMap`：四象限状态。
 - `RecommendationBlock`：7 天、30 天、90 天建议。
-- `ShareCard`：静态分享卡片。
+- `ShareCard`：分享卡片展示和 PNG 下载入口。
 
 ## 核心函数
 
@@ -28,7 +28,8 @@
 - `determineLevel`：判断 Human 1.0、2.0、3.0。
 - `determinePhase`：判断 X.1、X.2、X.3。
 - `scoreAssessment`：输出完整评分结果。
-- `buildResult`：把评分结果、阶段、象限、建议和模板组合为用户报告。
+- `buildResult`：把评分结果、阶段、象限、建议和模板组合为用户报告，包括 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 Immediate Next Action。
+- `buildShareCardImage`：用 Canvas 生成 1080x1440 的 PNG 分享卡片。
 
 ## 数据流
 
@@ -37,7 +38,7 @@
 3. `AssessmentFlow` 将答案保存到 localStorage。
 4. 完成 48 题后调用 `buildResult`。
 5. 结果保存到 localStorage。
-6. `/result` 读取最近一次结果并展示。
+6. `/result` 读取最近一次结果的答案，并用当前数据模板重建结果后展示。这样模板升级后，旧浏览器结果也能迁移到新结构。
 
 ## 状态管理
 
@@ -66,7 +67,7 @@ localStorage key：
 
 ## 测试
 
-当前使用 Vitest，测试位于 `tests/scoring.test.ts`。
+当前使用 Vitest。`tests/scoring.test.ts` 覆盖核心计分，`tests/result-builder.test.ts` 覆盖免费结果字段、限制象限建议、分享卡片和缺失模板错误。
 
 未来建议补充：
 
