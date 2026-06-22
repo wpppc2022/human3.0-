@@ -100,6 +100,7 @@ export interface QuadrantReport {
 
 export interface BuiltResult {
   id: string;
+  answers: Answers;
   stage: StageDefinition;
   title: string;
   metatype: string;

@@ -30,6 +30,7 @@
 - `scoreAssessment`：输出完整评分结果。
 - `buildResult`：把评分结果、阶段、象限、建议和模板组合为用户报告，包括 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 Immediate Next Action。
 - `buildShareCardImage`：用 Canvas 生成 1080x1440 的 PNG 分享卡片。
+- `encodeAnswersForShare` / `decodeAnswersFromShare`：把 48 个答案编码进 URL，或从静态分享链接恢复答案。
 
 ## 数据流
 
@@ -39,6 +40,7 @@
 4. 完成 48 题后调用 `buildResult`。
 5. 结果保存到 localStorage。
 6. `/result` 读取最近一次结果的答案，并用当前数据模板重建结果后展示。这样模板升级后，旧浏览器结果也能迁移到新结构。
+7. 用户复制分享链接时，`lib/share-link.ts` 将答案按题目顺序编码为 `v1.<48 digits>`，路由 `/result/share?a=...` 再解码并重建结果。
 
 ## 状态管理
 
@@ -52,6 +54,8 @@ localStorage key：
 ## API 路由
 
 `app/api/submit/route.ts` 已预留提交接口。第一版客户端不依赖它，未来接入持久化时可复用同一套 `buildResult` 逻辑。
+
+`app/result/share/page.tsx` 是当前静态分享路由，不依赖数据库。它适合 MVP 验证，但 URL 中包含答案码；接入 Supabase 后应优先使用 `/result/[id]` 短链接。
 
 ## Supabase 接入方式
 
@@ -67,7 +71,7 @@ localStorage key：
 
 ## 测试
 
-当前使用 Vitest。`tests/scoring.test.ts` 覆盖核心计分，`tests/result-builder.test.ts` 覆盖免费结果字段、限制象限建议、分享卡片和缺失模板错误。
+当前使用 Vitest。`tests/scoring.test.ts` 覆盖核心计分，`tests/result-builder.test.ts` 覆盖免费结果字段、限制象限建议、分享卡片和缺失模板错误，`tests/share-link.test.ts` 覆盖静态分享链接编码和解码。
 
 未来建议补充：
 

@@ -116,6 +116,7 @@ export function buildResult(params: {
 
   return {
     id: params.id,
+    answers: params.answers,
     stage,
     title: `${stage.code}｜${title}`,
     metatype: template.metatype,

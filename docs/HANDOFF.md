@@ -19,6 +19,7 @@
 - 结果页：Human 阶段、中文结果名、主导象限、限制象限、四象限状态、核心判断、主要限制因素、7 天/30 天/90 天建议、分享卡片。
 - 免费结果系统：已加入 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 24 小时 Immediate Next Action。
 - 分享卡片下载：已支持在浏览器生成 PNG 并下载。
+- 静态分享链接：已支持复制 `/result/share?a=...`，通过 URL 中的答案码重建同一份结果。
 - API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
 - 测试：已有核心计分测试和数据校验命令。
 
@@ -26,7 +27,7 @@
 
 - `pnpm install` 通过。
 - `pnpm validate:data` 通过。
-- `pnpm test` 通过，10 个测试通过。
+- `pnpm test` 通过，14 个测试通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
 - 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
@@ -90,6 +91,8 @@ pnpm build
 - `components/ResultClient.tsx`：结果页本地读取。
 - `components/ShareCard.tsx`：分享卡片展示和下载入口。
 - `lib/share-card-image.ts`：Canvas 生成 PNG 分享卡片。
+- `lib/share-link.ts`：静态分享链接编码和解码。
+- `components/SharedResultClient.tsx`：读取分享链接并重建结果。
 - `app/api/submit/route.ts`：未来提交接口。
 
 ## 数据文件说明
@@ -111,6 +114,7 @@ pnpm test
 ## 已知问题
 
 - `/result/[id]` 还不是真实分享链接，因为第一版没有数据库。
+- `/result/share?a=...` 是当前静态分享链接方案，链接包含 48 个答案码；适合 MVP 验证，不适合作为长期隐私方案。
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片下载依赖浏览器下载行为，移动端不同浏览器可能表现不同，需要真机验收。
 - 没有端到端自动化测试；本次审计用浏览器做了人工式流程验证。
@@ -125,5 +129,5 @@ pnpm test
 4. 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
 5. 增加端到端测试，覆盖刷新恢复和完整提交。
 6. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
-7. 让 `/result/[id]` 读取数据库结果。
+7. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 8. 实现复测记录。

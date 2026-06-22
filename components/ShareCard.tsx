@@ -1,14 +1,62 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { Check, Copy, Download } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import questionsData from "@/data/questions.json";
+import { buildShareResultPath } from "@/lib/share-link";
 import { downloadShareCardImage } from "@/lib/share-card-image";
-import type { BuiltResult } from "@/lib/types";
+import type { BuiltResult, Question } from "@/lib/types";
 
 export function ShareCard({ result }: { result: BuiltResult }) {
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">(
+    "idle",
+  );
+  const [shareUrl, setShareUrl] = useState("");
+  const sharePath = useMemo(
+    () => buildShareResultPath(questionsData as Question[], result.answers),
+    [result],
+  );
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      setShareUrl(new URL(sharePath, window.location.origin).toString());
+    });
+  }, [sharePath]);
+
+  function fallbackCopy(url: string) {
+    const textarea = document.createElement("textarea");
+    textarea.value = url;
+    textarea.setAttribute("readonly", "true");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const didCopy = document.execCommand("copy");
+    textarea.remove();
+    return didCopy;
+  }
+
+  async function copyShareLink() {
+    const url = shareUrl || new URL(sharePath, window.location.origin).toString();
+    let didCopy = fallbackCopy(url);
+
+    if (!didCopy && window.navigator.clipboard) {
+      try {
+        await window.navigator.clipboard.writeText(url);
+        didCopy = true;
+      } catch {
+        didCopy = false;
+      }
+    }
+
+    setCopyState(didCopy ? "copied" : "failed");
+    window.setTimeout(() => setCopyState("idle"), 1800);
+  }
+
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -20,6 +68,14 @@ export function ShareCard({ result }: { result: BuiltResult }) {
         >
           <Download className="size-4" aria-hidden="true" />
           下载 PNG
+        </Button>
+        <Button type="button" variant="outline" onClick={copyShareLink}>
+          {copyState === "copied" ? (
+            <Check className="size-4" aria-hidden="true" />
+          ) : (
+            <Copy className="size-4" aria-hidden="true" />
+          )}
+          {copyState === "copied" ? "已复制" : "复制链接"}
         </Button>
       </div>
       <Card className="max-w-xl border-primary/20 bg-card">
@@ -54,6 +110,26 @@ export function ShareCard({ result }: { result: BuiltResult }) {
           </div>
         </CardContent>
       </Card>
+      <div className="max-w-xl space-y-2">
+        <label
+          htmlFor="share-url"
+          className="text-sm font-medium text-muted-foreground"
+        >
+          结果链接
+        </label>
+        <input
+          id="share-url"
+          readOnly
+          value={shareUrl}
+          className="h-11 w-full rounded-md border bg-card px-3 text-sm text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          onFocus={(event) => event.currentTarget.select()}
+        />
+        {copyState === "failed" ? (
+          <p className="text-sm text-muted-foreground">
+            自动复制失败，可以手动选中上方链接复制。
+          </p>
+        ) : null}
+      </div>
     </section>
   );
 }

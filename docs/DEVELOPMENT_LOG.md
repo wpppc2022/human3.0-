@@ -124,3 +124,15 @@
 - 修改文件：`components/ShareCard.tsx`、`lib/share-card-image.ts`、`docs/PRD.md`、`docs/TODO.md`、`docs/HANDOFF.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/DECISIONS.md`、`README.md`。
 - 当前风险：Canvas 生成图的视觉仍需真实社交平台场景审校；移动端浏览器下载行为可能因平台而异。
 - 下一步建议：用手机浏览器测试 PNG 下载和分享路径。
+
+### 静态分享链接
+
+- 完成：新增 `lib/share-link.ts`，将 48 个答案按题目顺序编码为 `v1.<48 digits>`，并支持从分享码解码答案。
+- 完成：新增 `/result/share?a=...` 路由和 `components/SharedResultClient.tsx`，可不依赖 localStorage 重建分享结果。
+- 完成：在 `components/ShareCard.tsx` 增加“复制链接”按钮，支持 Clipboard API 和文本框回退复制。
+- 完成：新增 `tests/share-link.test.ts`，覆盖编码、解码、路径生成、缺失答案和非法分享码。
+- 完成：运行 `pnpm test`，当前 14 个测试通过；运行 `pnpm build`，`/result/share` 路由构建通过。
+- 完成：浏览器验证结果链接输入框可见，复制出的 `/result/share?a=...` 链接可重建结果页，且不展示原始分数。
+- 修改文件：`lib/share-link.ts`、`components/ShareCard.tsx`、`components/SharedResultClient.tsx`、`app/result/share/page.tsx`、`tests/share-link.test.ts`、`docs/`。
+- 当前风险：静态分享链接包含答案码，不适合作为长期隐私方案。
+- 下一步建议：接入 Supabase 后，用数据库短链接替代 `/result/share?a=...`。
