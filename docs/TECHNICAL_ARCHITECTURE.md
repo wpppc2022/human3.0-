@@ -51,6 +51,8 @@ localStorage key：
 - `human-3-assessment-progress`
 - `human-3-assessment-result`
 
+`lib/storage.ts` 会在读取时校验缓存结构和答案值范围。损坏 JSON、旧结构、非法答案或非法题号进度会被视为无缓存，页面回到初始状态或提示重新评估。
+
 ## API 路由
 
 `app/api/submit/route.ts` 已预留提交接口。第一版客户端不依赖它，未来接入持久化时可复用同一套 `buildResult` 逻辑。
@@ -78,7 +80,7 @@ localStorage key：
 端到端测试使用 Playwright：
 
 - `playwright.config.ts`：在 `127.0.0.1:3100` 启动独立 Next.js 开发服务，避免影响用户当前打开的 `localhost:3000`。
-- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、无本地结果、完成 48 题、结果页、PNG 下载、无效分享链接、静态分享链接和提交 API。
+- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、脏缓存恢复、无本地结果、完成 48 题、结果页、PNG 下载、无效分享链接、静态分享链接和提交 API。
 - `tests/e2e/mobile.spec.ts`：用移动端视口检查答题页核心控件和横向溢出。
 
 首次运行端到端测试前需要执行：
@@ -109,4 +111,4 @@ Playwright 浏览器目录会使用 Actions cache 缓存。首次远端运行仍
 未来建议补充：
 
 - result-builder 快照测试。
-- 更多 API、localStorage 和分享链接边界测试。
+- 更多 API 和分享链接边界测试。

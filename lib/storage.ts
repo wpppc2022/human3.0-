@@ -1,7 +1,38 @@
 "use client";
 
 import { ASSESSMENT_STORAGE_KEY, RESULT_STORAGE_KEY } from "@/lib/constants";
+import { isAnswerValue } from "@/lib/scoring";
 import type { Answers, BuiltResult, StoredAssessment, StoredResult } from "@/lib/types";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isAnswers(value: unknown): value is Answers {
+  if (!isRecord(value)) return false;
+  return Object.values(value).every(isAnswerValue);
+}
+
+function isStoredAssessment(value: unknown): value is StoredAssessment {
+  if (!isRecord(value)) return false;
+  return (
+    isAnswers(value.answers) &&
+    typeof value.currentIndex === "number" &&
+    Number.isInteger(value.currentIndex) &&
+    value.currentIndex >= 0 &&
+    typeof value.updatedAt === "string"
+  );
+}
+
+function isStoredResult(value: unknown): value is StoredResult {
+  if (!isRecord(value)) return false;
+  return (
+    typeof value.id === "string" &&
+    isAnswers(value.answers) &&
+    isRecord(value.result) &&
+    typeof value.createdAt === "string"
+  );
+}
 
 function safeRead<T>(key: string): T | null {
   if (typeof window === "undefined") return null;
@@ -20,7 +51,8 @@ function safeWrite<T>(key: string, value: T) {
 }
 
 export function loadAssessmentProgress() {
-  return safeRead<StoredAssessment>(ASSESSMENT_STORAGE_KEY);
+  const stored = safeRead<unknown>(ASSESSMENT_STORAGE_KEY);
+  return isStoredAssessment(stored) ? stored : null;
 }
 
 export function saveAssessmentProgress(answers: Answers, currentIndex: number) {
@@ -46,5 +78,6 @@ export function saveResult(result: BuiltResult, answers: Answers) {
 }
 
 export function loadResult() {
-  return safeRead<StoredResult>(RESULT_STORAGE_KEY);
+  const stored = safeRead<unknown>(RESULT_STORAGE_KEY);
+  return isStoredResult(stored) ? stored : null;
 }

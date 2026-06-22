@@ -2,9 +2,9 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 
 import questions from "../../data/questions.json";
+import { ASSESSMENT_STORAGE_KEY, RESULT_STORAGE_KEY } from "../../lib/constants";
 import type { AnswerValue, Answers, Question } from "../../lib/types";
 
-const progressStorageKey = "human-3-assessment-progress";
 const typedQuestions = questions as Question[];
 
 async function clearBrowserState(page: Page) {
@@ -52,7 +52,7 @@ test("assessment progress survives refresh", async ({ page }) => {
       page.evaluate((key) => {
         const raw = window.localStorage.getItem(key);
         return raw ? JSON.parse(raw).currentIndex : null;
-      }, progressStorageKey),
+      }, ASSESSMENT_STORAGE_KEY),
     )
     .toBe(1);
 
@@ -62,7 +62,47 @@ test("assessment progress survives refresh", async ({ page }) => {
   await expect(page.getByText("已回答 1 题")).toBeVisible();
 });
 
+test("assessment ignores corrupted saved progress", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate((key) => {
+    window.localStorage.setItem(
+      key,
+      JSON.stringify({
+        answers: { M01: 7 },
+        currentIndex: "not-a-number",
+        updatedAt: "broken-cache",
+      }),
+    );
+  }, ASSESSMENT_STORAGE_KEY);
+
+  await page.goto("/assessment");
+
+  await expect(page.getByText("1 / 48")).toBeVisible();
+  await expect(page.getByText("已回答 0 题")).toBeVisible();
+  await expect(page.getByRole("button", { name: "下一题" })).toBeDisabled();
+});
+
 test("result page handles missing local result", async ({ page }) => {
+  await page.goto("/result");
+
+  await expect(page.getByText("还没有可查看的结果")).toBeVisible();
+  await expect(page.getByRole("link", { name: "开始评估" })).toBeVisible();
+});
+
+test("result page handles corrupted local result", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate((key) => {
+    window.localStorage.setItem(
+      key,
+      JSON.stringify({
+        id: "broken-result",
+        answers: { M01: 6 },
+        result: {},
+        createdAt: "broken-cache",
+      }),
+    );
+  }, RESULT_STORAGE_KEY);
+
   await page.goto("/result");
 
   await expect(page.getByText("还没有可查看的结果")).toBeVisible();
@@ -117,7 +157,7 @@ test("shared result page handles invalid share code", async ({ page }) => {
   await expect(page.getByRole("link", { name: "开始评估" })).toBeVisible();
 });
 
-test("submit API validates missing answers and returns a result for complete answers", async ({
+test("submit API validates missing and invalid answers, then returns a result", async ({
   request,
 }) => {
   const missingAnswersResponse = await request.post("/api/submit", {
@@ -132,6 +172,15 @@ test("submit API validates missing answers and returns a result for complete ans
   const answers = Object.fromEntries(
     typedQuestions.map((question) => [question.id, 4 as AnswerValue]),
   ) as Answers;
+  const invalidAnswers = { ...answers, M01: 6 };
+  const invalidAnswersResponse = await request.post("/api/submit", {
+    data: { answers: invalidAnswers },
+  });
+
+  expect(invalidAnswersResponse.status()).toBe(400);
+  await expect(invalidAnswersResponse.json()).resolves.toMatchObject({
+    error: expect.stringContaining("invalid answers: M01"),
+  });
 
   const response = await request.post("/api/submit", {
     data: { answers },

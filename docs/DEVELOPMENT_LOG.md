@@ -189,3 +189,16 @@
 - 修改文件：`tests/e2e/assessment-flow.spec.ts`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：桌面端下载已自动化验证；移动端浏览器下载行为和社交平台实际展示效果仍需真机验收。
 - 下一步建议：补更多边界输入测试，或进入题目与结果文案审校。
+
+### localStorage 和边界输入防护
+
+- 完成：增强 `lib/storage.ts`，读取答题进度和结果时校验缓存结构、`currentIndex` 和答案值范围。
+- 完成：损坏或旧结构 localStorage 会按无缓存处理，答题页回到第 1 题，结果页提示重新评估。
+- 完成：扩展 E2E，覆盖损坏答题进度、损坏本地结果、API 非法答案值。
+- 完成：扩展 `tests/share-link.test.ts`，覆盖过长分享码、非法字符和空答案码。
+- 完成：运行 `pnpm test`，14 个单元测试通过；运行 `pnpm test:e2e`，9 个端到端测试通过。
+- 完成：运行 `pnpm check`，数据校验、单元测试、lint、生产构建和端到端测试全部通过。
+- 完成：同步更新 README、PRD、TECHNICAL_ARCHITECTURE、HANDOFF、TODO 和 DECISIONS。
+- 修改文件：`lib/storage.ts`、`tests/e2e/assessment-flow.spec.ts`、`tests/share-link.test.ts`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：还可以继续扩展更多 API 边界，例如非 JSON 请求体、额外字段和极端答案组合。
+- 下一步建议：进入题目与结果文案审校，或继续补 API 和分享链接边界测试。

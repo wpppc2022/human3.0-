@@ -45,6 +45,15 @@ describe("share link", () => {
     expect(() => decodeAnswersFromShare(typedQuestions, "v1.123")).toThrow(
       /Invalid share link answers/,
     );
+    expect(() =>
+      decodeAnswersFromShare(typedQuestions, `v1.${"4".repeat(49)}`),
+    ).toThrow(/Invalid share link answers/);
+    expect(() =>
+      decodeAnswersFromShare(typedQuestions, `v1.${"4".repeat(47)}x`),
+    ).toThrow(/Invalid share link answers/);
+    expect(() => decodeAnswersFromShare(typedQuestions, "v1.")).toThrow(
+      /Invalid share link answers/,
+    );
     expect(() => decodeAnswersFromShare(typedQuestions, "v2.4444")).toThrow(
       /Unsupported share link format/,
     );

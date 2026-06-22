@@ -29,7 +29,7 @@
 - `pnpm install` 通过。
 - `pnpm validate:data` 通过。
 - `pnpm test` 通过，14 个测试通过。
-- `pnpm test:e2e` 通过，7 个端到端测试通过。
+- `pnpm test:e2e` 通过，9 个端到端测试通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
 - `pnpm check` 通过，已串联数据校验、单元测试、代码检查、生产构建和端到端测试。
@@ -95,7 +95,7 @@ pnpm check
 - `lib/types.ts`：核心类型。
 - `lib/scoring.ts`：计分逻辑入口，包含反向计分、象限状态、Human 层级、阶段、主导/限制象限。
 - `lib/result-builder.ts`：结果生成入口，把评分结果和 JSON 文案组合成用户报告。
-- `lib/storage.ts`：localStorage 保存、恢复、清理。
+- `lib/storage.ts`：localStorage 保存、恢复、清理和缓存结构校验。
 - `lib/constants.ts`：站点名称、答案选项、象限顺序、状态文案。
 - `lib/supabase.ts`：未来 Supabase 懒初始化入口，目前故意不接入。
 - `components/AssessmentFlow.tsx`：答题流程。
@@ -107,7 +107,7 @@ pnpm check
 - `app/api/submit/route.ts`：未来提交接口。
 - `scripts/validate-data.mjs`：严格检查数据文件结构、覆盖范围、重复项、模板占位符和禁止使用的受保护人格测试名称。
 - `playwright.config.ts`：端到端测试配置，会在 `127.0.0.1:3100` 启动独立测试服务。
-- `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、PNG 下载、无本地结果、无效分享链接、提交 API、分享链接和移动端核心控件。
+- `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、脏缓存恢复、PNG 下载、无本地结果、无效分享链接、提交 API、分享链接和移动端核心控件。
 - `.github/workflows/ci.yml`：CI 工作流，使用 Node.js 22、pnpm 11.5.3、Playwright Chromium 和 `pnpm check`。
 
 ## 数据文件说明
@@ -138,7 +138,7 @@ pnpm check
 - `/result/share?a=...` 是当前静态分享链接方案，链接包含 48 个答案码；适合 MVP 验证，不适合作为长期隐私方案。
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片 PNG 已有桌面端 E2E 下载校验；移动端不同浏览器下载行为可能表现不同，需要真机验收。
-- 端到端测试已覆盖核心流程、PNG 下载、无本地结果、无效分享链接和提交 API；尚未覆盖损坏 localStorage、非法答案值、过短或过长分享码等更多边界输入。
+- 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、无本地结果、无效分享链接、提交 API 和非法答案值；仍可继续扩展更多边界输入。
 - CI 已配置但尚未在远程仓库实际跑过，首次 push 后需要检查 Actions 日志。
 - Human 层级和阶段阈值是 MVP 默认规则，需要真实样例校准。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
@@ -149,7 +149,7 @@ pnpm check
 2. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
 3. 用 10 到 20 个样例答案校准 `lib/scoring.ts` 的层级和阶段阈值。
 4. 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
-5. 推送远程后观察首次 CI 运行，并继续扩展边界输入端到端测试。
+5. 推送远程后观察首次 CI 运行，并继续扩展更细的边界输入端到端测试。
 6. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 7. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 8. 实现复测记录。

@@ -95,7 +95,7 @@ public/images/          预留图片资源目录
 - `lib/scoring.ts`：计分逻辑。
 - `lib/result-builder.ts`：把计分结果组合成中文报告。
 - `lib/types.ts`：核心类型定义。
-- `lib/storage.ts`：localStorage 保存和恢复。
+- `lib/storage.ts`：localStorage 保存、恢复和缓存结构校验。
 - `lib/share-card-image.ts`：Canvas 生成 PNG 分享卡片。
 - `lib/share-link.ts`：把 48 个答案编码为静态分享链接，并从链接重建答案。
 - `components/AssessmentFlow.tsx`：答题流程和本地保存。
@@ -103,7 +103,7 @@ public/images/          预留图片资源目录
 - `docs/HANDOFF.md`：AI 或开发者快速接手摘要。
 - `scripts/validate-data.mjs`：严格检查 `data/` 目录结构、题量、阶段覆盖、重复项、模板占位符和禁止使用的受保护人格测试名称。
 - `playwright.config.ts`：端到端测试配置，会在 3100 端口启动独立测试服务。
-- `tests/e2e/`：覆盖首页进入测评、刷新恢复、完整答题、结果页、PNG 下载、异常状态、提交 API、分享链接和移动端核心控件。
+- `tests/e2e/`：覆盖首页进入测评、刷新恢复、脏缓存恢复、完整答题、结果页、PNG 下载、异常状态、提交 API、分享链接和移动端核心控件。
 - `.github/workflows/ci.yml`：GitHub Actions 工作流，推送或 PR 到 `main` 时运行 `pnpm check`。
 
 ## 下一步开发建议
