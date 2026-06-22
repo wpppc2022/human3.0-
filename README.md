@@ -103,7 +103,7 @@ public/images/          预留图片资源目录
 - `docs/HANDOFF.md`：AI 或开发者快速接手摘要。
 - `scripts/validate-data.mjs`：严格检查 `data/` 目录结构、题量、阶段覆盖、重复项、模板占位符和禁止使用的受保护人格测试名称。
 - `playwright.config.ts`：端到端测试配置，会在 3100 端口启动独立测试服务。
-- `tests/e2e/`：覆盖首页进入测评、刷新恢复、完整答题、结果页、异常状态、提交 API、分享链接和移动端核心控件。
+- `tests/e2e/`：覆盖首页进入测评、刷新恢复、完整答题、结果页、PNG 下载、异常状态、提交 API、分享链接和移动端核心控件。
 - `.github/workflows/ci.yml`：GitHub Actions 工作流，推送或 PR 到 `main` 时运行 `pnpm check`。
 
 ## 下一步开发建议

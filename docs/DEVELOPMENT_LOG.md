@@ -179,3 +179,13 @@
 - 修改文件：`tests/e2e/assessment-flow.spec.ts`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：E2E 仍未覆盖 PNG 下载和更多边界输入，例如损坏 localStorage、非法答案值、过短或过长分享码。
 - 下一步建议：继续补下载 PNG 和边界输入测试，或进入题目与结果文案审校。
+
+### 分享卡片 PNG 下载 E2E
+
+- 完成：在完整测评 E2E 中点击“下载 PNG”，监听浏览器下载事件。
+- 完成：校验下载文件名符合 `human-3-result-{stage}.png`，文件大小大于 10KB，且文件头符合 PNG 签名。
+- 完成：运行 `pnpm test:e2e`，7 个端到端测试通过。
+- 完成：同步更新 README、PRD、TECHNICAL_ARCHITECTURE、HANDOFF、TODO 和 DECISIONS。
+- 修改文件：`tests/e2e/assessment-flow.spec.ts`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：桌面端下载已自动化验证；移动端浏览器下载行为和社交平台实际展示效果仍需真机验收。
+- 下一步建议：补更多边界输入测试，或进入题目与结果文案审校。

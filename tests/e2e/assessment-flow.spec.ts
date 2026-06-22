@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 import questions from "../../data/questions.json";
 import type { AnswerValue, Answers, Question } from "../../lib/types";
@@ -14,6 +15,14 @@ async function clearBrowserState(page: Page) {
 async function answerCurrentQuestion(page: Page, nextButtonName: string) {
   await page.getByRole("radio", { name: /比较符合/ }).click();
   await page.getByRole("button", { name: nextButtonName }).click();
+}
+
+async function expectPngFile(path: string) {
+  const file = await readFile(path);
+  const pngSignature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+
+  expect(file.byteLength).toBeGreaterThan(10_000);
+  expect([...file.subarray(0, pngSignature.length)]).toEqual(pngSignature);
 }
 
 test.beforeEach(async ({ page }) => {
@@ -78,6 +87,17 @@ test("user can complete assessment, view result, and open share link", async ({
   await expect(page.locator("body")).not.toContainText(
     /rawScore|averageScore|平均分|原始分数|失衡分/,
   );
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: /下载 PNG/ }).click();
+  const download = await downloadPromise;
+  const downloadPath = await download.path();
+
+  expect(download.suggestedFilename()).toMatch(
+    /^human-3-result-[1-3]\.[1-3]\.png$/,
+  );
+  expect(downloadPath).not.toBeNull();
+  await expectPngFile(downloadPath as string);
 
   const shareInput = page.getByLabel("结果链接");
   await expect(shareInput).toHaveValue(/\/result\/share\?a=v1\.[1-5]{48}$/);
