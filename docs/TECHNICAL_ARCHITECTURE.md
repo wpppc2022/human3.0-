@@ -73,11 +73,22 @@ localStorage key：
 
 当前使用 Vitest。`tests/scoring.test.ts` 覆盖核心计分，`tests/result-builder.test.ts` 覆盖免费结果字段、限制象限建议、分享卡片和缺失模板错误，`tests/share-link.test.ts` 覆盖静态分享链接编码和解码。
 
-数据校验使用 `scripts/validate-data.mjs`。它会检查 `data/` 目录的字段集合、题量、象限覆盖、阶段覆盖、重复项、推荐项数量、模板占位符和禁止使用的受保护人格测试名称。`pnpm check` 会串联运行数据校验、单元测试、代码检查和生产构建。
+数据校验使用 `scripts/validate-data.mjs`。它会检查 `data/` 目录的字段集合、题量、象限覆盖、阶段覆盖、重复项、推荐项数量、模板占位符和禁止使用的受保护人格测试名称。`pnpm check` 会串联运行数据校验、单元测试、代码检查、生产构建和端到端测试。
+
+端到端测试使用 Playwright：
+
+- `playwright.config.ts`：在 `127.0.0.1:3100` 启动独立 Next.js 开发服务，避免影响用户当前打开的 `localhost:3000`。
+- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、完成 48 题、结果页和静态分享链接。
+- `tests/e2e/mobile.spec.ts`：用移动端视口检查答题页核心控件和横向溢出。
+
+首次运行端到端测试前需要执行：
+
+```bash
+pnpm exec playwright install chromium
+```
 
 未来建议补充：
 
 - result-builder 快照测试。
-- Playwright 端到端测试：完成答题、刷新恢复、查看结果。
 - 将 `pnpm check` 接入 CI。
 - API 路由测试。

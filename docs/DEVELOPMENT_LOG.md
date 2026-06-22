@@ -145,3 +145,16 @@
 - 修改文件：`scripts/validate-data.mjs`、`package.json`、`README.md`、`docs/DATA_SCHEMA.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：校验脚本仍是手写规则，不是通用 JSON schema；如果未来数据结构大改，需要同步更新脚本。
 - 下一步建议：把 `pnpm check` 接入 CI，并继续补 Playwright 端到端测试。
+
+### Playwright 端到端测试
+
+- 完成：新增 Playwright 依赖、`playwright.config.ts` 和 `pnpm test:e2e`。
+- 完成：端到端测试覆盖首页进入测评、答题进度刷新恢复、完成 48 题、结果页核心字段、不展示原始分数、静态分享链接重建结果和移动端核心控件。
+- 完成：`pnpm check` 已纳入 Playwright 端到端测试。
+- 完成：收窄 Vitest 配置，只运行 `tests/**/*.test.ts`，避免读取 Playwright `.spec.ts` 文件。
+- 完成：安装 Chromium 测试浏览器，并运行 `pnpm test:e2e`，4 个端到端测试通过。
+- 完成：运行 `pnpm check`，数据校验、14 个单元测试、lint、生产构建和 4 个端到端测试全部通过。
+- 完成：同步更新 README、PRD、TECHNICAL_ARCHITECTURE、HANDOFF、TODO 和 DECISIONS。
+- 修改文件：`package.json`、`pnpm-lock.yaml`、`.gitignore`、`playwright.config.ts`、`vitest.config.ts`、`tests/e2e/assessment-flow.spec.ts`、`tests/e2e/mobile.spec.ts`、`docs/`、`README.md`。
+- 当前风险：E2E 目前覆盖核心 happy path，尚未覆盖异常分享链接、无本地结果、下载 PNG 和 API 路由。
+- 下一步建议：把 `pnpm check` 接入 CI，并继续扩展异常路径测试。

@@ -21,15 +21,17 @@
 - 分享卡片下载：已支持在浏览器生成 PNG 并下载。
 - 静态分享链接：已支持复制 `/result/share?a=...`，通过 URL 中的答案码重建同一份结果。
 - API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
-- 测试和校验：已有核心计分测试、结果生成测试、分享链接测试和严格数据校验命令。
+- 测试和校验：已有核心计分测试、结果生成测试、分享链接测试、Playwright 端到端测试和严格数据校验命令。
 
 最近一次交接审计结果：
 
 - `pnpm install` 通过。
 - `pnpm validate:data` 通过。
 - `pnpm test` 通过，14 个测试通过。
+- `pnpm test:e2e` 通过，4 个端到端测试通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
+- `pnpm check` 通过，已串联数据校验、单元测试、代码检查、生产构建和端到端测试。
 - 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
 - 浏览器结果页检查通过：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action 和分享卡片可见，且不展示原始分数。
 - 移动端 390px 宽度检查通过：首页、答题页、结果页无横向溢出。
@@ -38,6 +40,7 @@
 
 ```bash
 pnpm install
+pnpm exec playwright install chromium
 pnpm dev
 ```
 
@@ -101,6 +104,8 @@ pnpm check
 - `components/SharedResultClient.tsx`：读取分享链接并重建结果。
 - `app/api/submit/route.ts`：未来提交接口。
 - `scripts/validate-data.mjs`：严格检查数据文件结构、覆盖范围、重复项、模板占位符和禁止使用的受保护人格测试名称。
+- `playwright.config.ts`：端到端测试配置，会在 `127.0.0.1:3100` 启动独立测试服务。
+- `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、分享链接和移动端核心控件。
 
 ## 数据文件说明
 
@@ -130,7 +135,7 @@ pnpm check
 - `/result/share?a=...` 是当前静态分享链接方案，链接包含 48 个答案码；适合 MVP 验证，不适合作为长期隐私方案。
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片下载依赖浏览器下载行为，移动端不同浏览器可能表现不同，需要真机验收。
-- 没有端到端自动化测试；目前依赖 `pnpm check` 和人工式浏览器流程验证。
+- 端到端测试目前覆盖核心 happy path，尚未覆盖异常链接、下载 PNG 和 API 路由。
 - Human 层级和阶段阈值是 MVP 默认规则，需要真实样例校准。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
 
@@ -140,7 +145,7 @@ pnpm check
 2. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
 3. 用 10 到 20 个样例答案校准 `lib/scoring.ts` 的层级和阶段阈值。
 4. 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
-5. 增加端到端测试，覆盖刷新恢复和完整提交，并把 `pnpm check` 接入 CI。
+5. 把 `pnpm check` 接入 CI，并继续扩展异常路径端到端测试。
 6. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 7. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 8. 实现复测记录。
