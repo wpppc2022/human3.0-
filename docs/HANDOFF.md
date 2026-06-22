@@ -21,7 +21,7 @@
 - 分享卡片下载：已支持在浏览器生成 PNG 并下载。
 - 静态分享链接：已支持复制 `/result/share?a=...`，通过 URL 中的答案码重建同一份结果。
 - API 预留：`/api/submit` 可接收答案并生成结果，未来可接 Supabase。
-- 测试：已有核心计分测试和数据校验命令。
+- 测试和校验：已有核心计分测试、结果生成测试、分享链接测试和严格数据校验命令。
 
 最近一次交接审计结果：
 
@@ -54,6 +54,12 @@ pnpm validate:data
 pnpm lint
 pnpm test
 pnpm build
+```
+
+完整本地验收命令：
+
+```bash
+pnpm check
 ```
 
 环境注意：在当前 Codex 桌面环境里，系统默认路径可能没有 Node。可使用工作区内置 Node/pnpm，或在本机正常安装 Node.js 和 pnpm 后运行以上命令。
@@ -94,6 +100,7 @@ pnpm build
 - `lib/share-link.ts`：静态分享链接编码和解码。
 - `components/SharedResultClient.tsx`：读取分享链接并重建结果。
 - `app/api/submit/route.ts`：未来提交接口。
+- `scripts/validate-data.mjs`：严格检查数据文件结构、覆盖范围、重复项、模板占位符和禁止使用的受保护人格测试名称。
 
 ## 数据文件说明
 
@@ -111,13 +118,19 @@ pnpm validate:data
 pnpm test
 ```
 
+交接或发布前运行：
+
+```bash
+pnpm check
+```
+
 ## 已知问题
 
 - `/result/[id]` 还不是真实分享链接，因为第一版没有数据库。
 - `/result/share?a=...` 是当前静态分享链接方案，链接包含 48 个答案码；适合 MVP 验证，不适合作为长期隐私方案。
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片下载依赖浏览器下载行为，移动端不同浏览器可能表现不同，需要真机验收。
-- 没有端到端自动化测试；本次审计用浏览器做了人工式流程验证。
+- 没有端到端自动化测试；目前依赖 `pnpm check` 和人工式浏览器流程验证。
 - Human 层级和阶段阈值是 MVP 默认规则，需要真实样例校准。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
 
@@ -127,7 +140,7 @@ pnpm test
 2. 审校题目和结果文案，确认语气克制、自然、无诊断化表达。
 3. 用 10 到 20 个样例答案校准 `lib/scoring.ts` 的层级和阶段阈值。
 4. 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
-5. 增加端到端测试，覆盖刷新恢复和完整提交。
+5. 增加端到端测试，覆盖刷新恢复和完整提交，并把 `pnpm check` 接入 CI。
 6. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 7. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 8. 实现复测记录。

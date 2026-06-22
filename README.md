@@ -50,10 +50,13 @@ pnpm start
 检查命令：
 
 ```bash
+pnpm check
 pnpm lint
 pnpm test
 pnpm validate:data
 ```
+
+`pnpm check` 会依次运行数据校验、单元测试、代码检查和生产构建，适合作为交接前的完整本地验收。
 
 ## 项目结构
 
@@ -89,6 +92,7 @@ public/images/          预留图片资源目录
 - `components/AssessmentFlow.tsx`：答题流程和本地保存。
 - `components/ResultClient.tsx`：结果页读取和展示。
 - `docs/HANDOFF.md`：AI 或开发者快速接手摘要。
+- `scripts/validate-data.mjs`：严格检查 `data/` 目录结构、题量、阶段覆盖、重复项、模板占位符和禁止使用的受保护人格测试名称。
 
 ## 下一步开发建议
 

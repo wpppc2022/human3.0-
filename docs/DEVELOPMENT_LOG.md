@@ -136,3 +136,12 @@
 - 修改文件：`lib/share-link.ts`、`components/ShareCard.tsx`、`components/SharedResultClient.tsx`、`app/result/share/page.tsx`、`tests/share-link.test.ts`、`docs/`。
 - 当前风险：静态分享链接包含答案码，不适合作为长期隐私方案。
 - 下一步建议：接入 Supabase 后，用数据库短链接替代 `/result/share?a=...`。
+
+### 严格数据校验和本地验收命令
+
+- 完成：增强 `scripts/validate-data.mjs`，新增字段集合、重复项、题号格式、阶段编号一致性、推荐项数量、模板占位符和受保护人格测试名称检查。
+- 完成：新增 `pnpm check`，串联运行 `pnpm validate:data`、`pnpm test`、`pnpm lint` 和 `pnpm build`。
+- 完成：同步更新 README、DATA_SCHEMA、TECHNICAL_ARCHITECTURE、HANDOFF、TODO 和 DECISIONS。
+- 修改文件：`scripts/validate-data.mjs`、`package.json`、`README.md`、`docs/DATA_SCHEMA.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：校验脚本仍是手写规则，不是通用 JSON schema；如果未来数据结构大改，需要同步更新脚本。
+- 下一步建议：把 `pnpm check` 接入 CI，并继续补 Playwright 端到端测试。

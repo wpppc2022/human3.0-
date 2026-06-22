@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "validate:data": "node scripts/validate-data.mjs"
+    "validate:data": "node scripts/validate-data.mjs",
+    "check": "pnpm validate:data && pnpm test && pnpm lint && pnpm build"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

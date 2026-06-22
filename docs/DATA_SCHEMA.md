@@ -12,6 +12,14 @@
 
 产品人员可增删改题，但需要保持每个象限题量一致，且同步更新测试和计分假设。
 
+当前数据校验要求：
+
+- 总题数必须为 48。
+- 四个象限必须各有 12 题。
+- 每个象限至少有 1 道反向计分题。
+- `id` 必须唯一，并使用象限前缀加两位数字，例如 `M01`、`B01`、`S01`、`V01`。
+- 字段集合必须与本节一致，不能新增未说明字段。
+
 ## `data/quadrants.json`
 
 - `id`：象限 ID。
@@ -32,6 +40,8 @@
 - `coreState`：核心状态。
 - `description`：详细解释。
 
+当前数据校验要求：必须完整覆盖 `1.1` 到 `3.3`，`code` 必须等于 `Human {id}`，`level` 和 `phase` 必须与阶段编号一致。
+
 ## `data/recommendations.json`
 
 - `quadrant`：建议对应的限制象限。
@@ -39,6 +49,8 @@
 - `sevenDays`：未来 7 天行动建议。
 - `thirtyDays`：未来 30 天行动建议。
 - `ninetyDays`：未来 90 天行动建议。
+
+当前数据校验要求：必须覆盖四个象限；`sevenDays`、`thirtyDays`、`ninetyDays` 当前各固定为 3 条建议，方便结果页和未来分享卡片稳定排版。
 
 ## `data/result-templates.json`
 
@@ -51,6 +63,8 @@
 - `crossQuadrantDynamics`：象限之间如何互相增强或拖累，支持 `{dominant}` 和 `{weak}`。
 - `keywords`：分享卡片关键词。
 
+当前数据校验要求：必须覆盖 `1.1` 到 `3.3`；`titlePattern` 必须包含 `{dominant}`；`crossQuadrantDynamics` 必须包含 `{dominant}` 和 `{weak}`；`keywords` 当前固定为 3 个。
+
 ## `data/site-content.json`
 
 - `badge`：首页顶部标签文案。
@@ -58,6 +72,12 @@
 - `resultPreview`：首页结果示例区。
 - `outcomes`：首页“评估后你会看到”模块。
 - `disclaimer`：首页免责声明。
+
+所有 `data/` 文件会通过 `scripts/validate-data.mjs` 检查字段、覆盖范围、重复项和禁止使用的受保护人格测试名称。改完 JSON 后先运行：
+
+```bash
+pnpm validate:data
+```
 
 ## 未来 Supabase 表结构
 
