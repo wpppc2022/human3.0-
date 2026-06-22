@@ -169,3 +169,13 @@
 - 修改文件：`.github/workflows/ci.yml`、`package.json`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：CI 已配置但尚未在远程仓库实际运行，首次 push 后需要检查 Actions 日志。
 - 下一步建议：推送远程仓库并观察首次 CI 运行；若浏览器安装耗时过长，再拆分 job 或优化缓存策略。
+
+### 异常路径和 API E2E 覆盖
+
+- 完成：扩展 `tests/e2e/assessment-flow.spec.ts`，新增无本地结果页、无效分享链接和 `/api/submit` 提交接口测试。
+- 完成：API E2E 覆盖缺失答案返回 400，以及完整答案返回结果对象、无缺失题目和答案回显。
+- 完成：运行 `pnpm test:e2e`，7 个端到端测试通过。
+- 完成：同步更新 README、PRD、TECHNICAL_ARCHITECTURE、HANDOFF、TODO 和 DECISIONS。
+- 修改文件：`tests/e2e/assessment-flow.spec.ts`、`README.md`、`docs/PRD.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：E2E 仍未覆盖 PNG 下载和更多边界输入，例如损坏 localStorage、非法答案值、过短或过长分享码。
+- 下一步建议：继续补下载 PNG 和边界输入测试，或进入题目与结果文案审校。

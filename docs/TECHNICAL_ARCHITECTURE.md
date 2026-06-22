@@ -78,7 +78,7 @@ localStorage key：
 端到端测试使用 Playwright：
 
 - `playwright.config.ts`：在 `127.0.0.1:3100` 启动独立 Next.js 开发服务，避免影响用户当前打开的 `localhost:3000`。
-- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、完成 48 题、结果页和静态分享链接。
+- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、无本地结果、完成 48 题、结果页、无效分享链接、静态分享链接和提交 API。
 - `tests/e2e/mobile.spec.ts`：用移动端视口检查答题页核心控件和横向溢出。
 
 首次运行端到端测试前需要执行：
@@ -109,4 +109,4 @@ Playwright 浏览器目录会使用 Actions cache 缓存。首次远端运行仍
 未来建议补充：
 
 - result-builder 快照测试。
-- API 路由测试。
+- 下载 PNG 和更多 API 边界测试。
