@@ -236,3 +236,13 @@
 - 修改文件：`docs/USER_FEEDBACK_PLAN.md`、`docs/MOBILE_QA_CHECKLIST.md`、`README.md`、`docs/PRD.md`、`docs/RELEASE_1_0.md`、`docs/CONTENT_REVIEW.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`scripts/validate-data.mjs`、`docs/DEVELOPMENT_LOG.md`、`docs/DECISIONS.md`。
 - 当前风险：真实用户反馈和真实手机验收仍未实际执行，需要用户或测试人员提供外部证据。
 - 下一步建议：按 `docs/USER_FEEDBACK_PLAN.md` 完成 3 到 5 位真实用户反馈，并按 `docs/MOBILE_QA_CHECKLIST.md` 完成真机验收。
+
+### 本机移动端生产构建验收
+
+- 完成：使用生产构建服务运行 390x844 移动端 Chromium 验收，完整覆盖首页、答题页、结果页、分享页、刷新恢复、PNG 下载和分享链接重建。
+- 完成：新增 `docs/MOBILE_QA_REPORT.md`，记录本机移动端验收环境、覆盖路径、布局数据、证据路径和结论。
+- 完成：四个页面 `scrollWidth` 均为 390，横向溢出为 0；答题刷新恢复通过；结果页不展示原始分数；PNG 下载生成 `human-3-result-3.3.png`；分享链接可重建结果。
+- 完成：将本机验收记录接入 README、PRD、RELEASE_1_0、HANDOFF、TODO、MOBILE_QA_CHECKLIST 和 `scripts/validate-data.mjs`。
+- 修改文件：`.gitignore`、`docs/MOBILE_QA_REPORT.md`、`README.md`、`docs/PRD.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/MOBILE_QA_CHECKLIST.md`、`scripts/validate-data.mjs`、`docs/DEVELOPMENT_LOG.md`、`docs/DECISIONS.md`。
+- 当前风险：本机 Chromium 不能替代真实 iPhone Safari 和 Android Chrome，移动端下载行为仍需真机确认。
+- 下一步建议：按 `docs/MOBILE_QA_CHECKLIST.md` 做真实设备验收，并把结果回填到 `docs/MOBILE_QA_REPORT.md`。

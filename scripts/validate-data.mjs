@@ -84,6 +84,7 @@ const contentFiles = [
   "docs/DATA_SCHEMA.md",
   "docs/HANDOFF.md",
   "docs/MOBILE_QA_CHECKLIST.md",
+  "docs/MOBILE_QA_REPORT.md",
   "docs/MODEL.md",
   "docs/PRD.md",
   "docs/PRODUCT.md",

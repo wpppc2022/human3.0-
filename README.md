@@ -91,6 +91,7 @@ public/images/          预留图片资源目录
 - `docs/SCORING_CALIBRATION.md`：阶段阈值样例校准记录。
 - `docs/USER_FEEDBACK_PLAN.md`：1.0 发布前真实用户反馈和阈值复核执行指南。
 - `docs/MOBILE_QA_CHECKLIST.md`：1.0 发布前真实手机浏览器验收清单。
+- `docs/MOBILE_QA_REPORT.md`：本机移动端浏览器验收记录。
 - `data/questions.json`：48 道题，产品人员未来可优先维护这里。
 - `data/stages.json`：Human 1.1 到 Human 3.3 的阶段定义。
 - `data/quadrants.json`：Mind、Body、Spirit、Vocation 四象限定义。
