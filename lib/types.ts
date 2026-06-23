@@ -20,6 +20,8 @@ export type QuadrantStateId =
   | "grounded"
   | "mature";
 
+export type QuadrantDevelopmentStageId = HumanStageId;
+
 export type AnswerValue = 1 | 2 | 3 | 4 | 5;
 
 export type Answers = Record<string, AnswerValue>;
@@ -79,10 +81,30 @@ export interface ResultTemplate {
   keywords: string[];
 }
 
+export interface QuadrantDevelopment {
+  level: HumanLevel;
+  phase: PhaseId;
+  stage: QuadrantDevelopmentStageId;
+  label: string;
+  description: string;
+}
+
 export interface QuadrantScore {
   quadrant: QuadrantId;
   rawScore: number;
   state: QuadrantStateId;
+  development: QuadrantDevelopment;
+}
+
+export interface ScoreMetrics {
+  averageScore: number;
+  minScore: number;
+  maxScore: number;
+  imbalanceScore: number;
+  unstableCount: number;
+  formingOrBetterCount: number;
+  groundedOrBetterCount: number;
+  matureCount: number;
 }
 
 export interface ScoringResult {
@@ -94,6 +116,12 @@ export interface ScoringResult {
   weakQuadrant: QuadrantId;
   imbalanceScore: number;
   averageScore: number;
+  minScore: number;
+  maxScore: number;
+  unstableCount: number;
+  formingOrBetterCount: number;
+  groundedOrBetterCount: number;
+  matureCount: number;
   answeredCount: number;
   missingQuestionIds: string[];
 }
@@ -103,6 +131,7 @@ export interface QuadrantReport {
   state: QuadrantStateId;
   stateLabel: string;
   stateMeaning: string;
+  development: QuadrantDevelopment;
   impact: string;
 }
 

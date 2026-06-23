@@ -42,6 +42,8 @@
 
 当前数据校验要求：必须完整覆盖 `1.1` 到 `3.3`，`code` 必须等于 `Human {id}`，`level` 和 `phase` 必须与阶段编号一致。
 
+注意：整体 Human 阶段和单象限发展阶段都使用 `1.1` 到 `3.3` 这组编号。`stages.json` 仍只描述整体 Human 阶段；单象限发展阶段的短标签和解释目前写在 `lib/scoring.ts` 的 `getQuadrantDevelopment` 中，后续如需产品人员无代码维护，可迁移到独立 JSON。
+
 ## `data/recommendations.json`
 
 - `quadrant`：建议对应的限制象限。
@@ -90,6 +92,7 @@ pnpm validate:data
 - `answers`
 - `quadrant_scores`
 - `quadrant_states`
+- `quadrant_developments`
 - `level`
 - `phase`
 - `stage`

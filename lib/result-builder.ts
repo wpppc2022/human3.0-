@@ -103,6 +103,7 @@ export function buildResult(params: {
       state: score.state,
       stateLabel,
       stateMeaning: QUADRANT_STATE_MEANINGS[score.state],
+      development: score.development,
       impact: getQuadrantImpact(
         quadrant,
         stateLabel,

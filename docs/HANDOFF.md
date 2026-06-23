@@ -17,6 +17,7 @@
 - 答题页：48 道题、5 级选项、上一题、下一题、进度条。
 - 本地保存：答题进度刷新后可恢复，最近一次结果保存在 localStorage。
 - 结果页：Human 阶段、中文结果名、主导象限、限制象限、四象限状态、核心判断、主要限制因素、7 天/30 天/90 天建议、分享卡片。
+- 评分模型升级：每个象限已新增独立发展阶段，整体 Human 3.x / 3.3 门槛已按四象限协同规则收紧。
 - 免费结果系统：已加入 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 24 小时 Immediate Next Action。
 - 分享卡片下载：已支持在浏览器生成 PNG 并下载。
 - 静态分享链接：已支持复制 `/result/share?a=...`，通过 URL 中的答案码重建同一份结果。
@@ -30,7 +31,7 @@
 
 - `pnpm install` 通过。
 - `pnpm validate:data` 通过。
-- `pnpm test` 通过，26 个测试通过。
+- `pnpm test` 通过，55 个测试通过。
 - `pnpm test:e2e` 通过，9 个端到端测试通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
@@ -92,9 +93,12 @@ pnpm check
 - 每题答案为 1 到 5。
 - `reverseScored = true` 时使用 `6 - answer` 反向计分。
 - 每个象限总分范围为 12 到 60。
-- 结果页不展示原始分数，只展示状态：尚未稳定、正在形成、已有基础、相对成熟。
+- 结果页不展示原始分数，只展示状态：尚未稳定、正在形成、已有基础、相对成熟，以及轻量的单象限发展阶段解释。
+- 每个象限会独立判断 1.1 到 3.3 的发展阶段；这只解释该象限，不代表整体 Human 阶段。
 - 主导象限是得分最高象限，限制象限是得分最低象限。
 - Human 阶段范围为 Human 1.1 到 Human 3.3。
+- 整体 Human 3.0 必须满足平均分不低于 47、最低象限分不低于 41、失衡程度不超过 10、四象限都已有基础或更好、至少 2 个象限相对成熟。
+- 整体 Human 3.3 必须满足平均分不低于 51、最低象限分不低于 49、失衡程度不超过 6、四象限都相对成熟。
 - 阶段和建议不是诊断结论，只用于自我理解和个人发展参考。
 
 完整规则见 `docs/SCORING_RULES.md`。
@@ -102,7 +106,7 @@ pnpm check
 ## 关键技术文件
 
 - `lib/types.ts`：核心类型。
-- `lib/scoring.ts`：计分逻辑入口，包含反向计分、象限状态、Human 层级、阶段、主导/限制象限。
+- `lib/scoring.ts`：计分逻辑入口，包含反向计分、象限状态、象限独立发展阶段、整体 Human 层级、阶段、主导/限制象限。
 - `lib/result-builder.ts`：结果生成入口，把评分结果和 JSON 文案组合成用户报告。
 - `lib/storage.ts`：localStorage 保存、恢复、清理和缓存结构校验。
 - `lib/constants.ts`：站点名称、答案选项、象限顺序、状态文案。
@@ -158,7 +162,7 @@ pnpm check
 - 分享卡片 PNG 已有桌面端 E2E 下载校验和本机移动端 Chromium 验收；移动端不同浏览器下载行为可能表现不同，仍需要真机验收。
 - 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、无本地结果、无效分享链接、提交 API 和非法答案值；仍可继续扩展更多边界输入。
 - GitHub CLI 已补齐 `workflow` scope，远程 `main` 已同步；GitHub Actions CI 已触发并在修复 pnpm 构建脚本审批配置后通过，详情见 `docs/REMOTE_CI_STATUS.md`。
-- Human 层级和阶段阈值已用 12 个模拟画像完成第一轮校准，仍需要真实用户或产品团队样例继续复核。
+- Human 层级和阶段阈值已按 `docs/SCORING_MODEL_UPGRADE_SPEC.md` 升级，并用模拟画像和关键边界分数组合完成自动化校准；仍需要真实用户或产品团队样例继续复核。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
 
 ## 下一步建议
@@ -168,7 +172,7 @@ pnpm check
 3. 阅读 `docs/QUESTION_BANK_SCORING_TABLE.md`，让产品、内容或非技术评审先确认题库、反向题和公式解释是否清楚。
 4. 按 `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md` 组织外部验收，公网测试地址为 `https://human3-0-phi.vercel.app/`。
 5. 按 `docs/USER_FEEDBACK_PLAN.md` 组织 3 到 5 位真实用户反馈，并把结论回填到 `docs/CONTENT_REVIEW.md` 和 `docs/SCORING_CALIBRATION.md`。
-6. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；第一轮模拟画像校准见 `docs/SCORING_CALIBRATION.md`。
+6. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；当前升级规则和边界案例见 `docs/SCORING_CALIBRATION.md`。
 7. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
 8. 继续扩展更细的边界输入端到端测试。
 9. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。

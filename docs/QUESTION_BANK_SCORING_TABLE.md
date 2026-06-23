@@ -220,37 +220,82 @@ else:
 | 37-48 | 已有基础 | 这个象限已经能在多数情况下发挥作用。 |
 | 49-60 | 相对成熟 | 这个象限已经成为人生系统中的稳定能力。 |
 
-### 7. Human 层级判断
+### 7. 象限独立发展阶段
+
+每个象限会根据自己的总分单独得到一个发展阶段：
+
+| 象限分数 | 象限阶段 | UI 短标签 |
+| --- | --- | --- |
+| 12-18 | 1.1 | 基础支撑明显不足 |
+| 19-24 | 1.2 | 不稳定已被看见 |
+| 25-28 | 1.3 | 初步意识正在出现 |
+| 29-32 | 2.1 | 主动能力刚开始建立 |
+| 33-36 | 2.2 | 方法正在形成 |
+| 37-44 | 2.3 | 可复用方法成形 |
+| 45-48 | 3.1 | 系统支撑开始出现 |
+| 49-54 | 3.2 | 成熟能力正在协同 |
+| 55-60 | 3.3 | 高度稳定的系统支撑 |
+
+单象限阶段用于解释该象限当前状态。一个象限进入 3.x，不代表整体 Human 阶段一定进入 3.x。
+
+### 8. Human 层级判断
 
 先计算：
 
 ```text
-unstableCount = count(quadrantState == "尚未稳定")
-solidCount = count(quadrantState == "已有基础" or quadrantState == "相对成熟")
+unstableCount = count(quadrantScore <= 24)
+groundedOrBetterCount = count(quadrantScore >= 37)
+matureCount = count(quadrantScore >= 49)
+minScore = min(all quadrant scores)
+maxScore = max(all quadrant scores)
+imbalanceScore = maxScore - minScore
 ```
 
 层级判断公式：
 
 ```text
-if unstableCount >= 2 or averageScore < 29:
+if unstableCount >= 2 or averageScore < 30 or minScore <= 20:
   level = "Human 1.0"
-else if solidCount >= 3 and imbalanceScore <= 14 and averageScore >= 41:
+else if (
+  averageScore >= 47
+  and minScore >= 41
+  and imbalanceScore <= 10
+  and groundedOrBetterCount == 4
+  and matureCount >= 2
+):
   level = "Human 3.0"
 else:
   level = "Human 2.0"
 ```
 
-### 8. 阶段判断
+### 9. 阶段判断
 
 阶段判断公式：
 
 ```text
-if averageScore < 30 or unstableCount >= 2:
-  phase = "1"
-else if imbalanceScore >= 14 or averageScore < 42:
-  phase = "2"
-else:
-  phase = "3"
+if level == "Human 1.0":
+  if unstableCount >= 3 or averageScore < 24 or minScore <= 18:
+    phase = "1"
+  else if unstableCount >= 2 or averageScore < 28:
+    phase = "2"
+  else:
+    phase = "3"
+
+if level == "Human 2.0":
+  if unstableCount >= 1 or averageScore < 36 or imbalanceScore >= 18:
+    phase = "1"
+  else if averageScore < 43 or imbalanceScore >= 11 or groundedOrBetterCount < 2:
+    phase = "2"
+  else:
+    phase = "3"
+
+if level == "Human 3.0":
+  if minScore < 45 or imbalanceScore >= 8 or matureCount < 3:
+    phase = "1"
+  else if averageScore < 51 or minScore < 49 or imbalanceScore > 6 or matureCount < 4:
+    phase = "2"
+  else:
+    phase = "3"
 ```
 
 阶段含义：
@@ -261,7 +306,7 @@ else:
 | 2 | Uncertainty | 不确定期 | 已经意识到旧模式不适合，但新模式还没稳定。 |
 | 3 | Discovery | 发现期 | 开始找到新的方向、方法和秩序。 |
 
-### 9. 最终 Human 阶段
+### 10. 最终 Human 阶段
 
 `HumanStage` 由 `level` 和 `phase` 组合而成：
 
@@ -281,7 +326,7 @@ phase = 2
 stage = Human 2.2
 ```
 
-### 10. 主导象限和限制象限
+### 11. 主导象限和限制象限
 
 主导象限：
 
@@ -319,6 +364,9 @@ Mind -> Body -> Spirit -> Vocation
 - 每个象限 12 题，是为了让四个象限在总分上权重一致；这不代表四个象限在每个人的人生中同等重要。
 - 每个象限 3 道反向题，用于降低机械同意倾向，并帮助识别某些常见卡点；反向题不是“负面题”，也不用于评价用户好坏。
 - 不展示原始分数，是为了减少用户把结果误读成诊断、排名或固定标签。1.0 候选版只展示状态、解释和下一步行动。
+- 42/42/42/42 的均衡已有基础画像不再进入 Human 3.3，当前应为 Human 2.2。
+- 48/48/48/36 的三强一弱画像不再进入 Human 3.3，当前应为 Human 2.2。
+- 只有四象限都进入相对成熟，且平均分、最低象限和失衡程度都满足门槛时，才会得到 Human 3.3。
 - 本评估是自我发展参考，不是医学、心理、法律或职业诊断，也不承诺科学测量效度。
 
 ## 真实用户反馈观察点

@@ -35,7 +35,14 @@ export function QuadrantMap({ result }: { result: BuiltResult }) {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
+                <div className="rounded-md border bg-background p-3">
+                  <p className="text-xs text-muted-foreground">象限发展阶段</p>
+                  <p className="mt-1 font-medium text-foreground">
+                    {report.development.stage} · {report.development.label}
+                  </p>
+                </div>
                 <p>{report.stateMeaning}</p>
+                <p>{report.development.description}</p>
                 <p>{report.impact}</p>
               </CardContent>
             </Card>

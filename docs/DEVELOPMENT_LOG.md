@@ -295,3 +295,15 @@
 - 修改文件：`components/AssessmentIntro.tsx`、`components/AssessmentFlow.tsx`、`components/ResultSummary.tsx`、`components/ShareCard.tsx`、`components/ResultClient.tsx`、`components/SharedResultClient.tsx`、`scripts/validate-data.mjs`、`tests/e2e/assessment-flow.spec.ts`、`docs/MOBILE_QA_REPORT.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：这些是本地体验打磨和自动化验收，仍需要真实用户反馈和真实手机浏览器验收确认。
 - 下一步建议：把公网链接发给 3 到 5 位真实用户，并按 `docs/USER_FEEDBACK_PLAN.md` 收集反馈。
+
+### 评分模型升级：象限独立阶段和整体门槛收紧
+
+- 完成：读取并按 `docs/SCORING_MODEL_UPGRADE_SPEC.md` 落地评分升级。
+- 完成：每个象限新增独立发展阶段，基于 12-60 分映射到 1.1-3.3，并保留原有四象限状态。
+- 完成：整体 Human 3.0 / Human 3.3 门槛改为同时参考平均分、最低象限、失衡程度、已有基础象限数量和成熟象限数量。
+- 完成：结果页四象限卡片新增轻量“象限发展阶段”解释，不展示原始分数，分享卡片不高调展示象限阶段。
+- 完成：更新评分、校准、结果构建和端到端测试，关键边界包括 42/42/42/42 -> Human 2.2、48/48/48/36 -> Human 2.2、55/54/52/50 -> Human 3.3。
+- 完成：使用内置 Node/pnpm 路径运行 `pnpm check`，数据校验、55 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`lib/types.ts`、`lib/scoring.ts`、`lib/result-builder.ts`、`components/QuadrantMap.tsx`、`tests/scoring.test.ts`、`tests/scoring-calibration.test.ts`、`tests/result-builder.test.ts`、`tests/e2e/assessment-flow.spec.ts`、`docs/SCORING_RULES.md`、`docs/SCORING_CALIBRATION.md`、`docs/QUESTION_BANK_SCORING_TABLE.md`、`docs/MODEL.md`、`docs/DATA_SCHEMA.md`、`docs/USER_FEEDBACK_PLAN.md`、`docs/HANDOFF.md`、`docs/RELEASE_1_0.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：评分规则已按规格实现并自动化覆盖，但真实用户对“整体阶段”和“单象限阶段”的理解仍需外部反馈确认。
+- 下一步建议：由总控或工程窗口复核结果页文案层级是否足够克制，并用真实用户样例继续验证新阶段体感。

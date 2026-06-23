@@ -127,6 +127,7 @@ test("user can complete assessment, view result, and open share link", async ({
   await expect(page.getByText("主导象限")).toBeVisible();
   await expect(page.getByText("主要限制", { exact: true })).toBeVisible();
   await expect(page.getByText("先做这一步")).toBeVisible();
+  await expect(page.getByText("象限发展阶段")).toHaveCount(4);
   await expect(page.getByText("Lifestyle Archetype")).toBeVisible();
   await expect(page.getByText("Core Problem")).toBeVisible();
   await expect(page.getByText("别人眼中的你")).toBeVisible();

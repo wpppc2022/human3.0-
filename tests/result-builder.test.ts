@@ -64,6 +64,12 @@ describe("result builder", () => {
     expect(result.crossQuadrantDynamics).toContain(result.weakQuadrant.name);
     expect(result.shareInsight.length).toBeGreaterThan(10);
     expect(result.friendPerspective.conversationStarter).toContain("？");
+    expect(result.quadrantReports[0].development.stage).toMatch(
+      /^[1-3]\.[1-3]$/,
+    );
+    expect(result.quadrantReports[0].development.description.length).toBeGreaterThan(
+      10,
+    );
     expect(result.recommendations.immediateAction.length).toBeGreaterThan(10);
   });
 

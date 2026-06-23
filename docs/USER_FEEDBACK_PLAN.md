@@ -17,6 +17,7 @@ https://human3-0-phi.vercel.app/
 - 用户觉得结果具体、克制、可行动。
 - 用户能指出题目或结果中不清楚、太抽象、冒犯或过度承诺的地方。
 - 用户样例能帮助复核 Human 层级和阶段阈值是否符合产品直觉。
+- 用户是否能理解单象限发展阶段只是局部状态，不等于整体 Human 阶段。
 
 ## 样本建议
 
@@ -40,6 +41,7 @@ https://human3-0-phi.vercel.app/
 - [ ] 用户从首页开始独立完成 48 道题。
 - [ ] 记录设备、浏览器和大致完成时间。
 - [ ] 记录 Human 阶段、主导象限、限制象限。
+- [ ] 记录用户是否理解四象限中新增的“象限发展阶段”。
 - [ ] 用户阅读结果页和分享卡片。
 - [ ] 如用户愿意，尝试下载 PNG 或复制分享链接。
 - [ ] 按访谈问题询问，不引导答案。
@@ -77,6 +79,7 @@ https://human3-0-phi.vercel.app/
 | result_stage | 用户得到的 Human 阶段，例如 Human 2.2。 |
 | dominant_quadrant | 主导象限。 |
 | weak_quadrant | 限制象限。 |
+| quadrant_stage_feedback | 用户是否理解单象限发展阶段。 |
 | user_fit_rating | 用户主观贴合度，1 到 5。 |
 | clarity_rating | 用户主观清晰度，1 到 5。 |
 | action_rating | 行动建议可执行程度，1 到 5。 |
@@ -89,9 +92,9 @@ https://human3-0-phi.vercel.app/
 
 可直接复制的记录表：
 
-| participant_id | user_type | device_browser | completed | completion_time | result_stage | dominant_quadrant | weak_quadrant | user_fit_rating | clarity_rating | action_rating | share_willingness | confusing_questions | uncomfortable_copy | missing_context | blocker_level | notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| U01 | 职场新人 | iPhone Safari | Yes | 8 min | Human 2.2 | Mind | Body | 4 | 4 | 3 | Maybe | Q12 | 无 | 想知道象限含义 | None | 结果大体贴合 |
+| participant_id | user_type | device_browser | completed | completion_time | result_stage | dominant_quadrant | weak_quadrant | quadrant_stage_feedback | user_fit_rating | clarity_rating | action_rating | share_willingness | confusing_questions | uncomfortable_copy | missing_context | blocker_level | notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| U01 | 职场新人 | iPhone Safari | Yes | 8 min | Human 2.2 | Mind | Body | 能理解 | 4 | 4 | 3 | Maybe | Q12 | 无 | 想知道象限含义 | None | 结果大体贴合 |
 
 ## 访谈问题
 
@@ -102,10 +105,11 @@ https://human3-0-phi.vercel.app/
 3. 结果标题和核心判断是否像当前状态，而不是固定身份？
 4. 哪一句最像你？哪一句最不像你？
 5. 主要限制象限的解释是否清楚？
-6. 24 小时、7 天、30 天、90 天行动建议是否具体可做？
-7. 你愿意把分享卡片发给朋友吗？如果不愿意，原因是什么？
-8. 你愿意把分享链接发给朋友让对方也测一次吗？如果不愿意，原因是什么？
-9. 页面里有没有让你感觉被诊断、被评判或被过度承诺的表达？
+6. 你是否能理解每个象限自己的发展阶段，和整体 Human 阶段不是一回事？
+7. 24 小时、7 天、30 天、90 天行动建议是否具体可做？
+8. 你愿意把分享卡片发给朋友吗？如果不愿意，原因是什么？
+9. 你愿意把分享链接发给朋友让对方也测一次吗？如果不愿意，原因是什么？
+10. 页面里有没有让你感觉被诊断、被评判或被过度承诺的表达？
 
 ## 阈值复核记录
 
