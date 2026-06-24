@@ -1,0 +1,1377 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HUMAN 3.0 结果页原型</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --black: #000;
+        --ink: #f5f5f7;
+        --muted: rgba(245, 245, 247, 0.68);
+        --soft: rgba(245, 245, 247, 0.46);
+        --dim: rgba(245, 245, 247, 0.28);
+        --line: rgba(245, 245, 247, 0.18);
+        --line-strong: rgba(245, 245, 247, 0.36);
+        --panel: rgba(245, 245, 247, 0.035);
+        --page: min(calc(100% - 40px), 1160px);
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 24px;
+        --space-6: 32px;
+        --space-7: 48px;
+        --space-8: 72px;
+        --display:
+          -apple-system,
+          BlinkMacSystemFont,
+          "SF Pro Display",
+          "PingFang SC",
+          "Noto Sans SC",
+          "Microsoft YaHei",
+          sans-serif;
+        --mono:
+          "SFMono-Regular",
+          "SF Mono",
+          Consolas,
+          ui-monospace,
+          monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--black);
+      }
+
+      body {
+        min-height: 100svh;
+        margin: 0;
+        background: #000;
+        color: var(--ink);
+        font-family: var(--display);
+        letter-spacing: 0;
+      }
+
+      a,
+      button {
+        color: inherit;
+        font: inherit;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      button {
+        appearance: none;
+      }
+
+      :focus-visible {
+        outline: 2px solid #f5f5f7;
+        outline-offset: 4px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(0, 0, 0, 0.88);
+        backdrop-filter: blur(18px);
+      }
+
+      body.menu-open .topbar {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: #000;
+        backdrop-filter: none;
+      }
+
+      .topbar-inner {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        width: var(--page);
+        height: 64px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+      }
+
+      .brand {
+        font-size: 15px;
+        font-weight: 650;
+        white-space: nowrap;
+      }
+
+      .nav {
+        display: none;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--soft);
+        font-size: 14px;
+      }
+
+      .nav-item {
+        position: relative;
+      }
+
+      .nav-trigger {
+        display: inline-flex;
+        min-height: 40px;
+        align-items: center;
+        border: 0;
+        background: transparent;
+        color: var(--soft);
+        padding: 0 var(--space-3);
+        cursor: default;
+      }
+
+      .nav-trigger:hover,
+      .nav-item:focus-within .nav-trigger {
+        color: var(--ink);
+      }
+
+      .submenu {
+        position: fixed;
+        top: 64px;
+        right: 0;
+        left: 0;
+        z-index: 19;
+        display: none;
+        min-height: 248px;
+        background: rgba(0, 0, 0, 0.96);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav-item::after {
+        content: "";
+        position: fixed;
+        top: 40px;
+        right: 0;
+        left: 0;
+        display: none;
+        height: 28px;
+      }
+
+      .nav-item:hover::after,
+      .nav-item:focus-within::after,
+      .nav-item:hover .submenu,
+      .nav-item:focus-within .submenu {
+        display: block;
+      }
+
+      .submenu-inner {
+        display: grid;
+        width: var(--page);
+        grid-template-columns: 260px repeat(3, minmax(0, 1fr));
+        gap: var(--space-6);
+        margin: 0 auto;
+        padding: var(--space-6) 0 var(--space-7);
+      }
+
+      .submenu-kicker,
+      .submenu-column span {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .submenu-title {
+        margin-top: var(--space-3);
+        color: var(--ink);
+        font-size: 27px;
+        font-weight: 650;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+      }
+
+      .submenu-column {
+        display: grid;
+        align-content: start;
+        gap: var(--space-2);
+      }
+
+      .submenu-column a {
+        color: var(--ink);
+        font-size: 15px;
+        line-height: 22px;
+      }
+
+      .menu-button {
+        position: relative;
+        z-index: 4;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        font-size: 22px;
+        line-height: 1;
+      }
+
+      body.menu-open .menu-button {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .mobile-menu {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: none;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .mobile-menu[data-open="true"],
+      body.menu-open .mobile-menu {
+        display: block;
+        animation: menuReveal 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .mobile-menu-track {
+        display: grid;
+        width: 200%;
+        height: 100%;
+        grid-template-columns: 1fr 1fr;
+        transform: translateX(0);
+        transition: transform 720ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .mobile-menu[data-view="detail"] .mobile-menu-track,
+      body.menu-detail .mobile-menu-track {
+        transform: translateX(-50%);
+      }
+
+      .mobile-menu-screen {
+        display: grid;
+        align-content: start;
+        gap: var(--space-5);
+        min-width: 0;
+        min-height: 100svh;
+        padding: 92px max(24px, calc((100vw - 390px) / 2 + 24px)) 32px;
+      }
+
+      .mobile-menu-heading {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .mobile-module,
+      .mobile-subitem,
+      .mobile-back {
+        display: flex;
+        min-height: 64px;
+        align-items: center;
+        justify-content: space-between;
+        border: 0;
+        border-bottom: 1px solid rgba(245, 245, 247, 0.12);
+        background: transparent;
+        color: var(--ink);
+        padding: 0;
+        text-align: left;
+        font-size: 28px;
+        font-weight: 520;
+      }
+
+      .mobile-module span,
+      .mobile-subitem span {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 400;
+      }
+
+      .mobile-subitems {
+        display: none;
+        gap: var(--space-2);
+      }
+
+      .mobile-subitems[data-active="true"] {
+        display: grid;
+      }
+
+      .mobile-back {
+        min-height: 48px;
+        justify-content: flex-start;
+        border-bottom: 0;
+        color: var(--soft);
+        font-size: 14px;
+      }
+
+      .mobile-detail-title {
+        font-size: 36px;
+        font-weight: 620;
+        line-height: 1.1;
+      }
+
+      .mobile-menu-close {
+        position: absolute;
+        top: 18px;
+        right: max(22px, calc((100vw - 390px) / 2 + 22px));
+        z-index: 4;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      @keyframes menuReveal {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      main {
+        width: var(--page);
+        margin: 0 auto;
+        padding: var(--space-7) 0 var(--space-8);
+      }
+
+      .report-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 0.74fr);
+        gap: clamp(48px, 8vw, 120px);
+        align-items: start;
+        padding: var(--space-4) 0 var(--space-7);
+      }
+
+      .back-link,
+      .button,
+      .text-button {
+        display: inline-flex;
+        min-height: 40px;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .back-link {
+        margin-bottom: var(--space-7);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 720px;
+        margin-top: var(--space-3);
+        font-size: clamp(48px, 7vw, 88px);
+        font-weight: 520;
+        letter-spacing: -0.04em;
+        line-height: 0.98;
+      }
+
+      .hero-subtitle {
+        margin-top: var(--space-4);
+        color: var(--ink);
+        font-size: clamp(20px, 2.4vw, 32px);
+        font-weight: 450;
+      }
+
+      .hero-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        margin-top: var(--space-4);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .hero-tags span + span::before {
+        content: "·";
+        margin-right: var(--space-2);
+        color: var(--dim);
+      }
+
+      .hero-copy {
+        max-width: 500px;
+        margin-top: var(--space-5);
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        margin-top: var(--space-6);
+      }
+
+      .button {
+        border: 1px solid var(--line-strong);
+        border-radius: 6px;
+        background: transparent;
+        padding: 0 var(--space-5);
+        color: var(--ink);
+        font-size: 14px;
+      }
+
+      .button.primary {
+        background: var(--ink);
+        color: #000;
+      }
+
+      .metadata {
+        margin-top: 86px;
+      }
+
+      .meta-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: var(--space-7);
+      }
+
+      .meta-table {
+        display: grid;
+        border-top: 1px solid var(--line);
+      }
+
+      .meta-row {
+        display: grid;
+        grid-template-columns: minmax(130px, 0.55fr) 1fr;
+        gap: var(--space-4);
+        border-bottom: 1px solid var(--line);
+        padding: 13px 0;
+      }
+
+      .meta-row dt {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .meta-row dd {
+        margin: 0;
+        color: var(--ink);
+        font-size: 14px;
+      }
+
+      .report-section {
+        padding: var(--space-7) 0;
+      }
+
+      .section-title {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--space-4);
+        align-items: center;
+        margin-bottom: var(--space-6);
+      }
+
+      .section-title h2 {
+        font-size: 21px;
+        font-weight: 520;
+        letter-spacing: -0.01em;
+      }
+
+      .section-title::after {
+        content: "";
+        height: 1px;
+        background: var(--line);
+      }
+
+      .dimensions-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+        gap: clamp(40px, 7vw, 88px);
+        align-items: center;
+      }
+
+      .radar-wrap {
+        position: relative;
+        display: grid;
+        min-height: 390px;
+        place-items: center;
+      }
+
+      .radar {
+        width: min(84vw, 360px);
+        height: auto;
+        overflow: visible;
+      }
+
+      .radar-label {
+        position: absolute;
+        color: var(--ink);
+        font-size: 16px;
+        line-height: 1.25;
+      }
+
+      .radar-label span {
+        display: block;
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .label-mind {
+        top: 4%;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+      }
+
+      .label-body {
+        bottom: 4%;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+      }
+
+      .label-spirit {
+        top: 48%;
+        left: 2%;
+        transform: translateY(-50%);
+      }
+
+      .label-vocation {
+        top: 48%;
+        right: 0;
+        transform: translateY(-50%);
+        text-align: right;
+      }
+
+      .dimension-list {
+        display: grid;
+        border-top: 1px solid var(--line);
+      }
+
+      .dimension-row {
+        display: grid;
+        grid-template-columns: minmax(135px, 0.48fr) minmax(0, 1fr);
+        gap: var(--space-6);
+        border-bottom: 1px solid var(--line);
+        padding: var(--space-4) 0;
+      }
+
+      .dimension-main {
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .dimension-name {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--space-3);
+        color: var(--ink);
+        font-size: 18px;
+      }
+
+      .dimension-name span {
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+
+      .dimension-state {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .bar {
+        height: 1px;
+        background: var(--line);
+      }
+
+      .bar i {
+        display: block;
+        height: 1px;
+        background: var(--ink);
+      }
+
+      .dimension-copy {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1.18fr;
+        gap: clamp(40px, 6vw, 76px);
+      }
+
+      .data-list {
+        display: grid;
+        border-top: 1px solid var(--line);
+      }
+
+      .data-row {
+        display: grid;
+        grid-template-columns: minmax(110px, 0.35fr) 1fr;
+        gap: var(--space-5);
+        border-bottom: 1px solid var(--line);
+        padding: var(--space-4) 0;
+      }
+
+      .data-row dt {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .data-row dd {
+        margin: 0;
+        color: var(--ink);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .data-row small {
+        display: block;
+        margin-top: var(--space-1);
+        color: var(--soft);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .split-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-7);
+      }
+
+      .split-list > div + div {
+        border-left: 1px solid var(--line);
+        padding-left: var(--space-7);
+      }
+
+      .list-title {
+        margin-bottom: var(--space-4);
+        color: var(--ink);
+        font-size: 15px;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      li {
+        position: relative;
+        margin-top: var(--space-2);
+        padding-left: 20px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      li::before {
+        content: "";
+        position: absolute;
+        top: 0.67em;
+        left: 0;
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--soft);
+      }
+
+      .next-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .next-item {
+        padding: var(--space-5) var(--space-6) 0 0;
+      }
+
+      .next-item + .next-item {
+        padding-left: 0;
+      }
+
+      .step-index {
+        display: inline-grid;
+        width: 28px;
+        height: 28px;
+        margin-bottom: var(--space-4);
+        place-items: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .next-item h3 {
+        margin-bottom: var(--space-3);
+        font-size: 17px;
+        font-weight: 500;
+      }
+
+      .todo-list {
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .todo-button {
+        display: grid;
+        width: 100%;
+        min-height: 44px;
+        grid-template-columns: 1fr auto;
+        gap: var(--space-3);
+        align-items: center;
+        border: 0;
+        border-bottom: 1px solid rgba(245, 245, 247, 0.12);
+        background: transparent;
+        color: var(--muted);
+        padding: 9px 0;
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.55;
+        cursor: pointer;
+      }
+
+      .todo-dot {
+        position: relative;
+        width: 22px;
+        height: 22px;
+        border: 2px solid rgba(245, 245, 247, 0.34);
+        border-radius: 999px;
+      }
+
+      .todo-button[aria-pressed="true"] {
+        color: var(--ink);
+      }
+
+      .todo-button[aria-pressed="true"] .todo-dot {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 8px rgba(245, 245, 247, 0.08);
+      }
+
+      .todo-button[aria-pressed="true"] .todo-dot::after {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border-radius: 999px;
+        background: var(--ink);
+      }
+
+      .share-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+        gap: clamp(40px, 7vw, 88px);
+        align-items: center;
+      }
+
+      .share-card {
+        aspect-ratio: 4 / 5;
+        display: grid;
+        align-content: space-between;
+        border: 1px solid var(--line-strong);
+        border-radius: 8px;
+        background:
+          linear-gradient(180deg, rgba(245, 245, 247, 0.06), rgba(245, 245, 247, 0.02)),
+          #000;
+        padding: var(--space-6);
+      }
+
+      .share-brand {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .share-card h3 {
+        max-width: 300px;
+        margin-top: var(--space-7);
+        font-size: clamp(32px, 6vw, 52px);
+        font-weight: 520;
+        letter-spacing: -0.04em;
+        line-height: 1.04;
+      }
+
+      .share-card p {
+        margin-top: var(--space-4);
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .share-foot {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+        border-top: 1px solid var(--line);
+        padding-top: var(--space-4);
+      }
+
+      .share-foot span {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+
+      .share-foot strong {
+        display: block;
+        margin-top: var(--space-1);
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .share-copy {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.75;
+      }
+
+      .footer-note {
+        max-width: 780px;
+        padding-top: var(--space-4);
+        color: var(--soft);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      @media (min-width: 860px) {
+        .nav {
+          display: flex;
+        }
+
+        .menu-button {
+          display: none;
+        }
+      }
+
+      @media (min-width: 1800px) {
+        :root {
+          --page: min(calc(100% - 120px), 1480px);
+        }
+
+        h1 {
+          font-size: 104px;
+        }
+
+        .hero-copy,
+        .dimension-copy,
+        .share-copy {
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 859px) {
+        :root {
+          --page: min(calc(100% - 40px), 720px);
+        }
+
+        main {
+          padding-top: var(--space-5);
+        }
+
+        .topbar-inner {
+          height: 56px;
+        }
+
+        .report-hero,
+        .dimensions-layout,
+        .two-column,
+        .share-layout {
+          grid-template-columns: 1fr;
+          gap: var(--space-6);
+        }
+
+        .metadata {
+          margin-top: 0;
+        }
+
+        .meta-actions {
+          justify-content: flex-start;
+          margin-bottom: var(--space-5);
+        }
+
+        .back-link {
+          margin-bottom: var(--space-5);
+        }
+
+        h1 {
+          font-size: clamp(42px, 13vw, 70px);
+        }
+
+        .radar-wrap {
+          min-height: 330px;
+        }
+
+        .dimension-row,
+        .data-row {
+          grid-template-columns: 1fr;
+          gap: var(--space-3);
+        }
+
+        .split-list,
+        .next-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .split-list > div + div,
+        .next-item + .next-item {
+          border-left: 0;
+          border-top: 0;
+          padding-left: 0;
+          margin-top: var(--space-5);
+          padding-top: 0;
+        }
+
+        .next-item {
+          padding-right: 0;
+        }
+      }
+
+      @media (max-width: 430px) {
+        :root {
+          --page: calc(100% - 32px);
+        }
+
+        .hero-actions {
+          display: grid;
+        }
+
+        .button {
+          justify-content: center;
+        }
+
+        .radar {
+          width: min(78vw, 300px);
+        }
+
+        .radar-label {
+          font-size: 13px;
+        }
+
+        .share-card {
+          padding: var(--space-5);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="human-3-ui-v2.html">HUMAN 3.0</a>
+        <nav class="nav" aria-label="主导航">
+          <div class="nav-item">
+            <button class="nav-trigger" type="button">概览</button>
+            <div class="submenu">
+              <div class="submenu-inner">
+                <div><div class="submenu-kicker">Overview</div><div class="submenu-title">理解 HUMAN 3.0 的四象限模型。</div></div>
+                <div class="submenu-column"><span>模型</span><a href="human-3-ui-v2.html#why">为什么需要</a><a href="human-3-ui-v2.html#quadrants">四象限</a></div>
+                <div class="submenu-column"><span>层级</span><a href="human-3-ui-v2.html#levels">发展层级</a><a href="human-3-ui-v2.html#flow">评估流程</a></div>
+                <div class="submenu-column"><span>入口</span><a href="human-3-ui-v2.html">首页</a><a href="human-3-assessment-v2.html">开始评估</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button">测试</button>
+            <div class="submenu">
+              <div class="submenu-inner">
+                <div><div class="submenu-kicker">Assessment</div><div class="submenu-title">完成 48 题，看见当前状态。</div></div>
+                <div class="submenu-column"><span>当前</span><a href="human-3-assessment-v2.html">继续答题</a><a href="human-3-assessment-v2.html">查看进度</a></div>
+                <div class="submenu-column"><span>说明</span><a href="human-3-ui-v2.html#flow">评估流程</a><a href="human-3-ui-v2.html#quadrants">测量象限</a></div>
+                <div class="submenu-column"><span>边界</span><a href="#limits">不显示原始分数</a><a href="human-3-ui-v2.html#why">非诊断工具</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button">结果</button>
+            <div class="submenu">
+              <div class="submenu-inner">
+                <div><div class="submenu-kicker">Result</div><div class="submenu-title">阶段、象限、卡点和下一步行动。</div></div>
+                <div class="submenu-column"><span>报告</span><a href="#dimensions">四象限状态</a><a href="#state">当前状态</a></div>
+                <div class="submenu-column"><span>分析</span><a href="#pattern">状态模式</a><a href="#blindspots">优势盲点</a></div>
+                <div class="submenu-column"><span>行动</span><a href="#next">下一步行动</a><a href="#share">分享卡片</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button">支持</button>
+            <div class="submenu">
+              <div class="submenu-inner">
+                <div><div class="submenu-kicker">Support</div><div class="submenu-title">帮助、边界和产品说明。</div></div>
+                <div class="submenu-column"><span>帮助</span><a href="#">常见问题</a><a href="#">反馈问题</a></div>
+                <div class="submenu-column"><span>边界</span><a href="#limits">结果边界</a><a href="#">隐私说明</a></div>
+                <div class="submenu-column"><span>联系</span><a href="#">支持入口</a><a href="human-3-ui-v2.html">返回首页</a></div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <button class="menu-button" id="menu-button" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMobileMenu()">≡</button>
+      </div>
+      <nav class="mobile-menu" id="mobile-menu" data-open="false" data-view="root" aria-label="移动端菜单">
+        <button class="mobile-menu-close" type="button" aria-label="关闭菜单" onclick="closeMobileMenu()">×</button>
+        <div class="mobile-menu-track">
+          <div class="mobile-menu-screen">
+            <div class="mobile-menu-heading">Menu</div>
+            <button class="mobile-module" type="button" onclick="openMobileModule('overview')">概览 <span>Overview</span></button>
+            <button class="mobile-module" type="button" onclick="openMobileModule('assessment')">测试 <span>Assessment</span></button>
+            <button class="mobile-module" type="button" onclick="openMobileModule('result')">结果 <span>Result</span></button>
+            <button class="mobile-module" type="button" onclick="openMobileModule('support')">支持 <span>Support</span></button>
+          </div>
+          <div class="mobile-menu-screen">
+            <button class="mobile-back" type="button" onclick="backMobileMenu()">‹ 返回</button>
+            <div class="mobile-detail-title" id="mobile-detail-title">概览</div>
+            <div class="mobile-subitems" data-panel="overview">
+              <a class="mobile-subitem" href="human-3-ui-v2.html#why">为什么需要 <span>模型</span></a>
+              <a class="mobile-subitem" href="human-3-ui-v2.html#quadrants">四象限 <span>系统</span></a>
+              <a class="mobile-subitem" href="human-3-ui-v2.html#levels">发展层级 <span>层级</span></a>
+            </div>
+            <div class="mobile-subitems" data-panel="assessment">
+              <a class="mobile-subitem" href="human-3-assessment-v2.html">继续答题 <span>当前</span></a>
+              <a class="mobile-subitem" href="human-3-ui-v2.html#flow">评估流程 <span>说明</span></a>
+              <a class="mobile-subitem" href="human-3-assessment-v2.html">重新开始 <span>状态</span></a>
+            </div>
+            <div class="mobile-subitems" data-panel="result">
+              <a class="mobile-subitem" href="#dimensions">四象限状态 <span>报告</span></a>
+              <a class="mobile-subitem" href="#pattern">状态模式 <span>分析</span></a>
+              <a class="mobile-subitem" href="#next">下一步行动 <span>行动</span></a>
+            </div>
+            <div class="mobile-subitems" data-panel="support">
+              <a class="mobile-subitem" href="#limits">结果边界 <span>边界</span></a>
+              <a class="mobile-subitem" href="#">常见问题 <span>帮助</span></a>
+              <a class="mobile-subitem" href="human-3-ui-v2.html">返回首页 <span>首页</span></a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="report-hero" aria-labelledby="report-title">
+        <div>
+          <a class="back-link" href="human-3-assessment-v2.html">← 返回问卷</a>
+          <p class="eyebrow">Your Human Pattern Report</p>
+          <h1 id="report-title">认知主导的不确定探索者</h1>
+          <p class="hero-subtitle">Mind + Vocation</p>
+          <div class="hero-tags" aria-label="状态关键词">
+            <span>结构化理解</span>
+            <span>系统搭建</span>
+            <span>价值转化</span>
+          </div>
+          <p class="hero-copy">
+            你已经能用清晰的思考处理复杂问题，也开始把能力转化成长期价值。当前的关键不是继续堆更多方法，而是让身体节奏和意义感重新成为系统的一部分。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#next">查看下一步</a>
+            <a class="button" href="#share">保存分享卡片</a>
+          </div>
+        </div>
+
+        <aside class="metadata" aria-label="结果元信息">
+          <div class="meta-actions">
+            <a class="button" href="#share">↓ 下载完整报告</a>
+          </div>
+          <dl class="meta-table">
+            <div class="meta-row">
+              <dt>Current Stage</dt>
+              <dd>Human 2.2 · 不确定重组期</dd>
+            </div>
+            <div class="meta-row">
+              <dt>Phase</dt>
+              <dd>Transition / Uncertainty</dd>
+            </div>
+            <div class="meta-row">
+              <dt>Dominant</dt>
+              <dd>Mind, Vocation</dd>
+            </div>
+            <div class="meta-row">
+              <dt>Limiting</dt>
+              <dd>Body / 身体系统</dd>
+            </div>
+            <div class="meta-row">
+              <dt>Report ID</dt>
+              <dd>H3-24-0624-2030</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="report-section" id="dimensions" aria-labelledby="dimensions-title">
+        <div class="section-title">
+          <h2 id="dimensions-title">1. 你的四象限状态</h2>
+        </div>
+        <div class="dimensions-layout">
+          <div class="radar-wrap" aria-label="四象限发展图">
+            <svg class="radar" viewBox="0 0 320 320" role="img" aria-label="Mind 和 Vocation 较强，Body 是限制象限">
+              <line x1="160" y1="28" x2="160" y2="292" stroke="rgba(245,245,247,.12)" />
+              <line x1="28" y1="160" x2="292" y2="160" stroke="rgba(245,245,247,.12)" />
+              <polygon points="160,66 246,160 160,232 82,160" fill="rgba(245,245,247,.08)" stroke="rgba(245,245,247,.88)" stroke-width="2" />
+              <circle cx="160" cy="66" r="3" fill="#f5f5f7" />
+              <circle cx="246" cy="160" r="3" fill="#f5f5f7" />
+              <circle cx="160" cy="232" r="3" fill="#f5f5f7" />
+              <circle cx="82" cy="160" r="3" fill="#f5f5f7" />
+            </svg>
+            <div class="radar-label label-mind">Mind<span>2.3 · 已有基础</span></div>
+            <div class="radar-label label-body">Body<span>1.3 · 需要支撑</span></div>
+            <div class="radar-label label-spirit">Spirit<span>2.1 · 正在形成</span></div>
+            <div class="radar-label label-vocation">Vocation<span>2.3 · 已有基础</span></div>
+          </div>
+
+          <div class="dimension-list">
+            <div class="dimension-row">
+              <div class="dimension-main">
+                <div class="dimension-name">Mind <span>2.3</span></div>
+                <div class="bar"><i style="width: 78%"></i></div>
+                <div class="dimension-state">已有基础 · 主导象限</div>
+              </div>
+              <p class="dimension-copy">你擅长拆解问题、组织信息，并能把混乱状态整理成可行动结构。需要留意的是，过度分析会让你推迟真实行动。</p>
+            </div>
+            <div class="dimension-row">
+              <div class="dimension-main">
+                <div class="dimension-name">Body <span>1.3</span></div>
+                <div class="bar"><i style="width: 42%"></i></div>
+                <div class="dimension-state">局部行动 · 限制象限</div>
+              </div>
+              <p class="dimension-copy">你的身体系统还没有稳定承载当前的认知负荷。睡眠、运动、恢复和压力调节会直接影响整体判断质量。</p>
+            </div>
+            <div class="dimension-row">
+              <div class="dimension-main">
+                <div class="dimension-name">Spirit <span>2.1</span></div>
+                <div class="bar"><i style="width: 58%"></i></div>
+                <div class="dimension-state">正在形成 · 需要表达</div>
+              </div>
+              <p class="dimension-copy">你有意义感和关系意识，但还容易把它们放在效率之后。更稳定的连接会让你不只靠意志力推进。</p>
+            </div>
+            <div class="dimension-row">
+              <div class="dimension-main">
+                <div class="dimension-name">Vocation <span>2.3</span></div>
+                <div class="bar"><i style="width: 74%"></i></div>
+                <div class="dimension-state">已有基础 · 价值转化</div>
+              </div>
+              <p class="dimension-copy">你正在把能力转成作品、系统或可复用价值。下一阶段的关键，是让影响力建立在可持续节奏上。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section two-column" id="state" aria-labelledby="state-title">
+        <div>
+          <div class="section-title">
+            <h2 id="state-title">2. 当前状态</h2>
+          </div>
+          <dl class="data-list">
+            <div class="data-row">
+              <dt>整体阶段</dt>
+              <dd>Human 2.2 · 不确定重组期<small>你已经离开默认路径，但新系统还没有完全稳定。</small></dd>
+            </div>
+            <div class="data-row">
+              <dt>主要阶段</dt>
+              <dd>Transition<small>探索、实验、重组和筛选正在同时发生。</small></dd>
+            </div>
+            <div class="data-row">
+              <dt>发展方向</dt>
+              <dd>走向 Human 3.0<small>重点不是更努力，而是让四象限能够协同工作。</small></dd>
+            </div>
+          </dl>
+        </div>
+
+        <div id="pattern">
+          <div class="section-title">
+            <h2>3. 你的状态模式</h2>
+          </div>
+          <dl class="data-list">
+            <div class="data-row">
+              <dt>生活模式</dt>
+              <dd>系统优化者<small>你倾向于优化结构和流程，但可能忽略身体信号与情绪反馈。</small></dd>
+            </div>
+            <div class="data-row">
+              <dt>Metatype</dt>
+              <dd>认知型建设者<small>Mind + Vocation 是当前最容易调动的组合。</small></dd>
+            </div>
+            <div class="data-row">
+              <dt>核心问题</dt>
+              <dd>如何让能力增长不再以透支为代价，并真正沉淀为长期系统。</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="report-section" id="blindspots" aria-labelledby="blindspots-title">
+        <div class="section-title">
+          <h2 id="blindspots-title">4. 优势与盲点</h2>
+        </div>
+        <div class="split-list">
+          <div>
+            <p class="list-title">你的优势</p>
+            <ul>
+              <li>能够快速把复杂信息整理成结构。</li>
+              <li>愿意为长期价值搭建系统，而不是只解决眼前问题。</li>
+              <li>有较强的自我要求和持续改进意识。</li>
+              <li>能把抽象想法转成计划、作品或方法论。</li>
+            </ul>
+          </div>
+          <div>
+            <p class="list-title">当前盲点</p>
+            <ul>
+              <li>容易把休息视为低优先级，直到身体被迫提醒你。</li>
+              <li>在不确定期会过度寻找确定答案，推迟试错。</li>
+              <li>对意义和关系的需求表达偏晚，容易独自消化压力。</li>
+              <li>把价值创造和个人消耗绑定得太紧。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section" id="next" aria-labelledby="next-title">
+        <div class="section-title">
+          <h2 id="next-title">5. 下一步行动</h2>
+        </div>
+        <div class="next-grid">
+          <div class="next-item">
+            <span class="step-index">01</span>
+            <h3>先稳定 Body</h3>
+            <div class="todo-list" aria-label="先稳定 Body 的待办事项">
+              <button class="todo-button" type="button" aria-pressed="true"><span>连续 7 天固定一个睡眠收尾动作。</span><i class="todo-dot"></i></button>
+              <button class="todo-button" type="button" aria-pressed="false"><span>每天安排 20 分钟低门槛身体活动。</span><i class="todo-dot"></i></button>
+              <button class="todo-button" type="button" aria-pressed="false"><span>记录压力峰值出现前的身体信号。</span><i class="todo-dot"></i></button>
+            </div>
+          </div>
+          <div class="next-item">
+            <span class="step-index">02</span>
+            <h3>给 Spirit 留位置</h3>
+            <div class="todo-list" aria-label="给 Spirit 留位置的待办事项">
+              <button class="todo-button" type="button" aria-pressed="false"><span>每周和一个可信任的人做一次真实复盘。</span><i class="todo-dot"></i></button>
+              <button class="todo-button" type="button" aria-pressed="false"><span>把“我为什么继续”写成 5 句话。</span><i class="todo-dot"></i></button>
+              <button class="todo-button" type="button" aria-pressed="false"><span>在计划里保留关系和恢复，而不是只保留产出。</span><i class="todo-dot"></i></button>
+            </div>
+          </div>
+          <div class="next-item">
+            <span class="step-index">03</span>
+            <h3>让 Vocation 可持续</h3>
+            <div class="todo-list" aria-label="让 Vocation 可持续的待办事项">
+              <button class="todo-button" type="button" aria-pressed="false"><span>挑一个正在推进的项目，删掉一个非必要目标。</span><i class="todo-dot"></i></button>
+              <button class="todo-button" type="button" aria-pressed="false"><span>把能力沉淀成可复用流程，而不是只靠临场发挥。</span><i class="todo-dot"></i></button>
+              <button class="todo-button" type="button" aria-pressed="false"><span>用 30 天观察节奏，而不是只看单日效率。</span><i class="todo-dot"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section" id="share" aria-labelledby="share-title">
+        <div class="section-title">
+          <h2 id="share-title">6. 分享卡片</h2>
+        </div>
+        <div class="share-layout">
+          <div class="share-card" aria-label="分享卡片预览">
+            <div>
+              <div class="share-brand"><span>HUMAN 3.0</span><span>Human 2.2</span></div>
+              <h3>认知主导的不确定探索者</h3>
+              <p>你正在把能力转化成系统，但真正的下一步，是让身体、意义与事业重新协同。</p>
+            </div>
+            <div class="share-foot">
+              <div><span>Dominant</span><strong>Mind + Vocation</strong></div>
+              <div><span>Focus</span><strong>Body System</strong></div>
+            </div>
+          </div>
+          <div>
+            <p class="share-copy">
+              分享卡片适合截图、保存或转发。它只展示阶段、主导象限、当前重点和一句核心洞察，不展示原始分数，也不把结果包装成固定人格标签。
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#">保存卡片</a>
+              <a class="button" href="#">复制结果链接</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="footer-note" id="limits">
+        HUMAN 3.0 是自我发展评估，不是医学、心理诊断或职业诊断。结果呈现的是一次当前状态快照，适合用于复盘、讨论和行动设计；建议每 3-6 个月重新评估一次。
+      </p>
+    </main>
+
+    <script>
+      const menuButton = document.getElementById("menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const detailTitle = document.getElementById("mobile-detail-title");
+      const subPanels = document.querySelectorAll("[data-panel]");
+      const todoButtons = document.querySelectorAll(".todo-button");
+      const moduleLabels = {
+        overview: "概览",
+        assessment: "测试",
+        result: "结果",
+        support: "支持",
+      };
+
+      function setMenuOpen(isOpen) {
+        mobileMenu.dataset.open = String(isOpen);
+        document.body.classList.toggle("menu-open", isOpen);
+        document.body.style.overflow = isOpen ? "hidden" : "";
+        mobileMenu.dataset.view = "root";
+        document.body.classList.remove("menu-detail");
+        subPanels.forEach((panel) => {
+          panel.dataset.active = "false";
+        });
+        menuButton.setAttribute("aria-expanded", String(isOpen));
+      }
+
+      window.toggleMobileMenu = function () {
+        setMenuOpen(mobileMenu.dataset.open !== "true");
+      };
+
+      window.closeMobileMenu = function () {
+        setMenuOpen(false);
+      };
+
+      window.backMobileMenu = function () {
+        mobileMenu.dataset.view = "root";
+        document.body.classList.remove("menu-detail");
+      };
+
+      window.openMobileModule = function (module) {
+        subPanels.forEach((panel) => {
+          panel.dataset.active = String(panel.dataset.panel === module);
+        });
+        detailTitle.textContent = moduleLabels[module] || "";
+        mobileMenu.dataset.view = "detail";
+        document.body.classList.add("menu-detail");
+      };
+
+      document.addEventListener("click", (event) => {
+        if (mobileMenu.dataset.open !== "true") return;
+        if (mobileMenu.contains(event.target) || menuButton.contains(event.target)) return;
+        setMenuOpen(false);
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setMenuOpen(false);
+      });
+
+      todoButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const isPressed = button.getAttribute("aria-pressed") === "true";
+          button.setAttribute("aria-pressed", String(!isPressed));
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HUMAN 3.0 问卷页原型</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --black: #000;
+        --ink: #f5f5f7;
+        --muted: rgba(245, 245, 247, 0.68);
+        --soft: rgba(245, 245, 247, 0.46);
+        --line: rgba(245, 245, 247, 0.2);
+        --line-strong: rgba(245, 245, 247, 0.34);
+        --panel: rgba(245, 245, 247, 0.035);
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 24px;
+        --space-6: 32px;
+        --space-7: 48px;
+        --space-8: 64px;
+        --page: min(calc(100% - 32px), 1180px);
+        --shell-width: 760px;
+        --shell-min-height: calc(100svh - 120px);
+        --pane-gap: 32px;
+        --pane-pad: 64px;
+        --progress-width: 360px;
+        --question-width: 560px;
+        --question-size: 40px;
+        --question-leading: 1.22;
+        --options-width: 600px;
+        --option-gap: 24px;
+        --control-size: 52px;
+        --dot-size: 22px;
+        --display:
+          -apple-system,
+          BlinkMacSystemFont,
+          "SF Pro Display",
+          "PingFang SC",
+          "Noto Sans SC",
+          "Microsoft YaHei",
+          sans-serif;
+        --mono:
+          "SFMono-Regular",
+          "SF Mono",
+          Consolas,
+          ui-monospace,
+          monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--black);
+      }
+
+      body {
+        min-height: 100svh;
+        margin: 0;
+        background: #000;
+        color: var(--ink);
+        font-family: var(--display);
+      }
+
+      a,
+      button {
+        color: inherit;
+        font: inherit;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      button {
+        appearance: none;
+      }
+
+      :focus-visible {
+        outline: 2px solid #f5f5f7;
+        outline-offset: 4px;
+      }
+
+      .page {
+        min-height: 100svh;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.88);
+        backdrop-filter: blur(18px);
+      }
+
+      body.menu-open .topbar {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: #000;
+        backdrop-filter: none;
+      }
+
+      .topbar-inner {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        width: var(--page);
+        height: 60px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+      }
+
+      .brand {
+        font-size: 15px;
+        font-weight: 650;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .nav {
+        display: none;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--soft);
+        font-size: 14px;
+      }
+
+      .nav-item {
+        position: relative;
+      }
+
+      .nav-item::after {
+        content: "";
+        position: fixed;
+        top: 38px;
+        right: 0;
+        left: 0;
+        z-index: 8;
+        display: none;
+        height: 22px;
+      }
+
+      .nav-trigger {
+        display: inline-flex;
+        min-height: 38px;
+        align-items: center;
+        border: 0;
+        background: transparent;
+        color: var(--soft);
+        padding: 0 var(--space-3);
+        cursor: default;
+      }
+
+      .nav-item:hover .nav-trigger,
+      .nav-item:focus-within .nav-trigger {
+        color: var(--ink);
+      }
+
+      .nav-item:hover::after,
+      .nav-item:focus-within::after {
+        display: block;
+      }
+
+      .submenu {
+        position: fixed;
+        top: 60px;
+        right: 0;
+        left: 0;
+        z-index: 9;
+        display: none;
+        width: 100%;
+        min-height: 260px;
+        background: rgba(0, 0, 0, 0.96);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav-item:hover .submenu,
+      .nav-item:focus-within .submenu {
+        display: block;
+      }
+
+      .submenu-inner {
+        display: grid;
+        width: var(--page);
+        grid-template-columns: 260px repeat(3, minmax(0, 1fr));
+        gap: var(--space-6);
+        margin: 0 auto;
+        padding: var(--space-6) 0 var(--space-7);
+      }
+
+      .submenu-kicker,
+      .submenu-column span {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .submenu-title {
+        margin-top: var(--space-3);
+        color: var(--ink);
+        font-size: 28px;
+        font-weight: 650;
+        letter-spacing: -0.04em;
+        line-height: 1.14;
+      }
+
+      .submenu-column {
+        display: grid;
+        align-content: start;
+        gap: var(--space-2);
+      }
+
+      .submenu-column a {
+        color: var(--ink);
+        font-size: 15px;
+        line-height: 22px;
+      }
+
+      .submenu-column a:hover {
+        color: #fff;
+      }
+
+      .menu-button {
+        position: relative;
+        z-index: 12;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      body.menu-open .menu-button {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .mobile-menu {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: none;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .mobile-menu[data-open="true"],
+      body.menu-open .mobile-menu {
+        display: block;
+        animation: menuReveal 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .mobile-menu-track {
+        display: grid;
+        width: 200%;
+        height: 100%;
+        grid-template-columns: 1fr 1fr;
+        transform: translateX(0);
+        transition: transform 720ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .mobile-menu[data-view="detail"] .mobile-menu-track,
+      .mobile-menu.is-detail .mobile-menu-track,
+      body.menu-detail .mobile-menu-track {
+        transform: translateX(-50%);
+      }
+
+      .mobile-menu-screen {
+        display: grid;
+        align-content: start;
+        gap: var(--space-5);
+        min-width: 0;
+        min-height: 100svh;
+        padding: 92px max(24px, calc((100vw - 390px) / 2 + 24px)) 32px;
+      }
+
+      .mobile-menu-heading {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .mobile-module,
+      .mobile-subitem,
+      .mobile-back {
+        display: flex;
+        min-height: 64px;
+        align-items: center;
+        justify-content: space-between;
+        border: 0;
+        border-bottom: 1px solid rgba(245, 245, 247, 0.12);
+        background: transparent;
+        color: var(--ink);
+        padding: 0;
+        text-align: left;
+        font-size: 28px;
+        font-weight: 520;
+        letter-spacing: -0.04em;
+      }
+
+      .mobile-module span,
+      .mobile-subitem span,
+      .mobile-back span {
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0;
+      }
+
+      .mobile-subitems {
+        display: none;
+        gap: var(--space-2);
+      }
+
+      .mobile-subitems[data-active="true"] {
+        display: grid;
+      }
+
+      .mobile-back {
+        min-height: 48px;
+        justify-content: flex-start;
+        gap: var(--space-3);
+        border-bottom: 0;
+        color: var(--soft);
+        font-size: 14px;
+        font-weight: 520;
+        letter-spacing: 0;
+      }
+
+      .mobile-detail-title {
+        color: var(--ink);
+        font-size: 36px;
+        font-weight: 620;
+        letter-spacing: -0.05em;
+        line-height: 1.1;
+      }
+
+      .mobile-menu-close {
+        position: absolute;
+        top: 18px;
+        right: max(22px, calc((100vw - 390px) / 2 + 22px));
+        z-index: 4;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      @keyframes menuReveal {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .assessment {
+        display: grid;
+        width: var(--page);
+        margin: 0 auto;
+        padding: var(--space-8) 0;
+      }
+
+      .assessment-shell {
+        width: min(100%, var(--shell-width));
+        min-height: var(--shell-min-height);
+        justify-self: center;
+      }
+
+      .assessment-grid {
+        display: grid;
+        min-height: inherit;
+      }
+
+      .question-pane {
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--pane-gap);
+        padding: var(--pane-pad);
+        text-align: center;
+      }
+
+      .count {
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .progress {
+        display: grid;
+        width: min(100%, var(--progress-width));
+        justify-items: center;
+        gap: var(--space-3);
+      }
+
+      .segments {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .segments span {
+        height: 2px;
+        background: rgba(245, 245, 247, 0.2);
+      }
+
+      .segments .done,
+      .segments .current {
+        background: var(--ink);
+      }
+
+      .question {
+        max-width: var(--question-width);
+        font-size: var(--question-size);
+        font-weight: 430;
+        letter-spacing: -0.04em;
+        line-height: var(--question-leading);
+      }
+
+      .options {
+        display: grid;
+        width: min(100%, var(--options-width));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: var(--option-gap);
+        align-items: end;
+      }
+
+      .option {
+        display: grid;
+        justify-items: center;
+        gap: var(--space-4);
+        border: 0;
+        background: transparent;
+        color: var(--soft);
+        cursor: pointer;
+      }
+
+      .option span {
+        min-height: 34px;
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      .dot {
+        position: relative;
+        width: var(--dot-size);
+        height: var(--dot-size);
+        border: 2px solid rgba(245, 245, 247, 0.34);
+        border-radius: 50%;
+      }
+
+      .dot::after {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border-radius: 50%;
+        background: transparent;
+      }
+
+      .option[aria-checked="true"] {
+        color: var(--ink);
+      }
+
+      .option[aria-checked="true"] .dot {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 5px rgba(245, 245, 247, 0.1);
+      }
+
+      .option[aria-checked="true"] .dot::after {
+        background: var(--ink);
+      }
+
+      .controls {
+        display: flex;
+        width: min(100%, var(--options-width));
+        align-items: center;
+        justify-content: space-between;
+        margin-top: var(--space-2);
+      }
+
+      .circle {
+        position: relative;
+        display: grid;
+        width: var(--control-size);
+        height: var(--control-size);
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: transparent;
+        color: var(--ink);
+        font-size: 0;
+        cursor: pointer;
+      }
+
+      .circle::before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        border-top: 3px solid currentColor;
+        border-right: 3px solid currentColor;
+      }
+
+      .circle[data-direction="prev"]::before {
+        transform: translateX(2px) rotate(-135deg);
+      }
+
+      .circle[data-direction="next"]::before {
+        transform: translateX(-2px) rotate(45deg);
+      }
+
+      @media (min-width: 760px) {
+        :root {
+          --page: min(calc(100% - 56px), 1180px);
+        }
+
+        .nav {
+          display: flex;
+        }
+
+        .menu-button {
+          display: none;
+        }
+
+      }
+
+      @media (min-width: 1600px) {
+        :root {
+          --page: min(calc(100% - 96px), 1560px);
+          --shell-width: 1040px;
+          --shell-min-height: calc(100svh - 180px);
+          --pane-gap: 44px;
+          --pane-pad: 96px;
+          --progress-width: 520px;
+          --question-width: 820px;
+          --question-size: 56px;
+          --options-width: 820px;
+          --option-gap: 36px;
+          --control-size: 64px;
+          --dot-size: 26px;
+        }
+
+        .topbar-inner {
+          height: 72px;
+        }
+
+        .brand {
+          font-size: 18px;
+        }
+
+        .nav {
+          font-size: 16px;
+        }
+
+        .count,
+        .option span {
+          font-size: 14px;
+          line-height: 20px;
+        }
+
+        .segments span {
+          height: 3px;
+        }
+      }
+
+      @media (min-width: 2400px) {
+        :root {
+          --page: min(calc(100% - 160px), 1880px);
+          --shell-width: 1280px;
+          --shell-min-height: calc(100svh - 240px);
+          --pane-gap: 56px;
+          --pane-pad: 120px;
+          --progress-width: 640px;
+          --question-width: 980px;
+          --question-size: 68px;
+          --options-width: 980px;
+          --option-gap: 48px;
+          --control-size: 76px;
+          --dot-size: 30px;
+        }
+      }
+
+      @media (max-width: 759px) {
+        :root {
+          --shell-min-height: calc(100svh - 86px);
+          --pane-gap: 24px;
+          --pane-pad: 32px 24px;
+          --progress-width: 320px;
+          --question-width: 100%;
+          --question-size: 28px;
+          --question-leading: 1.25;
+          --options-width: 100%;
+          --option-gap: 0;
+          --control-size: 52px;
+          --dot-size: 22px;
+        }
+
+        .topbar-inner {
+          height: 54px;
+        }
+
+        .assessment {
+          padding: var(--space-4) 0;
+        }
+
+        .assessment-shell {
+          min-height: var(--shell-min-height);
+        }
+
+        .assessment-grid {
+          min-height: var(--shell-min-height);
+        }
+
+        .question-pane {
+          min-height: inherit;
+          align-content: center;
+        }
+
+        .options {
+          grid-template-columns: 1fr;
+          text-align: left;
+        }
+
+        .option {
+          grid-template-columns: 1fr auto;
+          justify-items: stretch;
+          align-items: center;
+          border-bottom: 1px solid rgba(245, 245, 247, 0.12);
+          padding: 13px 0;
+        }
+
+        .option span {
+          min-height: 0;
+          font-size: 13px;
+        }
+
+        .controls {
+          position: sticky;
+          bottom: var(--space-4);
+          margin-top: var(--space-3);
+        }
+      }
+
+      @media (max-width: 380px) {
+        :root {
+          --pane-gap: 18px;
+          --pane-pad: 24px 18px;
+          --progress-width: 280px;
+          --question-size: 23px;
+          --control-size: 44px;
+          --dot-size: 20px;
+        }
+
+        .topbar-inner {
+          height: 48px;
+        }
+
+        .brand {
+          font-size: 14px;
+        }
+
+        .menu-button {
+          font-size: 20px;
+        }
+
+        .assessment {
+          padding: 10px 0;
+        }
+
+        .assessment-shell,
+        .assessment-grid {
+          min-height: calc(100svh - 68px);
+        }
+
+        .count,
+        .option span {
+          font-size: 12px;
+        }
+
+        .option {
+          padding: 10px 0;
+        }
+
+        .circle::before {
+          width: 10px;
+          height: 10px;
+          border-width: 2px;
+        }
+      }
+
+      @media (max-height: 700px) {
+        :root {
+          --pane-gap: 18px;
+          --pane-pad: 22px 24px;
+          --question-size: 23px;
+          --control-size: 44px;
+        }
+
+        .assessment {
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+
+        .option {
+          padding-top: 9px;
+          padding-bottom: 9px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a class="brand" href="human-3-ui-v2.html">HUMAN 3.0</a>
+          <nav class="nav" aria-label="问卷导航">
+            <div class="nav-item">
+              <button class="nav-trigger" type="button">概览</button>
+              <div class="submenu">
+                <div class="submenu-inner">
+                  <div><div class="submenu-kicker">Overview</div><div class="submenu-title">理解 HUMAN 3.0 的基本结构。</div></div>
+                  <div class="submenu-column"><span>模型</span><a href="human-3-ui-v2.html#why">为什么需要</a><a href="human-3-ui-v2.html#quadrants">四象限</a></div>
+                  <div class="submenu-column"><span>层级</span><a href="human-3-ui-v2.html#levels">发展层级</a><a href="human-3-ui-v2.html#false-transformation">假性改变</a></div>
+                  <div class="submenu-column"><span>入口</span><a href="human-3-ui-v2.html">首页</a><a href="human-3-ui-v2.html#preview">报告预览</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="nav-item">
+              <button class="nav-trigger" type="button">测试</button>
+              <div class="submenu">
+                <div class="submenu-inner">
+                  <div><div class="submenu-kicker">Assessment</div><div class="submenu-title">完成 48 题，生成当前状态。</div></div>
+                  <div class="submenu-column"><span>当前</span><a href="#">继续答题</a><a href="#">查看进度</a></div>
+                  <div class="submenu-column"><span>说明</span><a href="human-3-ui-v2.html#flow">评估流程</a><a href="human-3-ui-v2.html#quadrants">测量象限</a></div>
+                  <div class="submenu-column"><span>状态</span><a href="#">自动保存</a><a href="#">重新开始</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="nav-item">
+              <button class="nav-trigger" type="button">结果</button>
+              <div class="submenu">
+                <div class="submenu-inner">
+                  <div><div class="submenu-kicker">Result</div><div class="submenu-title">查看阶段、卡点和下一步行动。</div></div>
+                  <div class="submenu-column"><span>报告</span><a href="human-3-result-v2.html">结果预览</a><a href="human-3-result-v2.html#state">整体阶段</a></div>
+                  <div class="submenu-column"><span>分析</span><a href="#">主导象限</a><a href="#">限制象限</a></div>
+                  <div class="submenu-column"><span>行动</span><a href="human-3-result-v2.html#next">24 小时行动</a><a href="human-3-result-v2.html#next">30 天计划</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="nav-item">
+              <button class="nav-trigger" type="button">支持</button>
+              <div class="submenu">
+                <div class="submenu-inner">
+                  <div><div class="submenu-kicker">Support</div><div class="submenu-title">边界、帮助和产品说明。</div></div>
+                  <div class="submenu-column"><span>帮助</span><a href="#">常见问题</a><a href="#">反馈问题</a></div>
+                  <div class="submenu-column"><span>边界</span><a href="#">非诊断声明</a><a href="#">隐私说明</a></div>
+                  <div class="submenu-column"><span>联系</span><a href="#">支持入口</a><a href="human-3-ui-v2.html">返回首页</a></div>
+                </div>
+              </div>
+            </div>
+          </nav>
+          <button class="menu-button" id="menu-button" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMobileMenu()">≡</button>
+        </div>
+        <nav class="mobile-menu" id="mobile-menu" data-open="false" data-view="root" aria-label="移动端菜单">
+          <button class="mobile-menu-close" type="button" id="close-menu" aria-label="关闭菜单" onclick="closeMobileMenu()">×</button>
+          <div class="mobile-menu-track">
+            <div class="mobile-menu-screen">
+              <div class="mobile-menu-heading">Menu</div>
+              <button class="mobile-module" type="button" data-module="overview" onclick="openMobileModule('overview')">概览 <span>Overview</span></button>
+              <button class="mobile-module" type="button" data-module="assessment" onclick="openMobileModule('assessment')">测试 <span>Assessment</span></button>
+              <button class="mobile-module" type="button" data-module="result" onclick="openMobileModule('result')">结果 <span>Result</span></button>
+              <button class="mobile-module" type="button" data-module="support" onclick="openMobileModule('support')">支持 <span>Support</span></button>
+            </div>
+            <div class="mobile-menu-screen">
+              <button class="mobile-back" type="button" id="menu-back" onclick="backMobileMenu()">‹ 返回</button>
+              <div class="mobile-detail-title" id="mobile-detail-title">概览</div>
+              <div class="mobile-subitems" data-panel="overview">
+                <a class="mobile-subitem" href="human-3-ui-v2.html#why">为什么需要 <span>模型</span></a>
+                <a class="mobile-subitem" href="human-3-ui-v2.html#quadrants">四象限 <span>系统</span></a>
+                <a class="mobile-subitem" href="human-3-ui-v2.html#levels">发展层级 <span>层级</span></a>
+              </div>
+              <div class="mobile-subitems" data-panel="assessment">
+                <a class="mobile-subitem" href="#">继续答题 <span>当前</span></a>
+                <a class="mobile-subitem" href="human-3-ui-v2.html#flow">评估流程 <span>说明</span></a>
+                <a class="mobile-subitem" href="#">重新开始 <span>状态</span></a>
+              </div>
+              <div class="mobile-subitems" data-panel="result">
+                <a class="mobile-subitem" href="human-3-result-v2.html">结果预览 <span>报告</span></a>
+                <a class="mobile-subitem" href="human-3-result-v2.html#state">整体阶段 <span>阶段</span></a>
+                <a class="mobile-subitem" href="human-3-result-v2.html#next">下一步行动 <span>行动</span></a>
+              </div>
+              <div class="mobile-subitems" data-panel="support">
+                <a class="mobile-subitem" href="#">常见问题 <span>帮助</span></a>
+                <a class="mobile-subitem" href="#">非诊断声明 <span>边界</span></a>
+                <a class="mobile-subitem" href="human-3-ui-v2.html">返回首页 <span>首页</span></a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <main class="assessment">
+        <section class="assessment-shell" aria-label="HUMAN 3.0 问卷">
+          <div class="assessment-grid">
+            <section class="question-pane" aria-labelledby="question-title">
+              <div class="progress" aria-label="答题进度">
+                <span class="count">20 / 48</span>
+                <div class="segments" aria-hidden="true">
+                  <span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span>
+                  <span class="current"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+
+              <h2 class="question" id="question-title">我遇到复杂问题时，会先试着拆解结构，而不是马上找答案。</h2>
+
+              <div class="options" role="radiogroup" aria-labelledby="question-title">
+                <button class="option" type="button" role="radio" aria-checked="false"><span>非常不符合</span><i class="dot"></i></button>
+                <button class="option" type="button" role="radio" aria-checked="false"><span>比较不符合</span><i class="dot"></i></button>
+                <button class="option" type="button" role="radio" aria-checked="true"><span>不确定</span><i class="dot"></i></button>
+                <button class="option" type="button" role="radio" aria-checked="false"><span>比较符合</span><i class="dot"></i></button>
+                <button class="option" type="button" role="radio" aria-checked="false"><span>非常符合</span><i class="dot"></i></button>
+              </div>
+
+              <div class="controls">
+                <button class="circle" type="button" aria-label="上一题" data-direction="prev"></button>
+                <button class="circle" type="button" aria-label="下一题" data-direction="next"></button>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.querySelectorAll('[role="radiogroup"]').forEach((group) => {
+        group.querySelectorAll('[role="radio"]').forEach((option) => {
+          option.addEventListener("click", () => {
+            group.querySelectorAll('[role="radio"]').forEach((item) => {
+              item.setAttribute("aria-checked", "false");
+            });
+            option.setAttribute("aria-checked", "true");
+          });
+        });
+      });
+
+      const menuButton = document.getElementById("menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const closeMenu = document.getElementById("close-menu");
+      const menuBack = document.getElementById("menu-back");
+      const detailTitle = document.getElementById("mobile-detail-title");
+      const moduleButtons = document.querySelectorAll("[data-module]");
+      const subPanels = document.querySelectorAll("[data-panel]");
+      const moduleLabels = {
+        overview: "概览",
+        assessment: "测试",
+        result: "结果",
+        support: "支持",
+      };
+
+      function setMenuOpen(isOpen) {
+        mobileMenu.dataset.open = String(isOpen);
+        document.body.classList.toggle("menu-open", isOpen);
+        document.body.style.overflow = isOpen ? "hidden" : "";
+        if (isOpen) {
+          mobileMenu.dataset.view = "root";
+          mobileMenu.classList.remove("is-detail");
+          document.body.classList.remove("menu-detail");
+          subPanels.forEach((panel) => {
+            panel.dataset.active = "false";
+          });
+        } else {
+          mobileMenu.dataset.view = "root";
+          mobileMenu.classList.remove("is-detail");
+          document.body.classList.remove("menu-detail");
+        }
+        menuButton.setAttribute("aria-expanded", String(isOpen));
+        menuButton.textContent = "≡";
+      }
+
+      window.toggleMobileMenu = function () {
+        setMenuOpen(mobileMenu.dataset.open !== "true");
+      };
+
+      window.closeMobileMenu = function () {
+        setMenuOpen(false);
+      };
+
+      window.backMobileMenu = function () {
+        mobileMenu.dataset.view = "root";
+        mobileMenu.classList.remove("is-detail");
+        document.body.classList.remove("menu-detail");
+      };
+
+      window.openMobileModule = function (module) {
+        subPanels.forEach((panel) => {
+          panel.dataset.active = String(panel.dataset.panel === module);
+        });
+        detailTitle.textContent = moduleLabels[module] || "";
+        mobileMenu.dataset.view = "detail";
+        mobileMenu.classList.add("is-detail");
+        document.body.classList.add("menu-detail");
+      };
+
+      document.addEventListener("click", (event) => {
+        if (mobileMenu.dataset.open !== "true") return;
+        if (mobileMenu.contains(event.target) || menuButton.contains(event.target)) return;
+        setMenuOpen(false);
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setMenuOpen(false);
+      });
+    </script>
+  </body>
+</html>
