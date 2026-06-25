@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import questionsData from "@/data/questions.json";
 import { buildShareResultPath } from "@/lib/share-link";
 import { downloadShareCardImage } from "@/lib/share-card-image";
@@ -58,11 +57,14 @@ export function ShareCard({ result }: { result: BuiltResult }) {
   }
 
   return (
-    <section className="space-y-4">
+    <section id="share" className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h2 className="text-xl font-semibold">保存或分享结果</h2>
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="font-mono text-xs text-white/42">SHARE</p>
+          <h2 className="text-3xl font-semibold tracking-normal text-white">
+            保存或分享结果
+          </h2>
+          <p className="text-sm leading-6 text-white/52">
             下载图片适合发给朋友；复制链接可以让别人打开同一份结果。
           </p>
         </div>
@@ -71,7 +73,7 @@ export function ShareCard({ result }: { result: BuiltResult }) {
             type="button"
             variant="outline"
             onClick={() => downloadShareCardImage(result)}
-            className="w-full sm:w-auto"
+            className="w-full border-white/20 bg-transparent text-white hover:bg-white hover:text-black sm:w-auto"
           >
             <Download className="size-4" aria-hidden="true" />
             下载 PNG
@@ -80,7 +82,7 @@ export function ShareCard({ result }: { result: BuiltResult }) {
             type="button"
             variant="outline"
             onClick={copyShareLink}
-            className="w-full sm:w-auto"
+            className="w-full border-white/20 bg-transparent text-white hover:bg-white hover:text-black sm:w-auto"
           >
             {copyState === "copied" ? (
               <Check className="size-4" aria-hidden="true" />
@@ -91,63 +93,60 @@ export function ShareCard({ result }: { result: BuiltResult }) {
           </Button>
         </div>
       </div>
-      <Card className="max-w-xl border-primary/20 bg-card">
-        <CardContent className="space-y-6 p-6">
-          <div className="flex items-center justify-between gap-4">
-            <Badge variant="secondary">{result.shareCard.stageCode}</Badge>
-            <span className="text-sm text-muted-foreground">
-              {result.shareCard.siteName}
-            </span>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,560px)_minmax(280px,1fr)]">
+        <div className="border border-white/12 bg-white/[0.025] p-6">
+          <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-5">
+            <Badge variant="secondary" className="bg-white text-black">
+              {result.shareCard.stageCode}
+            </Badge>
+            <span className="text-sm text-white/45">{result.shareCard.siteName}</span>
           </div>
-          <div className="space-y-3">
-            <p className="text-sm font-medium text-primary">
+          <div className="space-y-4 py-8">
+            <p className="text-sm font-medium text-white/62">
               {result.shareCard.chineseName}
             </p>
-            <p className="font-mono text-sm text-primary">
+            <p className="font-mono text-sm text-white/45">
               {result.shareCard.metatype}
             </p>
-            <h3 className="text-2xl font-semibold">{result.shareCard.title}</h3>
-            <p className="leading-8 text-muted-foreground">
-              {result.shareCard.insight}
-            </p>
+            <h3 className="text-3xl font-semibold leading-tight tracking-normal text-white">
+              {result.shareCard.title}
+            </h3>
+            <p className="leading-8 text-white/62">{result.shareCard.insight}</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full border px-3 py-1 text-sm">
+          <div className="flex flex-wrap gap-2 border-t border-white/10 pt-5">
+            <span className="rounded-full border border-white/14 px-3 py-1 text-sm text-white/68">
               最强支点：{result.shareCard.dominantQuadrant}
             </span>
-            <span className="rounded-full border px-3 py-1 text-sm">
+            <span className="rounded-full border border-white/14 px-3 py-1 text-sm text-white/68">
               当前卡点：{result.shareCard.weakQuadrant}
             </span>
             {result.shareCard.keywords.map((keyword) => (
               <span
                 key={keyword}
-                className="rounded-full bg-secondary px-3 py-1 text-sm text-secondary-foreground"
+                className="rounded-full bg-white/12 px-3 py-1 text-sm text-white/68"
               >
                 {keyword}
               </span>
             ))}
           </div>
-        </CardContent>
-      </Card>
-      <div className="max-w-xl space-y-2">
-        <label
-          htmlFor="share-url"
-          className="text-sm font-medium text-muted-foreground"
-        >
-          结果链接
-        </label>
-        <input
-          id="share-url"
-          readOnly
-          value={shareUrl}
-          className="h-11 w-full rounded-md border bg-card px-3 text-sm text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          onFocus={(event) => event.currentTarget.select()}
-        />
-        {copyState === "failed" ? (
-          <p className="text-sm text-muted-foreground">
-            自动复制失败，可以手动选中上方链接复制。
-          </p>
-        ) : null}
+        </div>
+        <div className="space-y-3">
+          <label htmlFor="share-url" className="text-sm font-medium text-white/58">
+            结果链接
+          </label>
+          <input
+            id="share-url"
+            readOnly
+            value={shareUrl}
+            className="h-12 w-full border border-white/14 bg-black px-3 text-sm text-white/62 outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+            onFocus={(event) => event.currentTarget.select()}
+          />
+          {copyState === "failed" ? (
+            <p className="text-sm text-white/52">
+              自动复制失败，可以手动选中上方链接复制。
+            </p>
+          ) : null}
+        </div>
       </div>
     </section>
   );

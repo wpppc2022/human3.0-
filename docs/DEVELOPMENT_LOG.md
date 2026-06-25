@@ -2,6 +2,16 @@
 
 ## 2026-06-22
 
+### 源头对齐审计
+
+- 完成：联网读取 Dan Koe 原始 HUMAN 3.0 知识库文章，并与当前项目 PRD、模型文档、象限定义和计分规则进行对照。
+- 完成：新增 `docs/SOURCE_ALIGNMENT.md`，记录已对齐内容、未覆盖内容、主动改写内容、暂不纳入内容、命名/产品口径冲突、版权与安全边界。
+- 完成：明确 5 个重要源头对齐缺口：Spirit 被缩窄、Mind 过度理性化、Vocation 缺少资源/系统/杠杆/长期影响、Body 缺少 embodiment/presence、原文实践模板与问题层级未进入当前建议系统。
+- 完成：同步更新 `docs/PRD.md`、`docs/TODO.md`、`docs/HANDOFF.md` 和 `docs/DECISIONS.md`，把源头对齐审计纳入后续工作流。
+- 修改文件：`docs/SOURCE_ALIGNMENT.md`、`docs/PRD.md`、`docs/TODO.md`、`docs/HANDOFF.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：源头概念复杂且包含高风险加速器、文明叙事和版权边界，后续产品化时必须继续做收窄和安全改写。
+- 下一步建议：先在模型/产品文档中补充 1.0 边界说明，再考虑 1.1 行动建议库和 2.0 AI 高级报告。
+
 ### Living PRD 建立
 
 - 完成：新增 `docs/PRD.md`，作为面向用户和后续 AI 的单一产品事实来源。
@@ -307,3 +317,84 @@
 - 修改文件：`lib/types.ts`、`lib/scoring.ts`、`lib/result-builder.ts`、`components/QuadrantMap.tsx`、`tests/scoring.test.ts`、`tests/scoring-calibration.test.ts`、`tests/result-builder.test.ts`、`tests/e2e/assessment-flow.spec.ts`、`docs/SCORING_RULES.md`、`docs/SCORING_CALIBRATION.md`、`docs/QUESTION_BANK_SCORING_TABLE.md`、`docs/MODEL.md`、`docs/DATA_SCHEMA.md`、`docs/USER_FEEDBACK_PLAN.md`、`docs/HANDOFF.md`、`docs/RELEASE_1_0.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
 - 当前风险：评分规则已按规格实现并自动化覆盖，但真实用户对“整体阶段”和“单象限阶段”的理解仍需外部反馈确认。
 - 下一步建议：由总控或工程窗口复核结果页文案层级是否足够克制，并用真实用户样例继续验证新阶段体感。
+
+### 1.0 源头对齐边界文档收口
+
+- 完成：根据 `docs/SOURCE_ALIGNMENT.md` 和模型优先级结论，补齐 1.0 源头对齐边界说明。
+- 完成：更新 `docs/MODEL.md`，扩展四象限定义：Spirit 增加关系、共同体、连接和非宗教化超越；Mind 增加情绪识别、信念校正、觉察、创造力和非诊断性盲点观察；Vocation 增加资源、系统、杠杆和长期影响；Body 增加身体感知、行动承载和稳定在场。
+- 完成：明确当前产品是受 Dan Koe HUMAN 3.0 启发的中文评估工具化改编，不是源头完整复刻，也不是官方测评。
+- 完成：明确 1.0 不评估 Level 4.0+，不纳入 Metacrisis、Channels、Flow、Digital Leverage、Glitches 或高风险实践引导。
+- 完成：明确当前 `Metatype` / `Lifestyle Archetype` 是本项目状态画像字段，不等于源头完整组合系统；1.1 可评估改名为“状态名 / 生活模式 / Human Pattern”。
+- 完成：更新 `docs/RELEASE_1_0.md`、`docs/HANDOFF.md` 和 `docs/TODO.md`，把题库版本、结果模板和行动建议扩展放入 1.1，把高级报告和完整组合系统放入 2.0。
+- 修改文件：`docs/MODEL.md`、`docs/RELEASE_1_0.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：本次只做文档边界收口，没有改题库、结果模板、行动建议或评分；用户实际看到的 1.0 UI 仍主要体现原有模型。
+- 下一步建议：1.1 再制定题库版本和结果/行动建议扩展方案，并配套数据校验和测试更新。
+
+### UI v2 落地整合
+
+- 完成：读取 `ui-prototypes/human-3-ui-v2.html`、`human-3-assessment-v2.html`、`human-3-result-v2.html`，将黑白灰视觉方向、页面结构和核心交互模式整合进现有 Next.js 产品。
+- 完成：新增 `components/SiteNav.tsx`，实现桌面下拉导航和移动端 Apple 式两级全屏菜单，一级包含“概览、测试、结果、支持”。
+- 完成：首页改为 v2 模型解释型结构：Hero、模型说明、四象限、三层级、评估流程、结果预览和边界免责声明。
+- 完成：问卷页改为独立黑底评估界面，保留 `/assessment` 路由、48 题、上一题/下一题、选项选中态、进度保存和刷新恢复。
+- 完成：结果页改为报告式结构，保留整体阶段、主导象限、限制象限、四象限状态/发展阶段、核心判断、行动建议、分享卡片、PNG 下载和复制链接。
+- 完成：下一步行动改成可勾选的待办按钮，行动内容仍来自现有 recommendations/result-builder 数据链路。
+- 完成：全局颜色切换为黑白灰，不引入彩色方案。
+- 完成：启动本地开发服务器，当前可通过 `http://localhost:3000` 预览。
+- 完成：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`app/globals.css`、`app/layout.tsx`、`components/SiteNav.tsx`、`components/AssessmentIntro.tsx`、`components/AssessmentFlow.tsx`、`components/QuestionCard.tsx`、`components/ProgressBar.tsx`、`components/ResultClient.tsx`、`components/SharedResultClient.tsx`、`components/ResultSummary.tsx`、`components/QuadrantMap.tsx`、`components/RecommendationBlock.tsx`、`components/ShareCard.tsx`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 当前风险：原型里的粒子文字动画、复杂滚动 reveal、精细四象限图形和完整调试面板暂未落地；当前优先保证真实业务流程可运行。
+- 下一步建议：交给 UI 视觉与交互窗口复核移动端菜单、问卷选项触控、结果页报告层级、待办按钮和分享卡片，再做第二轮视觉微调。
+
+### UI v2 第一轮复核小修收口
+
+- 完成：接收 UI 视觉与交互重构窗口第一轮复核结果，并核对三处小修只影响展示和交互外壳。
+- 完成：`components/SiteNav.tsx` 在移动端全屏菜单打开时锁定 body 滚动，关闭时恢复。
+- 完成：`components/QuestionCard.tsx` 将题目技术信息改为 `sr-only`，移动端选项改为单列行按钮，移除可见 1-5 数字。
+- 完成：`components/RecommendationBlock.tsx` 将下一步行动复选框视觉改为自定义圆点按钮，同时保留 `sr-only` checkbox 可访问性。
+- 完成：确认没有改动 `data/questions.json`、`lib/scoring.ts`、`lib/result-builder.ts`、localStorage 或分享逻辑。
+- 完成：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`components/SiteNav.tsx`、`components/QuestionCard.tsx`、`components/RecommendationBlock.tsx`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`。
+- 当前风险：问卷页圆形箭头仍偏极简，若真实用户觉得不清楚，可在移动端补极轻文字提示；行动勾选状态暂不持久化。
+- 下一步建议：总控可派工程质量窗口做最终代码/可访问性复核，或直接进入外部用户和真机验收。
+
+### P0 UI 纠偏：静态原型产品化
+
+- 完成：根据总控和 UI 窗口最新验收标准，停止“基于原型方向整合/近似复刻”路线，改为直接把 `ui-prototypes/` 三份静态 HTML/CSS/JS 产品化为真实 Next.js 页面。
+- 完成：首页迁移 `human-3-ui-v2.html` 的模型叙事结构、首屏粒子文字画布、四象限、层级、假性改变、流程、结果预览和边界说明；按钮接入 `/assessment`。
+- 完成：问卷页迁移 `human-3-assessment-v2.html` 的黑底居中大题、12 段细线进度、五级圆点选项和圆形上一题/下一题按钮；真实题库、答题状态、localStorage、提交和结果生成继续复用现有业务链路。
+- 完成：结果页迁移 `human-3-result-v2.html` 的报告式结构：左侧标题摘要、右侧元信息表、四象限轴线图、编号 section、当前状态/模式/优势盲点/下一步行动/分享卡片；结果字段来自 `result-builder`，不展示原始分值。
+- 完成：共享导航改为静态原型结构，保留桌面端四模块下拉和移动端 Apple 式全屏两级菜单。
+- 完成：新增 `app/prototype.css`，从三份静态 HTML 机械迁移 CSS，并在 `eslint.config.mjs` 忽略 Playwright 报告产物，避免测试失败报告污染 lint。
+- 完成：未改 `data/questions.json`、`lib/scoring.ts`、`lib/result-builder.ts`、`lib/storage.ts` 的核心规则。
+- 完成：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`app/prototype.css`、`app/globals.css`、`eslint.config.mjs`、`components/SiteNav.tsx`、`components/AssessmentIntro.tsx`、`components/AssessmentFlow.tsx`、`components/ResultClient.tsx`、`components/SharedResultClient.tsx`、`components/ResultReport.tsx`、`tests/e2e/assessment-flow.spec.ts`。
+- 当前风险：CSS 以静态原型迁移为主，后续视觉改动应优先回到 `ui-prototypes/` 或原型验收标准核对，避免再次二次设计；首页粒子动画已 React 化但不是逐行复制原始 JS。
+- 下一步建议：交给 UI 视觉与交互窗口逐页对照 `/`、`/assessment`、`/result`、`/result/share` 与三份静态 HTML，重点检查首屏、移动端菜单、问卷选项、结果页四象限图、下一步行动圆点和分享卡片。
+
+### P0 首页返工：直接套用原 HTML 文件
+
+- 完成：根据用户反馈“首页差别很大，直接套用原文件”，将 `/` 改为读取 `ui-prototypes/human-3-ui-v2.html`，抽取原 `<style>` 和 `<body>` 内容直接渲染。
+- 完成：首页不再通过 `AssessmentIntro.tsx` 重写或复刻原型结构；原 DOM、class 名、section 顺序、静态文案、debug panel 和原首页脚本保持为视觉基准。
+- 完成：只做必要业务替换，把 `human-3-assessment-v2.html` 链接替换为 `/assessment`，把 `human-3-result-v2.html` 链接替换为 `/result`。
+- 完成：在 `app/page.tsx` 记录后续 API 接入边界：`hero` 可接 site-content，`quadrants` 可接 quadrants，`levels` 可接 stages，`preview/final` 可接 result-templates/site-content；但未来接 API 只能替换数据，不应改变原 DOM/class 结构。
+- 完成：对照原文件和产品首页：`main` 宽度、`hero` 宽度、canvas 尺寸、章节顺序、导航文本、hero 文案、debug panel 均一致；唯一有意差异是开始评估链接指向 `/assessment`。
+- 完成：未改 `data/questions.json`、`lib/scoring.ts`、`lib/result-builder.ts`、`lib/storage.ts`。
+- 完成：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`app/page.tsx`、`tests/e2e/assessment-flow.spec.ts`、`tests/e2e/mobile.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/RELEASE_1_0.md`。
+- 当前风险：首页现在视觉上强绑定 `ui-prototypes/human-3-ui-v2.html`；后续内容 API 接入必须采用“数据替换”而不是组件重组，否则会再次偏离原文件。
+- 下一步建议：UI 窗口直接打开原文件和 `/` 做人工视觉对照；Debug/API 窗口再给出页面-接口映射后，按 section 逐块接入只读内容 API。
+
+### 真实结果恢复、评分 API 和下载验证收口
+
+- 完成：移除结果页视觉复核用预设结果，`/result` 恢复为优先读取当前浏览器 localStorage 中的真实答题结果，并通过 `buildResult` 生成报告；无真实结果时保留空态，不再默认展示假结果。
+- 完成：新增 `POST /api/assessment/score`，接收答案后复用 `lib/result-builder.ts` 和现有 `data/*.json` 生成 `BuiltResult`，不写数据库、不改评分规则。
+- 完成：新增 `POST /api/share/encode` 和 `POST /api/share/decode`，复用 `lib/share-link.ts` 生成和解析静态分享码。
+- 完成：答题页完成 48 题后优先调用 `POST /api/assessment/score` 生成真实结果，失败时保留本地 `buildResult` 回退，避免接口临时异常阻断用户。
+- 完成：分享结果页优先通过 `POST /api/share/decode` + `POST /api/assessment/score` 重建公开结果，失败时保留本地解码和生成回退。
+- 完成：结果页复制分享链接优先调用 `POST /api/share/encode`，失败时保留本地编码回退；保存卡片继续生成黑底分享卡片 PNG。
+- 完成：完整报告下载接入 `html2canvas` + `jspdf`，并在导出前临时替换 `lab/oklch` 相关颜色变量，避免 html2canvas 因现代 CSS 颜色报错。
+- 完成：扩展 E2E 覆盖完整答题到真实结果、分享链接、黑底 PNG 下载、完整报告 PDF 下载、评分 API、分享编码 API 和分享解码 API。
+- 完成：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- 修改文件：`components/ResultClient.tsx`、`components/AssessmentFlow.tsx`、`components/SharedResultClient.tsx`、`components/ResultReport.tsx`、`lib/report-pdf.ts`、`app/api/assessment/score/route.ts`、`app/api/share/encode/route.ts`、`app/api/share/decode/route.ts`、`tests/e2e/assessment-flow.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/RELEASE_1_0.md`、`docs/DEBUG_AND_API_ARCHITECTURE.md`、`docs/DECISIONS.md`。
+- 当前风险：PDF/PNG 下载已在桌面 Chromium E2E 中验证，但 iPhone Safari 和 Android Chrome 的真实下载行为仍需要真机验收；新评分/分享 API 目前不写库，仍是无登录 MVP 边界。
+- 下一步建议：由总控安排 GitHub/Vercel 同步窗口发布，再让 UI 窗口和真实手机分别复核结果页下载、分享链接和移动端按钮体验。

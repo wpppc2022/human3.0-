@@ -1,23 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { FriendPerspective } from "@/components/FriendPerspective";
-import { QuadrantMap } from "@/components/QuadrantMap";
-import { RecommendationBlock } from "@/components/RecommendationBlock";
-import { ResultSummary } from "@/components/ResultSummary";
-import { ShareCard } from "@/components/ShareCard";
-import { Button } from "@/components/ui/button";
+import { ResultEmptyState, ResultReport } from "@/components/ResultReport";
 import questionsData from "@/data/questions.json";
 import quadrantsData from "@/data/quadrants.json";
 import recommendationsData from "@/data/recommendations.json";
-import siteContent from "@/data/site-content.json";
 import templatesData from "@/data/result-templates.json";
 import stagesData from "@/data/stages.json";
 import { buildResult } from "@/lib/result-builder";
 import { decodeAnswersFromShare } from "@/lib/share-link";
 import type {
+  Answers,
   BuiltResult,
   QuadrantDefinition,
   Question,
@@ -28,12 +22,52 @@ import type {
 
 const questions = questionsData as Question[];
 
+async function postJson<T>(url: string, data: unknown) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const body = (await response.json()) as { data?: T; error?: string };
+  if (!response.ok || !body.data) {
+    throw new Error(body.error ?? `Request failed: ${url}`);
+  }
+
+  return body.data;
+}
+
+async function buildSharedResultViaApi(shareCode: string) {
+  const decoded = await postJson<{ answers: Answers }>("/api/share/decode", {
+    code: shareCode,
+  });
+  return postJson<BuiltResult>("/api/assessment/score", {
+    id: "shared-result",
+    answers: decoded.answers,
+  });
+}
+
+function buildSharedResultLocally(shareCode: string) {
+  const answers = decodeAnswersFromShare(questions, shareCode);
+  return buildResult({
+    id: "shared-result",
+    questions,
+    answers,
+    stages: stagesData as StageDefinition[],
+    quadrants: quadrantsData as QuadrantDefinition[],
+    recommendations: recommendationsData as RecommendationSet[],
+    templates: templatesData as ResultTemplate[],
+  });
+}
+
 export function SharedResultClient({ shareCode }: { shareCode?: string }) {
   const [result, setResult] = useState<BuiltResult | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    queueMicrotask(() => {
+    queueMicrotask(async () => {
       if (!shareCode) {
         setResult(null);
         setIsLoaded(true);
@@ -41,71 +75,36 @@ export function SharedResultClient({ shareCode }: { shareCode?: string }) {
       }
 
       try {
-        const answers = decodeAnswersFromShare(questions, shareCode);
-        const sharedResult = buildResult({
-          id: "shared-result",
-          questions,
-          answers,
-          stages: stagesData as StageDefinition[],
-          quadrants: quadrantsData as QuadrantDefinition[],
-          recommendations: recommendationsData as RecommendationSet[],
-          templates: templatesData as ResultTemplate[],
-        });
-
-        setResult(sharedResult);
+        try {
+          setResult(await buildSharedResultViaApi(shareCode));
+        } catch {
+          setResult(buildSharedResultLocally(shareCode));
+        }
       } catch {
         setResult(null);
+      } finally {
+        setIsLoaded(true);
       }
-
-      setIsLoaded(true);
     });
   }, [shareCode]);
 
   if (!isLoaded) {
     return (
-      <main className="mx-auto w-full max-w-4xl flex-1 px-5 py-10">
-        <p className="text-muted-foreground">正在读取分享结果...</p>
-      </main>
+      <ResultEmptyState
+        title="正在读取分享结果"
+        copy="页面正在解析分享链接，并使用当前题库与结果模板重新生成报告。"
+      />
     );
   }
 
   if (!result) {
     return (
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-start justify-center gap-5 px-5 py-10">
-        <h1 className="text-2xl font-semibold">这个分享链接无法读取</h1>
-        <p className="leading-8 text-muted-foreground">
-          链接可能不完整，或者来自旧版本。你可以重新完成一次评估生成新的结果，也可以请分享者重新复制链接。
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Button asChild>
-            <Link href="/assessment">开始评估</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/">返回首页</Link>
-          </Button>
-        </div>
-      </main>
+      <ResultEmptyState
+        title="这个分享链接无法读取"
+        copy="链接可能不完整，或者来自旧版本。你可以重新完成一次评估生成新的结果，也可以请分享者重新复制链接。"
+      />
     );
   }
 
-  return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-5 py-8 sm:px-8 lg:py-12">
-      <ResultSummary result={result} />
-      <QuadrantMap result={result} />
-      <FriendPerspective result={result} />
-      <RecommendationBlock result={result} />
-      <ShareCard result={result} />
-      <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
-        {siteContent.disclaimer}
-      </p>
-      <div className="flex flex-wrap gap-3">
-        <Button asChild>
-          <Link href="/assessment">我也测一次</Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="/">返回首页</Link>
-        </Button>
-      </div>
-    </main>
-  );
+  return <ResultReport result={result} shared />;
 }

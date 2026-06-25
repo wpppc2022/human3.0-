@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { ProgressBar } from "@/components/ProgressBar";
-import { QuestionCard } from "@/components/QuestionCard";
-import { Button } from "@/components/ui/button";
+import { SiteNav } from "@/components/SiteNav";
 import questionsData from "@/data/questions.json";
 import quadrantsData from "@/data/quadrants.json";
 import recommendationsData from "@/data/recommendations.json";
 import templatesData from "@/data/result-templates.json";
 import stagesData from "@/data/stages.json";
+import { ANSWER_OPTIONS } from "@/lib/constants";
 import { buildResult } from "@/lib/result-builder";
 import {
   clearAssessmentProgress,
@@ -29,14 +28,46 @@ import type {
 } from "@/lib/types";
 
 const questions = questionsData as Question[];
+const SEGMENT_COUNT = 12;
+
+async function scoreAssessmentViaApi(params: {
+  id: string;
+  answers: Answers;
+}) {
+  const response = await fetch("/api/assessment/score", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params),
+  });
+
+  const body = (await response.json()) as { data?: unknown; error?: string };
+  if (!response.ok || !body.data) {
+    throw new Error(body.error ?? "Unable to score assessment.");
+  }
+
+  return body.data as ReturnType<typeof buildResult>;
+}
+
+function getSegmentState(index: number, currentIndex: number) {
+  const currentSegment = Math.min(
+    SEGMENT_COUNT - 1,
+    Math.floor((currentIndex / questions.length) * SEGMENT_COUNT),
+  );
+
+  if (index < currentSegment) return "done";
+  if (index === currentSegment) return "current";
+  return "";
+}
 
 export function AssessmentFlow() {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [isRestored, setIsRestored] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const currentQuestion = questions[currentIndex];
-  const progress = ((currentIndex + 1) / questions.length) * 100;
   const selected = answers[currentQuestion.id];
   const isLastQuestion = currentIndex === questions.length - 1;
 
@@ -57,13 +88,17 @@ export function AssessmentFlow() {
     }
   }, [answers, currentIndex, isRestored]);
 
-  const answeredCount = useMemo(() => Object.keys(answers).length, [answers]);
-
   function handleSelect(value: AnswerValue) {
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
   }
 
-  function goNext() {
+  function goPrevious() {
+    setCurrentIndex((index) => Math.max(0, index - 1));
+  }
+
+  async function goNext() {
+    if (isSubmitting) return;
+
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((index) => index + 1);
       return;
@@ -76,15 +111,22 @@ export function AssessmentFlow() {
     }
 
     const id = `local-${Date.now()}`;
-    const result = buildResult({
-      id,
-      questions,
-      answers,
-      stages: stagesData as StageDefinition[],
-      quadrants: quadrantsData as QuadrantDefinition[],
-      recommendations: recommendationsData as RecommendationSet[],
-      templates: templatesData as ResultTemplate[],
-    });
+    setIsSubmitting(true);
+
+    let result: ReturnType<typeof buildResult>;
+    try {
+      result = await scoreAssessmentViaApi({ id, answers });
+    } catch {
+      result = buildResult({
+        id,
+        questions,
+        answers,
+        stages: stagesData as StageDefinition[],
+        quadrants: quadrantsData as QuadrantDefinition[],
+        recommendations: recommendationsData as RecommendationSet[],
+        templates: templatesData as ResultTemplate[],
+      });
+    }
 
     saveResult(result, answers);
     clearAssessmentProgress();
@@ -92,56 +134,75 @@ export function AssessmentFlow() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 pb-24 pt-6 sm:px-8 sm:py-10">
-      <div className="mb-8 space-y-3">
-        <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
-          <span>
-            {currentIndex + 1} / {questions.length}
-          </span>
-          <span>已回答 {answeredCount} 题</span>
-        </div>
-        <ProgressBar value={progress} />
-      </div>
+    <div className="prototype-page assessment-prototype page">
+      <SiteNav current="assessment" />
+      <main className="assessment">
+        <section className="assessment-shell" aria-label="HUMAN 3.0 问卷">
+          <div className="assessment-grid">
+            <section className="question-pane" aria-labelledby={currentQuestion.id}>
+              <div className="progress" aria-label="答题进度">
+                <span className="count">
+                  {currentIndex + 1} / {questions.length}
+                </span>
+                <div className="segments" aria-hidden="true">
+                  {Array.from({ length: SEGMENT_COUNT }, (_, index) => (
+                    <span
+                      className={getSegmentState(index, currentIndex)}
+                      key={index}
+                    />
+                  ))}
+                </div>
+              </div>
 
-      <div className="rounded-lg border bg-card p-5 shadow-sm sm:p-8">
-        <QuestionCard
-          question={currentQuestion}
-          selected={selected}
-          onSelect={handleSelect}
-        />
-      </div>
+              <p className="sr-only">
+                {currentQuestion.quadrant} · {currentQuestion.dimension}
+              </p>
+              <h2 className="question" id={currentQuestion.id}>
+                {currentQuestion.text}
+              </h2>
 
-      <div className="mt-4 rounded-md border bg-card px-4 py-3 text-sm leading-6 text-muted-foreground">
-        {selected
-          ? isLastQuestion
-            ? "已选择。点击下方按钮生成你的当前画像。"
-            : "已选择。可以继续下一题，进度会自动保存。"
-          : "请选择一个最接近当前状态的选项，再继续下一题。"}
-      </div>
+              <div
+                className="options"
+                role="radiogroup"
+                aria-labelledby={currentQuestion.id}
+              >
+                {ANSWER_OPTIONS.map((option) => (
+                  <button
+                    className="option"
+                    type="button"
+                    role="radio"
+                    aria-checked={selected === option.value}
+                    key={option.value}
+                    onClick={() => handleSelect(option.value)}
+                  >
+                    <span>{option.label}</span>
+                    <i className="dot" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setCurrentIndex((index) => Math.max(0, index - 1))}
-          disabled={currentIndex === 0}
-          className="h-11 min-w-24"
-        >
-          上一题
-        </Button>
-        <Button
-          type="button"
-          onClick={goNext}
-          disabled={!selected}
-          className="h-11 min-w-28"
-          aria-describedby="assessment-action-hint"
-        >
-          {isLastQuestion ? "生成结果" : "下一题"}
-        </Button>
-      </div>
-      <p id="assessment-action-hint" className="sr-only">
-        {selected ? "当前题已选择，可以继续。" : "当前题尚未选择，下一步按钮不可用。"}
-      </p>
-    </main>
+              <div className="controls">
+                <button
+                  className="circle"
+                  type="button"
+                  aria-label="上一题"
+                  data-direction="prev"
+                  disabled={currentIndex === 0}
+                  onClick={goPrevious}
+                />
+                <button
+                  className="circle"
+                  type="button"
+                  aria-label={isLastQuestion ? "生成结果" : "下一题"}
+                  data-direction="next"
+                  disabled={!selected || isSubmitting}
+                  onClick={goNext}
+                />
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }

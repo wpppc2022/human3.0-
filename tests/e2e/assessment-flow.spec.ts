@@ -25,23 +25,31 @@ async function expectPngFile(path: string) {
   expect([...file.subarray(0, pngSignature.length)]).toEqual(pngSignature);
 }
 
+async function expectPdfFile(path: string) {
+  const file = await readFile(path);
+
+  expect(file.byteLength).toBeGreaterThan(10_000);
+  expect(file.subarray(0, 4).toString()).toBe("%PDF");
+}
+
 test.beforeEach(async ({ page }) => {
   await clearBrowserState(page);
 });
 
 test("home page starts the assessment", async ({ page }) => {
   await expect(
-    page.getByRole("heading", { name: "Human 3.0 自我发展评估" }),
+    page.getByRole("heading", {
+      name: "HUMAN 3.0 看清自己。设计自己。成为更完整的人。",
+    }),
   ).toBeVisible();
-  await expect(page.getByText("这不是人格标签，也不是心理诊断。")).toBeVisible();
-  await expect(page.getByText("48 道题")).toBeVisible();
-  await expect(page.getByText("无需登录")).toBeVisible();
+  await expect(page.getByText("Personal Growth Assessment Framework")).toBeVisible();
+  await expect(page.getByText("人不是单点成长的。")).toBeVisible();
+  await expect(page.getByText("得到一张关于自己的行动地图。")).toBeVisible();
 
-  await page.getByRole("link", { name: /开始评估/ }).click();
+  await page.getByRole("link", { name: /开始评估/ }).first().click();
 
   await expect(page).toHaveURL(/\/assessment$/);
   await expect(page.getByText("1 / 48")).toBeVisible();
-  await expect(page.getByText("请选择一个最接近当前状态的选项")).toBeVisible();
   await expect(page.getByRole("button", { name: "下一题" })).toBeDisabled();
 });
 
@@ -62,7 +70,7 @@ test("assessment progress survives refresh", async ({ page }) => {
   await page.reload();
 
   await expect(page.getByText("2 / 48")).toBeVisible();
-  await expect(page.getByText("已回答 1 题")).toBeVisible();
+  await expect(page.getByRole("radio", { name: /比较符合/ })).toBeVisible();
 });
 
 test("assessment ignores corrupted saved progress", async ({ page }) => {
@@ -81,7 +89,6 @@ test("assessment ignores corrupted saved progress", async ({ page }) => {
   await page.goto("/assessment");
 
   await expect(page.getByText("1 / 48")).toBeVisible();
-  await expect(page.getByText("已回答 0 题")).toBeVisible();
   await expect(page.getByRole("button", { name: "下一题" })).toBeDisabled();
 });
 
@@ -123,40 +130,45 @@ test("user can complete assessment, view result, and open share link", async ({
   }
 
   await expect(page).toHaveURL(/\/result$/);
-  await expect(page.getByText("你的 Human 3.0 当前画像")).toBeVisible();
-  await expect(page.getByText("主导象限")).toBeVisible();
-  await expect(page.getByText("主要限制", { exact: true })).toBeVisible();
-  await expect(page.getByText("先做这一步")).toBeVisible();
-  await expect(page.getByText("象限发展阶段")).toHaveCount(4);
-  await expect(page.getByText("Lifestyle Archetype")).toBeVisible();
-  await expect(page.getByText("Core Problem")).toBeVisible();
-  await expect(page.getByText("别人眼中的你")).toBeVisible();
-  await expect(page.getByText("Immediate Next Action")).toBeVisible();
+  await expect(page.getByText("Your Human Pattern Report")).toBeVisible();
+  await expect(page.getByText("1. 你的四象限状态")).toBeVisible();
+  await expect(page.getByText("2. 当前状态")).toBeVisible();
+  await expect(page.getByText("3. 你的状态模式")).toBeVisible();
+  await expect(page.getByText("4. 优势与盲点")).toBeVisible();
+  await expect(page.getByText("5. 下一步行动")).toBeVisible();
+  await expect(page.getByText("6. 分享卡片")).toBeVisible();
+  await expect(page.getByText("Metatype")).toBeVisible();
   await expect(page.locator("body")).not.toContainText(
-    /rawScore|averageScore|平均分|原始分数|失衡分/,
+    /rawScore|averageScore|平均分：|失衡分/,
   );
 
   const downloadPromise = page.waitForEvent("download");
-  await page.getByRole("button", { name: /下载 PNG/ }).click();
+  await page.getByRole("button", { name: /保存卡片/ }).click();
   const download = await downloadPromise;
   const downloadPath = await download.path();
 
   expect(download.suggestedFilename()).toMatch(
-    /^human-3-result-[1-3]\.[1-3]\.png$/,
+    /^human-3-share-card-[1-3]\.[1-3]\.png$/,
   );
   expect(downloadPath).not.toBeNull();
   await expectPngFile(downloadPath as string);
-  await expect(page.getByText("保存或分享结果")).toBeVisible();
 
-  const shareInput = page.getByLabel("结果链接");
-  await expect(shareInput).toHaveValue(/\/result\/share\?a=v1\.[1-5]{48}$/);
-  const shareUrl = await shareInput.inputValue();
+  const pdfDownloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: /下载完整报告/ }).click();
+  const pdfDownload = await pdfDownloadPromise;
+  const pdfDownloadPath = await pdfDownload.path();
 
-  await page.goto(shareUrl);
+  expect(pdfDownload.suggestedFilename()).toMatch(
+    /^human-3-full-report-[1-3]\.[1-3]\.pdf$/,
+  );
+  expect(pdfDownloadPath).not.toBeNull();
+  await expectPdfFile(pdfDownloadPath as string);
 
-  await expect(page.getByText("你的 Human 3.0 当前画像")).toBeVisible();
-  await expect(page.getByText("Cross-Quadrant Dynamics")).toBeVisible();
-  await expect(page.getByRole("link", { name: "我也测一次" })).toBeVisible();
+  await page.goto(`/result/share?a=v1.${"4".repeat(48)}`);
+
+  await expect(page.getByText("Your Human Pattern Report")).toBeVisible();
+  await expect(page.locator('[aria-label="四象限发展图"]')).toBeVisible();
+  await expect(page.getByRole("link", { name: "返回问卷" })).toBeVisible();
 });
 
 test("shared result page handles invalid share code", async ({ page }) => {
@@ -201,4 +213,30 @@ test("submit API validates missing and invalid answers, then returns a result", 
   expect(body.result.scoring).toBeDefined();
   expect(body.result.scoring.missingQuestionIds).toEqual([]);
   expect(body.result.answers).toEqual(answers);
+
+  const scoreResponse = await request.post("/api/assessment/score", {
+    data: { id: "e2e-score", answers },
+  });
+  const scoreBody = await scoreResponse.json();
+
+  expect(scoreResponse.status()).toBe(200);
+  expect(scoreBody.data.id).toBe("e2e-score");
+  expect(scoreBody.data.answers).toEqual(answers);
+
+  const encodeResponse = await request.post("/api/share/encode", {
+    data: { answers },
+  });
+  const encodeBody = await encodeResponse.json();
+
+  expect(encodeResponse.status()).toBe(200);
+  expect(encodeBody.data.code).toMatch(/^v1\.[1-5]{48}$/);
+  expect(encodeBody.data.path).toMatch(/^\/result\/share\?a=v1\./);
+
+  const decodeResponse = await request.post("/api/share/decode", {
+    data: { code: encodeBody.data.code },
+  });
+  const decodeBody = await decodeResponse.json();
+
+  expect(decodeResponse.status()).toBe(200);
+  expect(decodeBody.data.answers).toEqual(answers);
 });

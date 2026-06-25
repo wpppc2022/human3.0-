@@ -55,7 +55,16 @@ localStorage key：
 
 ## API 路由
 
-`app/api/submit/route.ts` 已预留提交接口。第一版客户端不依赖它，未来接入持久化时可复用同一套 `buildResult` 逻辑。
+`app/api/submit/route.ts` 是早期提交接口，仍保留为兼容入口。未来接入持久化时可复用同一套 `buildResult` 逻辑。
+
+当前正式流程还提供以下 API：
+
+- `app/api/assessment/score/route.ts`：正式评分接口，接收答案并返回 `BuiltResult`，不写数据库。
+- `app/api/share/encode/route.ts`：分享码生成接口，复用 `lib/share-link.ts`。
+- `app/api/share/decode/route.ts`：分享码解析接口，复用 `lib/share-link.ts`。
+- `app/api/content/*`：只读内容接口，读取 `data/` 下的题库、象限、阶段、推荐、结果模板和站点文案。
+
+页面接入保持克制：`/assessment` 完成答题后优先调用评分 API，失败时回退本地 `buildResult`；`/result/share` 优先调用分享解码 + 评分 API，失败时回退本地解码和生成；复制分享链接优先调用分享编码 API，失败时回退本地编码。
 
 `app/result/share/page.tsx` 是当前静态分享路由，不依赖数据库。它适合 MVP 验证，但 URL 中包含答案码；接入 Supabase 后应优先使用 `/result/[id]` 短链接。
 
@@ -80,7 +89,7 @@ localStorage key：
 端到端测试使用 Playwright：
 
 - `playwright.config.ts`：在 `127.0.0.1:3100` 启动独立 Next.js 开发服务，避免影响用户当前打开的 `localhost:3000`。
-- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、脏缓存恢复、无本地结果、完成 48 题、结果页、PNG 下载、无效分享链接、静态分享链接和提交 API。
+- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、脏缓存恢复、无本地结果、完成 48 题、结果页、PNG 下载、PDF 下载、无效分享链接、静态分享链接、提交 API、评分 API 和分享编码/解码 API。
 - `tests/e2e/mobile.spec.ts`：用移动端视口检查答题页核心控件和横向溢出。
 
 首次运行端到端测试前需要执行：

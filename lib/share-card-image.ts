@@ -3,8 +3,10 @@
 import type { BuiltResult } from "@/lib/types";
 
 const CARD_WIDTH = 1080;
-const CARD_HEIGHT = 1440;
-const CARD_PADDING = 86;
+const CARD_HEIGHT = 1350;
+const CARD_PADDING = 84;
+const CARD_RADIUS = 26;
+const CARD_INSET = 44;
 
 function drawRoundedRect(
   context: CanvasRenderingContext2D,
@@ -70,21 +72,12 @@ function drawWrappedText(params: {
   return y + visibleLines.length * lineHeight;
 }
 
-function drawPill(
-  context: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-) {
-  context.font =
-    '28px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
-  const width = context.measureText(text).width + 42;
-  drawRoundedRect(context, x, y, width, 54, 27);
-  context.fillStyle = "#e8eee5";
-  context.fill();
-  context.fillStyle = "#24473f";
-  context.fillText(text, x + 21, y + 36);
-  return width;
+function font(size: number, weight = 500) {
+  return `${weight} ${size}px -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif`;
+}
+
+function mono(size: number, weight = 500) {
+  return `${weight} ${size}px "SFMono-Regular", "SF Mono", Consolas, ui-monospace, monospace`;
 }
 
 export function buildShareCardImage(result: BuiltResult) {
@@ -97,98 +90,72 @@ export function buildShareCardImage(result: BuiltResult) {
     throw new Error("Canvas is not supported in this browser.");
   }
 
-  context.fillStyle = "#f8f5ed";
+  context.fillStyle = "#000";
   context.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
 
-  context.fillStyle = "#ffffff";
   drawRoundedRect(
     context,
-    44,
-    44,
-    CARD_WIDTH - 88,
-    CARD_HEIGHT - 88,
-    40,
+    CARD_INSET,
+    CARD_INSET,
+    CARD_WIDTH - CARD_INSET * 2,
+    CARD_HEIGHT - CARD_INSET * 2,
+    CARD_RADIUS,
   );
+  context.fillStyle = "#080808";
   context.fill();
-
-  context.strokeStyle = "#d8d2c4";
-  context.lineWidth = 3;
+  context.strokeStyle = "rgba(245, 245, 247, 0.36)";
+  context.lineWidth = 2;
   context.stroke();
 
-  context.fillStyle = "#24473f";
-  context.font =
-    '34px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
-  context.fillText(result.shareCard.siteName, CARD_PADDING, 126);
+  const left = CARD_PADDING;
+  const right = CARD_WIDTH - CARD_PADDING;
+  const contentWidth = right - left;
 
-  context.fillStyle = "#6b705c";
-  context.font = '30px "SFMono-Regular", "SF Mono", Consolas, monospace';
-  context.fillText(result.shareCard.stageCode, CARD_PADDING, 190);
+  context.fillStyle = "rgba(245, 245, 247, 0.78)";
+  context.font = mono(28, 500);
+  context.fillText("HUMAN 3.0", left, 118);
+  const stage = result.shareCard.stageCode;
+  const stageWidth = context.measureText(stage).width;
+  context.fillText(stage, right - stageWidth, 118);
 
-  context.fillStyle = "#24473f";
-  context.font =
-    '54px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
-  context.fillText(result.shareCard.chineseName, CARD_PADDING, 286);
-
-  context.fillStyle = "#6b705c";
-  context.font = '32px "SFMono-Regular", "SF Mono", Consolas, monospace';
-  context.fillText(result.shareCard.metatype, CARD_PADDING, 340);
-
-  context.fillStyle = "#1f2d2a";
-  context.font =
-    '58px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
+  context.fillStyle = "#f5f5f7";
+  context.font = font(92, 760);
   const titleEndY = drawWrappedText({
     context,
     text: result.shareCard.title,
-    x: CARD_PADDING,
-    y: 440,
-    maxWidth: CARD_WIDTH - CARD_PADDING * 2,
-    lineHeight: 76,
-    maxLines: 3,
-  });
-
-  context.fillStyle = "#5f665f";
-  context.font =
-    '38px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
-  drawWrappedText({
-    context,
-    text: result.shareCard.insight,
-    x: CARD_PADDING,
-    y: titleEndY + 60,
-    maxWidth: CARD_WIDTH - CARD_PADDING * 2,
-    lineHeight: 58,
+    x: left,
+    y: 292,
+    maxWidth: contentWidth,
+    lineHeight: 112,
     maxLines: 5,
   });
 
-  context.fillStyle = "#24473f";
-  context.font =
-    '34px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
+  context.fillStyle = "rgba(245, 245, 247, 0.82)";
+  context.font = font(32, 420);
+  drawWrappedText({
+    context,
+    text: result.shareCard.insight,
+    x: left,
+    y: titleEndY + 62,
+    maxWidth: contentWidth,
+    lineHeight: 48,
+    maxLines: 3,
+  });
+
+  const footerY = CARD_HEIGHT - 172;
+  context.fillStyle = "rgba(245, 245, 247, 0.68)";
+  context.font = mono(24, 500);
+  context.fillText("Dominant", left, footerY);
+  context.fillText("Focus", left + contentWidth * 0.48, footerY);
+
+  context.fillStyle = "#f5f5f7";
+  context.font = font(34, 620);
+  context.fillText(result.shareCard.dominantQuadrant, left, footerY + 62);
   context.fillText(
-    `最强支点：${result.shareCard.dominantQuadrant}`,
-    CARD_PADDING,
-    1000,
+    `${result.shareCard.weakQuadrant} System`,
+    left + contentWidth * 0.48,
+    footerY + 62,
   );
-  context.fillText(
-    `当前卡点：${result.shareCard.weakQuadrant}`,
-    CARD_PADDING,
-    1054,
-  );
-
-  let pillX = CARD_PADDING;
-  for (const keyword of result.shareCard.keywords) {
-    const pillWidth = drawPill(context, keyword, pillX, 1102);
-    pillX += pillWidth + 18;
-  }
-
-  context.strokeStyle = "#d8d2c4";
-  context.beginPath();
-  context.moveTo(CARD_PADDING, 1240);
-  context.lineTo(CARD_WIDTH - CARD_PADDING, 1240);
-  context.stroke();
-
-  context.fillStyle = "#6b705c";
-  context.font =
-    '30px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
-  context.fillText("这不是人格标签，是一次当前人生系统状态快照。", CARD_PADDING, 1302);
 
   return canvas;
 }
@@ -203,7 +170,7 @@ export function downloadShareCardImage(result: BuiltResult) {
 
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.download = `human-3-result-${result.shareCard.stageCode}.png`;
+    link.download = `human-3-share-card-${result.shareCard.stageCode}.png`;
     link.href = url;
     document.body.appendChild(link);
     link.click();

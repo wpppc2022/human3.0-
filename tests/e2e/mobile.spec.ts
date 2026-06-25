@@ -4,7 +4,7 @@ test("mobile assessment screen keeps core controls visible", async ({ page }) =>
   await page.goto("/");
   await page.evaluate(() => window.localStorage.clear());
 
-  await page.getByRole("link", { name: /开始评估/ }).click();
+  await page.getByRole("link", { name: /开始评估/ }).first().click();
 
   await expect(page.getByText("1 / 48")).toBeVisible();
   await expect(page.getByRole("radio", { name: /不确定/ })).toBeVisible();
