@@ -251,7 +251,7 @@ determinePhaseV2(metrics, level): PhaseId
 - `components/QuadrantMap.tsx`
 - `components/ResultSummary.tsx`
 - `components/ResultClient.tsx`
-- `components/ShareCard.tsx`
+- `components/ResultReport.tsx`
 
 1.0 立刻改动建议：结果页四象限报告中增加一句象限发展解释。分享卡片不建议放象限阶段，避免信息过载。
 

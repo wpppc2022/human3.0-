@@ -134,8 +134,7 @@ pnpm check
 - `components/AssessmentFlow.tsx`：答题流程。
 - `components/SiteNav.tsx`：静态原型产品化后的共享导航，包含桌面四模块下拉导航和移动端 Apple 式两级全屏菜单。
 - `components/ResultClient.tsx`：结果页本地读取。正式 `/result` 不再使用视觉复核预设结果，没有真实 localStorage 结果时展示空态。
-- `components/ResultReport.tsx`：结果页静态原型产品化报告结构，复用 `result-builder` 输出、行动建议、分享链接和 PNG 下载。
-- `components/ShareCard.tsx`：分享卡片展示和下载入口。
+- `components/ResultReport.tsx`：结果页静态原型产品化报告结构，复用 `result-builder` 输出、行动建议、分享卡片展示、分享链接和 PNG/PDF 下载。
 - `lib/share-card-image.ts`：Canvas 生成 PNG 分享卡片。
 - `lib/report-pdf.ts`：完整报告 PDF 下载，导出时会规避 html2canvas 对 `lab/oklch` 颜色的兼容问题。
 - `lib/share-link.ts`：静态分享链接编码和解码。

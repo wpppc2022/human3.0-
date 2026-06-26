@@ -19,7 +19,7 @@
 - `ResultSummary`：顶部结果和核心判断。
 - `QuadrantMap`：四象限状态。
 - `RecommendationBlock`：7 天、30 天、90 天建议。
-- `ShareCard`：分享卡片展示和 PNG 下载入口。
+- `ResultReport`：结果页报告结构、行动建议、分享卡片展示、分享链接和 PNG/PDF 下载入口。
 
 ## 核心函数
 
@@ -29,7 +29,7 @@
 - `determinePhase`：判断 X.1、X.2、X.3。
 - `scoreAssessment`：输出完整评分结果。
 - `buildResult`：把评分结果、阶段、象限、建议和模板组合为用户报告，包括 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 Immediate Next Action。
-- `buildShareCardImage`：用 Canvas 生成 1080x1440 的 PNG 分享卡片。
+- `buildShareCardImage`：用 Canvas 生成黑底 PNG 分享卡片。
 - `encodeAnswersForShare` / `decodeAnswersFromShare`：把 48 个答案编码进 URL，或从静态分享链接恢复答案。
 
 ## 数据流
