@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { PrintableResultReport } from "@/components/PrintableResultReport";
 import { SiteNav } from "@/components/SiteNav";
 import siteContent from "@/data/site-content.json";
 import { QUADRANT_ORDER } from "@/lib/constants";
 import { downloadFullReportPdf } from "@/lib/report-pdf";
 import { buildShareResultPath } from "@/lib/share-link";
 import { downloadShareCardImage } from "@/lib/share-card-image";
+import { formatPhaseLabel } from "@/lib/stage-format";
 import questionsData from "@/data/questions.json";
 import type { BuiltResult, QuadrantId, Question } from "@/lib/types";
 
@@ -17,12 +19,6 @@ const stateWidths: Record<string, number> = {
   forming: 58,
   grounded: 74,
   mature: 84,
-};
-
-const stageCopy: Record<string, string> = {
-  "1": "失调期",
-  "2": "不确定期",
-  "3": "发现期",
 };
 
 function getQuadrantLabel(quadrantId: QuadrantId) {
@@ -198,6 +194,7 @@ export function ResultReport({
     result.primaryBlock,
     result.friendPerspective.misunderstoodAs,
   ];
+  const phaseLabel = formatPhaseLabel(result.stage);
 
   return (
     <div className="prototype-page result-prototype">
@@ -223,6 +220,18 @@ export function ResultReport({
 
           <aside className="metadata" aria-label="结果元信息">
             <div className="meta-actions">
+              {!shared ? (
+                <Link
+                  className="button"
+                  href="/result?pdfPreview=1"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    window.location.assign("/result?pdfPreview=1");
+                  }}
+                >
+                  预览 PDF
+                </Link>
+              ) : null}
               <button
                 className="button"
                 type="button"
@@ -240,9 +249,7 @@ export function ResultReport({
               </div>
               <div className="meta-row">
                 <dt>Phase</dt>
-                <dd>
-                  {result.stage.phaseName} / {stageCopy[result.stage.phase]}
-                </dd>
+                <dd>{phaseLabel}</dd>
               </div>
               <div className="meta-row">
                 <dt>Dominant</dt>
@@ -476,6 +483,34 @@ export function ResultReport({
         <p className="footer-note" id="limits">
           {siteContent.disclaimer}
         </p>
+      </main>
+      <div className="pdf-report-source" aria-hidden="true">
+        <PrintableResultReport result={result} shared={shared} />
+      </div>
+    </div>
+  );
+}
+
+export function PdfReportPreview({
+  result,
+  shared = false,
+}: {
+  result: BuiltResult;
+  shared?: boolean;
+}) {
+  return (
+    <div className="prototype-page result-prototype pdf-preview-page">
+      <main className="pdf-preview-main">
+        <section className="pdf-preview-toolbar" aria-labelledby="pdf-preview-title">
+          <div>
+            <p className="eyebrow">PDF Preview</p>
+            <h1 id="pdf-preview-title">完整报告导出预览</h1>
+            <p className="hero-copy">
+              以下两页即为导出内容预览。这里展示的是下载 PDF 使用的 A4 报告版式，不是当前长结果页截图；确认排版后，回到结果页即可下载同一份黑底报告。
+            </p>
+          </div>
+        </section>
+        <PrintableResultReport result={result} shared={shared} />
       </main>
     </div>
   );

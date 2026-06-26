@@ -3493,6 +3493,420 @@
 .result-prototype .empty-state h1 { font-size: clamp(42px, 8vw, 72px); }
 .result-prototype .empty-state p { color: var(--muted); font-size: 17px; line-height: 1.7; }
 
+.pdf-report-source {
+  position: absolute;
+  top: 0;
+  left: -10000px;
+  width: 794px;
+  pointer-events: none;
+}
+
+.pdf-preview-page {
+  background: #050505;
+}
+
+.pdf-preview-main {
+  display: grid;
+  gap: 32px;
+  justify-items: center;
+  width: min(calc(100% - 40px), 980px);
+}
+
+.pdf-preview-toolbar {
+  display: grid;
+  width: min(100%, 794px);
+  gap: 24px;
+  align-items: end;
+  padding: 48px 0 8px;
+}
+
+.pdf-preview-toolbar h1 {
+  max-width: 640px;
+  font-size: clamp(44px, 7vw, 74px);
+}
+
+.pdf-report-shell {
+  display: grid;
+  width: 794px;
+  gap: 24px;
+  background: #050505;
+  color: #f5f5f7;
+  font-family:
+    "Geist",
+    "Inter",
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+
+.pdf-report-sheet {
+  box-sizing: border-box;
+  display: flex;
+  width: 794px;
+  height: 1123px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(245, 245, 247, 0.2);
+  background: #000;
+  color: #f5f5f7;
+  padding: 52px 54px 42px;
+}
+
+.pdf-report-sheet h1,
+.pdf-report-sheet h2,
+.pdf-report-sheet h3,
+.pdf-report-sheet p,
+.pdf-report-sheet dl,
+.pdf-report-sheet dd,
+.pdf-report-sheet ul {
+  margin: 0;
+}
+
+.pdf-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: start;
+  border-bottom: 1px solid rgba(245, 245, 247, 0.2);
+  padding-bottom: 32px;
+}
+
+.pdf-header.compact {
+  padding-bottom: 24px;
+}
+
+.pdf-kicker {
+  color: rgba(245, 245, 247, 0.58);
+  font-family:
+    "Geist Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pdf-header h1 {
+  max-width: 520px;
+  margin-top: 12px;
+  color: #f5f5f7;
+  font-size: 54px;
+  font-weight: 520;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+}
+
+.pdf-stage {
+  display: grid;
+  min-width: 86px;
+  height: 86px;
+  place-items: center;
+  border: 1px solid rgba(245, 245, 247, 0.28);
+  border-radius: 999px;
+  color: #f5f5f7;
+  font-family:
+    "Geist Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 18px;
+}
+
+.pdf-insight {
+  max-width: 650px;
+  padding: 30px 0;
+  color: rgba(245, 245, 247, 0.86);
+  font-size: 22px;
+  line-height: 1.45;
+}
+
+.pdf-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 24px;
+  border-top: 1px solid rgba(245, 245, 247, 0.14);
+  border-bottom: 1px solid rgba(245, 245, 247, 0.14);
+  padding: 18px 0;
+}
+
+.pdf-meta-grid dt {
+  color: rgba(245, 245, 247, 0.5);
+  font-family:
+    "Geist Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pdf-meta-grid dd {
+  margin-top: 6px;
+  color: #f5f5f7;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.pdf-block {
+  padding-top: 28px;
+}
+
+.pdf-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pdf-section-title span {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border: 1px solid rgba(245, 245, 247, 0.26);
+  border-radius: 999px;
+  color: rgba(245, 245, 247, 0.7);
+  font-family:
+    "Geist Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 10px;
+}
+
+.pdf-section-title h2 {
+  color: #f5f5f7;
+  font-size: 18px;
+  font-weight: 520;
+}
+
+.pdf-quadrants {
+  display: grid;
+  gap: 10px;
+}
+
+.pdf-overview {
+  display: grid;
+  grid-template-columns: 242px 1fr;
+  gap: 22px;
+  align-items: center;
+}
+
+.pdf-radar-card {
+  position: relative;
+  display: grid;
+  min-height: 242px;
+  place-items: center;
+}
+
+.pdf-radar-card svg {
+  width: 224px;
+  height: 224px;
+  overflow: visible;
+}
+
+.pdf-radar-card line {
+  stroke: rgba(245, 245, 247, 0.2);
+  stroke-width: 1;
+}
+
+.pdf-radar-card polygon {
+  fill: rgba(245, 245, 247, 0.08);
+  stroke: rgba(245, 245, 247, 0.86);
+  stroke-width: 1.6;
+}
+
+.pdf-radar-card circle {
+  fill: #f5f5f7;
+}
+
+.pdf-radar-label {
+  position: absolute;
+  color: rgba(245, 245, 247, 0.72);
+  font-family:
+    "Geist Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 10px;
+}
+
+.pdf-radar-label.top {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pdf-radar-label.right {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.pdf-radar-label.bottom {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pdf-radar-label.left {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.pdf-quadrant {
+  border-top: 1px solid rgba(245, 245, 247, 0.16);
+  padding-top: 10px;
+}
+
+.pdf-quadrant-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pdf-quadrant h3 {
+  color: #f5f5f7;
+  font-size: 16px;
+  font-weight: 520;
+}
+
+.pdf-quadrant-head span,
+.pdf-quadrant small,
+.pdf-note {
+  color: rgba(245, 245, 247, 0.64);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.pdf-bar {
+  height: 1px;
+  margin: 9px 0 8px;
+  background: rgba(245, 245, 247, 0.18);
+}
+
+.pdf-bar i {
+  display: block;
+  height: 1px;
+  background: #f5f5f7;
+}
+
+.pdf-quadrant p {
+  margin-bottom: 5px;
+  color: rgba(245, 245, 247, 0.9);
+  font-size: 12px;
+}
+
+.pdf-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.pdf-body-copy {
+  color: rgba(245, 245, 247, 0.84);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.pdf-note {
+  margin-top: 10px;
+}
+
+.pdf-list,
+.pdf-actions ul {
+  display: grid;
+  gap: 11px;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-list li,
+.pdf-actions li {
+  position: relative;
+  padding-left: 16px;
+  color: rgba(245, 245, 247, 0.78);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.pdf-list li::before,
+.pdf-actions li::before {
+  content: "";
+  position: absolute;
+  top: 0.66em;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(245, 245, 247, 0.72);
+}
+
+.pdf-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.pdf-actions article {
+  border-top: 1px solid rgba(245, 245, 247, 0.18);
+  padding-top: 14px;
+}
+
+.pdf-actions h3 {
+  margin-bottom: 12px;
+  color: #f5f5f7;
+  font-size: 16px;
+  font-weight: 520;
+}
+
+.pdf-final {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 28px;
+  margin-top: auto;
+  border-top: 1px solid rgba(245, 245, 247, 0.16);
+  padding-top: 24px;
+}
+
+.pdf-final p:not(.pdf-kicker) {
+  color: rgba(245, 245, 247, 0.78);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pdf-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  border-top: 1px solid rgba(245, 245, 247, 0.14);
+  padding-top: 18px;
+  color: rgba(245, 245, 247, 0.46);
+  font-family:
+    "Geist Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 10px;
+}
+
+.meta-actions {
+  gap: 12px;
+}
+
 .result-prototype .section-title {
   grid-template-columns: 1fr;
 }

@@ -24,7 +24,7 @@
 - 评分模型升级：每个象限已新增独立发展阶段，整体 Human 3.x / 3.3 门槛已按四象限协同规则收紧。
 - 免费结果系统：已加入 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 24 小时 Immediate Next Action。
 - 分享卡片下载：已支持在浏览器生成 PNG 并下载。
-- 完整报告下载：已支持在浏览器生成 PDF，并处理 html2canvas 对现代 CSS 颜色的兼容问题。
+- 完整报告预览/下载：已支持两页 A4 黑底 PDF 报告版式，可先在浏览器预览，再用同一版式下载 PDF。
 - 静态分享链接：已支持复制 `/result/share?a=...`，通过 URL 中的答案码重建同一份结果。
 - 真实结果恢复：`/result` 已移除视觉复核用预设结果，正式页面只读取当前浏览器真实答题结果；无结果时展示空态。
 - 体验细节：已补充首页信任提示、答题页保存/选择提示、结果页顶部速览、分享入口说明和异常状态操作入口。
@@ -53,6 +53,7 @@
 - UI v2 落地后 `pnpm check` 通过：数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
 - UI v2 第一轮小修后再次运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
 - 真实结果恢复和 API 接入后再次运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
+- PDF 导出版式重构后，`pnpm lint`、`pnpm test`、`pnpm build` 和 `pnpm test:e2e` 已通过；E2E 覆盖 PDF 预览入口、2 张 A4 sheet、黑底、两页均无 `scrollHeight > clientHeight` 裁切和 PDF 文件下载。
 
 ## 如何运行
 
@@ -96,7 +97,9 @@ pnpm check
 - `/`：首页。
 - `/assessment`：答题页。
 - `/result`：读取当前浏览器最近一次结果。
+- `/result?pdfPreview=1`：读取当前浏览器最近一次结果，并展示两页 A4 黑底 PDF 预览版。
 - `/result/[id]`：预留分享结果路由，第一版仍读取本地结果。
+- `/result/share?a=...&pdfPreview=1`：读取分享答案码并展示两页 A4 黑底 PDF 预览版，适合没有本地结果时做版式确认。
 - `/api/submit`：预留服务端提交接口。
 - `/api/assessment/score`：正式评分接口，接收答案并返回 `BuiltResult`，不写数据库。
 - `/api/share/encode`：分享码生成接口，接收答案并返回分享码和 `/result/share?a=...` 路径。
@@ -135,8 +138,10 @@ pnpm check
 - `components/SiteNav.tsx`：静态原型产品化后的共享导航，包含桌面四模块下拉导航和移动端 Apple 式两级全屏菜单。
 - `components/ResultClient.tsx`：结果页本地读取。正式 `/result` 不再使用视觉复核预设结果，没有真实 localStorage 结果时展示空态。
 - `components/ResultReport.tsx`：结果页静态原型产品化报告结构，复用 `result-builder` 输出、行动建议、分享卡片展示、分享链接和 PNG/PDF 下载。
+- `components/PrintableResultReport.tsx`：PDF 专用两页 A4 黑底报告版式，使用真实 `BuiltResult` 数据，隐藏网页导航、按钮、菜单和分享控件。
 - `lib/share-card-image.ts`：Canvas 生成 PNG 分享卡片。
-- `lib/report-pdf.ts`：完整报告 PDF 下载，导出时会规避 html2canvas 对 `lab/oklch` 颜色的兼容问题。
+- `lib/report-pdf.ts`：完整报告 PDF 下载，逐页捕获 `[data-pdf-sheet]` 后写入 A4 PDF，避免长网页截图切片；导出时规避 html2canvas 对 `lab/oklch` 颜色的兼容问题。
+- `lib/stage-format.ts`：阶段展示格式化，避免 Phase 中英文重复显示。
 - `lib/share-link.ts`：静态分享链接编码和解码。
 - `components/SharedResultClient.tsx`：读取分享链接并重建结果；优先调用分享解码和评分 API，失败时回退到本地解码和 `buildResult`。
 - `app/api/submit/route.ts`：未来提交接口。
@@ -188,8 +193,9 @@ pnpm check
 - `/result/[id]` 还不是真实分享链接，因为第一版没有数据库。
 - `/result/share?a=...` 是当前静态分享链接方案，链接包含 48 个答案码；适合 MVP 验证，不适合作为长期隐私方案。
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
-- 分享卡片 PNG 和完整报告 PDF 已有桌面端 E2E 下载校验；移动端不同浏览器下载行为可能表现不同，仍需要真机验收。
-- 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、PDF 下载、无本地结果、无效分享链接、提交 API、评分 API、分享编码/解码 API 和非法答案值；仍可继续扩展更多边界输入。
+- 分享卡片 PNG 和两页 A4 PDF 已有桌面端 E2E 下载校验；移动端不同浏览器下载行为可能表现不同，仍需要真机验收。
+- PDF 当前是可预览的 2 页 A4 黑底报告版式；Page 1 裁切已修复并有 E2E 防回归断言，仍需要用户或 UI 窗口确认标题字号、四象限图大小、行动建议密度和免责声明长度。
+- 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、PDF 预览、PDF 下载、无本地结果、无效分享链接、提交 API、评分 API、分享编码/解码 API 和非法答案值；仍可继续扩展更多边界输入。
 - GitHub CLI 已补齐 `workflow` scope，远程 `main` 已同步；GitHub Actions CI 已触发并在修复 pnpm 构建脚本审批配置后通过，详情见 `docs/REMOTE_CI_STATUS.md`。
 - Human 层级和阶段阈值已按 `docs/SCORING_MODEL_UPGRADE_SPEC.md` 升级，并用模拟画像和关键边界分数组合完成自动化校准；仍需要真实用户或产品团队样例继续复核。
 - 当前四象限定义仍是 1.0 评估版：Spirit 的关系/共同体、Mind 的情绪/信念/觉察、Vocation 的资源/系统/长期影响、Body 的在场/身体感知主要在文档中说明，尚未完整进入题库和结果建议。
@@ -211,10 +217,11 @@ pnpm check
 7. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
 8. 让 UI 视觉与交互窗口先重点核对首页：`file://.../ui-prototypes/human-3-ui-v2.html` 对照 `http://localhost:3000/`，确认首屏、导航、粒子、模型叙事、四象限、层级、流程、结果预览和 debug panel 已接近原文件。
 9. 再按静态 HTML 验收标准核对 `/assessment`、`/result`、`/result/share`，重点看问卷圆点选项、结果页四象限轴线图、下一步圆点待办和分享卡片。
-10. 让总控安排 GitHub/Vercel 同步窗口，把已通过本地 `pnpm check` 的真实结果和 API 接入版本发布到远程。
-11. 继续扩展更细的边界输入端到端测试，尤其是非 JSON 请求体、极短/极长分享码和 API 回退路径。
-12. 1.1 再做源头维度扩展：题库版本、结果模板和行动建议补充 Spirit 关系/共同体、Mind 情绪/信念/觉察、Vocation 资源/系统/长期影响、Body 在场/身体感知。
-13. 2.0 再承接高级报告：Metacrisis、AI、Flow、Channels、Digital Leverage、完整 Archetype / Metatype 系统。
-14. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
-15. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
-16. 实现复测记录。
+10. 让 UI 视觉窗口重新打开 `/result?pdfPreview=1` 或 `/result/share?a=v1.444444444444444444444444444444444444444444444444&pdfPreview=1`，确认 Page 1 不再裁切，并继续复核 PDF 版式。
+11. 让总控安排 GitHub/Vercel 同步窗口，把已通过本地验证的 PDF 预览/导出版本发布到远程。
+12. 继续扩展更细的边界输入端到端测试，尤其是非 JSON 请求体、极短/极长分享码和 API 回退路径。
+13. 1.1 再做源头维度扩展：题库版本、结果模板和行动建议补充 Spirit 关系/共同体、Mind 情绪/信念/觉察、Vocation 资源/系统/长期影响、Body 在场/身体感知。
+14. 2.0 再承接高级报告：Metacrisis、AI、Flow、Channels、Digital Leverage、完整 Archetype / Metatype 系统。
+15. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
+16. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
+17. 实现复测记录。

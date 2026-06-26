@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import { ResultEmptyState, ResultReport } from "@/components/ResultReport";
+import {
+  PdfReportPreview,
+  ResultEmptyState,
+  ResultReport,
+} from "@/components/ResultReport";
 import questionsData from "@/data/questions.json";
 import quadrantsData from "@/data/quadrants.json";
 import recommendationsData from "@/data/recommendations.json";
@@ -22,9 +26,13 @@ import type {
 export function ResultClient() {
   const [result, setResult] = useState<BuiltResult | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isPdfPreview, setIsPdfPreview] = useState(false);
 
   useEffect(() => {
     queueMicrotask(() => {
+      setIsPdfPreview(
+        new URLSearchParams(window.location.search).get("pdfPreview") === "1",
+      );
       const stored = loadResult();
       if (!stored) {
         setResult(null);
@@ -68,6 +76,10 @@ export function ResultClient() {
         copy="请先完成一次评估。第一版结果只保存在当前浏览器中，如果更换设备、使用无痕窗口或清除浏览器数据，结果会消失。"
       />
     );
+  }
+
+  if (isPdfPreview) {
+    return <PdfReportPreview result={result} />;
   }
 
   return <ResultReport result={result} />;

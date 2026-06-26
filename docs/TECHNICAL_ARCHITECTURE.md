@@ -20,6 +20,7 @@
 - `QuadrantMap`：四象限状态。
 - `RecommendationBlock`：7 天、30 天、90 天建议。
 - `ResultReport`：结果页报告结构、行动建议、分享卡片展示、分享链接和 PNG/PDF 下载入口。
+- `PrintableResultReport`：PDF 专用两页 A4 黑底报告版式，供浏览器预览和导出复用。
 
 ## 核心函数
 
@@ -30,7 +31,9 @@
 - `scoreAssessment`：输出完整评分结果。
 - `buildResult`：把评分结果、阶段、象限、建议和模板组合为用户报告，包括 Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics 和 Immediate Next Action。
 - `buildShareCardImage`：用 Canvas 生成黑底 PNG 分享卡片。
+- `downloadFullReportPdf`：逐页捕获 `PrintableResultReport` 的 `[data-pdf-sheet]`，写入 A4 PDF；不捕获当前长结果页。
 - `encodeAnswersForShare` / `decodeAnswersFromShare`：把 48 个答案编码进 URL，或从静态分享链接恢复答案。
+- `formatPhaseLabel`：格式化阶段显示，避免 `phaseName` 已含中英文时再次拼接中文造成重复。
 
 ## 数据流
 
@@ -66,6 +69,13 @@ localStorage key：
 
 页面接入保持克制：`/assessment` 完成答题后优先调用评分 API，失败时回退本地 `buildResult`；`/result/share` 优先调用分享解码 + 评分 API，失败时回退本地解码和生成；复制分享链接优先调用分享编码 API，失败时回退本地编码。
 
+PDF 预览入口：
+
+- `/result?pdfPreview=1`：用当前浏览器本地结果渲染两页 A4 黑底预览。
+- `/result/share?a=...&pdfPreview=1`：用分享答案码重建结果并渲染两页 A4 黑底预览。
+
+PDF 导出不再捕获 `.result-prototype main` 长页面，而是捕获 `PrintableResultReport` 里的两张 `[data-pdf-sheet]`。这样每张 sheet 对应 PDF 的一页，避免长截图切片造成的分页拼接感。E2E 会检查两张 sheet 的 `scrollHeight <= clientHeight`，防止模块被裁切。
+
 `app/result/share/page.tsx` 是当前静态分享路由，不依赖数据库。它适合 MVP 验证，但 URL 中包含答案码；接入 Supabase 后应优先使用 `/result/[id]` 短链接。
 
 ## Supabase 接入方式
@@ -89,7 +99,7 @@ localStorage key：
 端到端测试使用 Playwright：
 
 - `playwright.config.ts`：在 `127.0.0.1:3100` 启动独立 Next.js 开发服务，避免影响用户当前打开的 `localhost:3000`。
-- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、脏缓存恢复、无本地结果、完成 48 题、结果页、PNG 下载、PDF 下载、无效分享链接、静态分享链接、提交 API、评分 API 和分享编码/解码 API。
+- `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、脏缓存恢复、无本地结果、完成 48 题、结果页、PNG 下载、PDF 预览、PDF 下载、无效分享链接、静态分享链接、提交 API、评分 API 和分享编码/解码 API。
 - `tests/e2e/mobile.spec.ts`：用移动端视口检查答题页核心控件和横向溢出。
 
 首次运行端到端测试前需要执行：

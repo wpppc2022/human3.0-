@@ -191,3 +191,9 @@
 - 原因：用户希望后续能按“页面接接口”继续开发；把评分和分享能力抽成接口可以稳定页面边界，但当前 MVP 没有数据库和登录，不能让临时 API 失败阻断用户完成评估。
 - 替代方案：继续全部在前端本地生成结果；或强制所有流程只走 API、失败即报错。
 - 影响：新增 `POST /api/assessment/score`、`POST /api/share/encode`、`POST /api/share/decode`；`/assessment`、`/result/share` 和复制分享链接已优先调用 API，失败时本地回退。评分、题库、结果模板和 localStorage 规则不变。
+
+- 日期：2026-06-26
+- 决策：PDF 导出使用独立两页 A4 黑底报告版式，不再捕获当前结果长页面并切片分页。
+- 原因：用户反馈当前 PDF 有屏幕截图和分页拼接感；PDF 应被视为单独的报告交付物，需要先有可打开的 A4 预览，确认版式后再用于正式下载。
+- 替代方案：继续用 html2canvas 捕获 `.result-prototype main` 后按 PDF 页高切片；或直接调用浏览器打印当前页面。
+- 影响：新增 `PrintableResultReport` 和 `/result?pdfPreview=1` 预览入口；`downloadFullReportPdf` 改为逐页捕获 `[data-pdf-sheet]`。结果页视觉、题库、评分、结果结构和分享卡片 PNG 不变。

@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import { ResultEmptyState, ResultReport } from "@/components/ResultReport";
+import {
+  PdfReportPreview,
+  ResultEmptyState,
+  ResultReport,
+} from "@/components/ResultReport";
 import questionsData from "@/data/questions.json";
 import quadrantsData from "@/data/quadrants.json";
 import recommendationsData from "@/data/recommendations.json";
@@ -65,9 +69,13 @@ function buildSharedResultLocally(shareCode: string) {
 export function SharedResultClient({ shareCode }: { shareCode?: string }) {
   const [result, setResult] = useState<BuiltResult | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isPdfPreview, setIsPdfPreview] = useState(false);
 
   useEffect(() => {
     queueMicrotask(async () => {
+      setIsPdfPreview(
+        new URLSearchParams(window.location.search).get("pdfPreview") === "1",
+      );
       if (!shareCode) {
         setResult(null);
         setIsLoaded(true);
@@ -104,6 +112,10 @@ export function SharedResultClient({ shareCode }: { shareCode?: string }) {
         copy="链接可能不完整，或者来自旧版本。你可以重新完成一次评估生成新的结果，也可以请分享者重新复制链接。"
       />
     );
+  }
+
+  if (isPdfPreview) {
+    return <PdfReportPreview result={result} shared />;
   }
 
   return <ResultReport result={result} shared />;

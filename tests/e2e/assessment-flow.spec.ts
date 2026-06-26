@@ -142,6 +142,35 @@ test("user can complete assessment, view result, and open share link", async ({
     /rawScore|averageScore|平均分：|失衡分/,
   );
 
+  await page.getByRole("link", { name: "预览 PDF" }).click();
+  await expect(page).toHaveURL(/\/result\?pdfPreview=1$/);
+  await expect(page.getByText("完整报告导出预览")).toBeVisible();
+  await expect(page.locator("[data-pdf-sheet]")).toHaveCount(2);
+  await expect(page.locator("[data-pdf-sheet]").first()).toHaveCSS(
+    "background-color",
+    "rgb(0, 0, 0)",
+  );
+  await expect(page.locator("[data-pdf-sheet]").first()).not.toContainText(
+    /rawScore|averageScore|平均分：|失衡分/,
+  );
+  const sheetOverflowStates = await page
+    .locator("[data-pdf-sheet]")
+    .evaluateAll((sheets) =>
+      sheets.map((sheet) => ({
+        clientHeight: sheet.clientHeight,
+        scrollHeight: sheet.scrollHeight,
+      })),
+    );
+
+  expect(sheetOverflowStates).toEqual([
+    expect.objectContaining({ clientHeight: expect.any(Number), scrollHeight: expect.any(Number) }),
+    expect.objectContaining({ clientHeight: expect.any(Number), scrollHeight: expect.any(Number) }),
+  ]);
+  for (const sheet of sheetOverflowStates) {
+    expect(sheet.scrollHeight).toBeLessThanOrEqual(sheet.clientHeight);
+  }
+  await page.goto("/result");
+
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /保存卡片/ }).click();
   const download = await downloadPromise;

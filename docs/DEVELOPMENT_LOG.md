@@ -398,3 +398,28 @@
 - 修改文件：`components/ResultClient.tsx`、`components/AssessmentFlow.tsx`、`components/SharedResultClient.tsx`、`components/ResultReport.tsx`、`lib/report-pdf.ts`、`app/api/assessment/score/route.ts`、`app/api/share/encode/route.ts`、`app/api/share/decode/route.ts`、`tests/e2e/assessment-flow.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/RELEASE_1_0.md`、`docs/DEBUG_AND_API_ARCHITECTURE.md`、`docs/DECISIONS.md`。
 - 当前风险：PDF/PNG 下载已在桌面 Chromium E2E 中验证，但 iPhone Safari 和 Android Chrome 的真实下载行为仍需要真机验收；新评分/分享 API 目前不写库，仍是无登录 MVP 边界。
 - 下一步建议：由总控安排 GitHub/Vercel 同步窗口发布，再让 UI 窗口和真实手机分别复核结果页下载、分享链接和移动端按钮体验。
+
+### PDF 导出版式重构：两页 A4 黑底预览版
+
+- 完成：根据用户和 UI 窗口反馈，停止使用“捕获当前长结果页并切片分页”的 PDF 思路，改为独立的两页 A4 黑底报告版式。
+- 完成：新增 `components/PrintableResultReport.tsx`，用真实 `BuiltResult` 数据渲染 PDF 专用 DOM：Page 1 为结果总览、元信息、四象限轴线轮廓图和四象限状态摘要；Page 2 为状态模式、优势盲点、7/30/90 天行动建议和免责声明。
+- 完成：新增浏览器预览入口：本机结果可打开 `/result?pdfPreview=1`；分享结果可打开 `/result/share?a=...&pdfPreview=1`。预览直接显示两张 A4 sheet，供用户先确认版式。
+- 完成：重写 `lib/report-pdf.ts`，导出时逐页捕获 `[data-pdf-sheet]`，每张 sheet 写入一页 A4 PDF，不再把一张长页面截图切成多页，减少分页拼接感。
+- 完成：PDF 版式黑底、隐藏网页导航/返回问卷/分享按钮/下载按钮/菜单，不展示原始分数。
+- 完成：保留 PNG 分享卡片下载能力，不改题库、评分、API 结果结构或 localStorage 流程。
+- 完成：E2E 增加 PDF 预览断言，确认预览入口可打开、存在 2 张 A4 sheet、sheet 背景为黑色，并继续校验 PDF 文件下载。
+- 修改文件：`components/PrintableResultReport.tsx`、`components/ResultReport.tsx`、`components/ResultClient.tsx`、`components/SharedResultClient.tsx`、`lib/report-pdf.ts`、`app/prototype.css`、`tests/e2e/assessment-flow.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/DECISIONS.md`。
+- 当前风险：当前是 2 页 A4 预览版，内容压缩和字重/行距仍需要用户或 UI 窗口人工确认；真机浏览器 PDF 下载行为仍需验收。
+- 下一步建议：让用户先打开预览入口确认版式，再由 UI 窗口细调 A4 排版密度、标题字号、四象限图大小和行动建议长度。
+
+### PDF 预览 P0 裁切修复
+
+- 完成：根据 UI 视觉窗口复核，修复 PDF 预览 Page 1 内容裁切问题。
+- 完成：Page 1 现在只保留标题、阶段信息、核心摘要、元信息、四象限图和四象限状态表。
+- 完成：将“当前模式 / 核心卡点”整体移动到 Page 2 顶部，避免 Page 1 底部模块被截断。
+- 完成：Phase 文案去重，`Uncertainty / 不确定期 / 不确定期` 调整为 `Uncertainty / 不确定期`；结果页和 PDF 共用 `formatPhaseLabel`。
+- 完成：预览页说明补充“以下两页即为导出内容预览”，Boundary 灰度略提高但仍保持小字号。
+- 完成：E2E 增加两张 A4 sheet 均满足 `scrollHeight <= clientHeight` 的断言，防止再次出现内容裁切。
+- 修改文件：`components/PrintableResultReport.tsx`、`components/ResultReport.tsx`、`lib/stage-format.ts`、`app/prototype.css`、`tests/e2e/assessment-flow.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/TODO.md`。
+- 当前风险：当前自动化已确认不裁切，但版式美感仍需要 UI 窗口二次复核。
+- 下一步建议：重新打开原预览入口交给 UI 视觉窗口复核，确认 Page 1 不再裁切后再进入同步。

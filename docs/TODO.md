@@ -11,6 +11,7 @@
 - 根据真实用户反馈继续审校免费结果系统文案：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action。
 - 审校分享卡片 PNG 的视觉层级、文案长度和移动端下载体验。
 - 用真实手机浏览器复核分享卡片 PNG 和完整报告 PDF 下载体验，尤其是 iPhone Safari 与 Android Chrome。
+- 打开 `/result?pdfPreview=1` 或 `/result/share?a=v1.444444444444444444444444444444444444444444444444&pdfPreview=1`，由用户或 UI 窗口确认两页 A4 黑底 PDF 预览版式，重点复核 Page 1 不再裁切。
 - 优先按 `ui-prototypes/human-3-ui-v2.html` 原文件复核首页 `/`，确认当前实现是直接套用原 HTML，而不是 React 复刻或二次设计。
 - 按 `ui-prototypes/` 另外两份静态 HTML 复核 `/assessment`、`/result`、`/result/share`，确认没有重新设计或偏离原型结构。
 - 在总控确认后执行 GitHub/Vercel 同步，把已通过本地 `pnpm check` 的真实结果和 API 接入版本发布到公网。
