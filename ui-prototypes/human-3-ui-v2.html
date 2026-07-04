@@ -232,7 +232,7 @@
       }
 
       html.debug-reduced .reveal,
-      html.debug-reduced .level,
+      html.debug-reduced .insight-card,
       html.debug-reduced .process-step,
       html.debug-reduced .media-story {
         transition: none !important;
@@ -808,38 +808,267 @@
         opacity: 1;
       }
 
-      .levels {
-        display: grid;
-        gap: var(--grid-gap);
-        margin-top: var(--space-8);
+      #levels {
+        background: #111;
       }
 
-      .level {
+      .insight-carousel {
+        min-width: 0;
+        margin-top: clamp(56px, 5vw, 72px);
+      }
+
+      .insight-track {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        gap: 20px;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        padding: 0 40px 10px 0;
+        scroll-behavior: smooth;
+        scroll-padding-inline: 0 var(--grid-gutter);
+        scroll-snap-type: inline mandatory;
+        scrollbar-width: none;
+        touch-action: pan-x pan-y;
+      }
+
+      .insight-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      .insight-card {
         position: relative;
-        display: grid;
-        gap: var(--space-4);
-        min-height: 220px;
-        border-radius: var(--tile-radius);
-        background: transparent;
-        padding: clamp(var(--space-5), 4vw, var(--space-7));
-        opacity: 0.58;
-        transform: translateY(18px);
+        display: flex;
+        height: 470px;
+        min-width: 0;
+        flex: 0 0 min(84vw, 360px);
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 8px;
+        background: #000;
+        padding: 32px;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        opacity: 1;
+        transform: none;
         transition:
-          opacity 500ms ease,
-          transform 500ms ease,
-          background 500ms ease;
+          background 220ms ease;
       }
 
-      .level.is-visible {
+      #false-transformation .insight-card {
+        height: 420px;
+        background: #121212;
+      }
+
+      .insight-card.is-expanded {
+        background: #050505;
+      }
+
+      #false-transformation .insight-card.is-expanded {
+        background: #161616;
+      }
+
+      .insight-symbol {
+        display: grid;
+        width: 56px;
+        height: 56px;
+        flex: 0 0 auto;
+        place-items: start;
+        color: #ededed;
+      }
+
+      .insight-symbol svg {
+        width: 48px;
+        height: 48px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.5;
+      }
+
+      #false-transformation .insight-symbol svg {
+        width: 52px;
+        height: 52px;
+      }
+
+      .insight-label {
+        margin-top: 28px;
+        color: #878787;
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+
+      .insight-card h3 {
+        max-width: 12ch;
+        margin: 12px 0 0;
+        color: #ededed;
+        font-size: clamp(30px, 3vw, 38px);
+        font-weight: 650;
+        letter-spacing: -0.04em;
+        line-height: 1.14;
+      }
+
+      .transformation-card h3 {
+        max-width: none;
+        font-family: var(--mono);
+        font-size: clamp(26px, 2.4vw, 30px);
+        font-weight: 540;
+        letter-spacing: -0.02em;
+      }
+
+      .transformation-key {
+        margin: 12px 0 0;
+        color: #ededed;
+        font-size: clamp(18px, 1.8vw, 20px);
+        line-height: 1.35;
+      }
+
+      .insight-content {
+        position: relative;
+        min-height: 132px;
+        margin-top: 18px;
+      }
+
+      .transformation-card .insight-content {
+        min-height: 94px;
+        margin-top: 14px;
+      }
+
+      .insight-summary,
+      .insight-more {
+        position: absolute;
+        inset: 0;
+        max-width: 36ch;
+        margin: 0;
+        transition:
+          opacity 220ms ease,
+          transform 220ms ease;
+      }
+
+      .insight-summary {
+        color: #a0a0a0;
         opacity: 1;
         transform: translateY(0);
-        background: transparent;
       }
 
-      .level-code {
-        color: var(--silver);
+      .insight-more {
+        color: #a0a0a0;
+        font-size: 13px;
+        line-height: 1.45;
+        opacity: 0;
+        transform: translateY(6px);
+        pointer-events: none;
+      }
+
+      .insight-card.is-expanded .insight-summary {
+        opacity: 0;
+        transform: translateY(-6px);
+        pointer-events: none;
+      }
+
+      .insight-card.is-expanded .insight-more {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .insight-more dl {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+      }
+
+      .insight-more dl div {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 10px;
+      }
+
+      .insight-more dt {
+        color: #878787;
         font-family: var(--mono);
-        font-size: var(--font-small);
+      }
+
+      .insight-more dd {
+        margin: 0;
+      }
+
+      .insight-toggle {
+        position: absolute;
+        right: 32px;
+        bottom: 32px;
+        display: inline-grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 50%;
+        background: transparent;
+        color: #ededed;
+        cursor: pointer;
+        transition:
+          background 220ms ease,
+          color 220ms ease,
+          transform 220ms ease;
+      }
+
+      .insight-toggle::before,
+      .insight-toggle::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 1px;
+        background: currentColor;
+      }
+
+      .insight-toggle::after {
+        transform: rotate(90deg);
+      }
+
+      .insight-card.is-expanded .insight-toggle {
+        background: #ededed;
+        color: #000;
+        transform: rotate(45deg);
+      }
+
+      .insight-carousel-foot {
+        display: flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 18px;
+      }
+
+      .insight-status {
+        color: #878787;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .insight-controls {
+        display: flex;
+        gap: 10px;
+      }
+
+      .insight-arrow {
+        display: inline-grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 50%;
+        background: transparent;
+        color: #ededed;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .insight-arrow:disabled {
+        opacity: 0.26;
+        cursor: default;
       }
 
       .turning-point {
@@ -847,45 +1076,30 @@
         display: grid;
         align-items: center;
         overflow: hidden;
-        padding: clamp(var(--space-9), 12vw, 160px) 0;
+        padding: clamp(96px, 8vw, 128px) 0;
         background: #000;
       }
 
+      .turning-point .section-inner {
+        min-width: 0;
+      }
+
       .turning-title {
-        max-width: 980px;
-        margin: 0 auto;
-        text-align: center;
-      }
-
-      .transformation-grid {
-        display: grid;
-        gap: var(--grid-gap);
-        margin-top: var(--space-8);
-      }
-
-      .transformation {
-        display: grid;
-        gap: var(--space-4);
-        border-radius: var(--tile-radius);
-        background: transparent;
-        padding: clamp(var(--space-5), 4vw, var(--space-7));
-      }
-
-      .transformation h3 {
-        font-family: var(--mono);
-        font-size: clamp(24px, 3.5vw, 44px);
-        letter-spacing: -0.02em;
+        max-width: 760px;
+        margin: 0;
+        text-align: left;
       }
 
       .emphasis-line {
+        width: 68%;
         max-width: 820px;
-        margin: var(--space-8) auto 0;
+        margin: clamp(56px, 5vw, 72px) 0 0;
         color: var(--ink);
-        text-align: center;
-        font-size: clamp(28px, 4vw, 56px);
-        font-weight: 680;
-        letter-spacing: -0.05em;
-        line-height: 1.08;
+        text-align: left;
+        font-size: clamp(24px, 2.4vw, 30px);
+        font-weight: 620;
+        letter-spacing: -0.03em;
+        line-height: 1.45;
       }
 
       .process {
@@ -1484,15 +1698,6 @@
           pointer-events: none;
         }
 
-        .levels {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          align-items: stretch;
-        }
-
-        .transformation-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
         .report-preview {
           grid-template-columns: 0.88fr 1.12fr;
         }
@@ -1775,6 +1980,72 @@
         }
       }
 
+      @media (min-width: 961px) and (max-width: 1399px) {
+        .insight-card {
+          flex-basis: min(36vw, 420px);
+        }
+      }
+
+      @media (min-width: 1400px) {
+        .insight-carousel {
+          width: calc(100% + 74px);
+        }
+
+        .insight-track {
+          padding-right: 0;
+        }
+
+        .insight-card {
+          flex-basis: calc((100% - 40px) / 3);
+        }
+      }
+
+      @media (max-width: 960px) {
+        .insight-carousel {
+          width: calc(100% + var(--grid-gutter));
+        }
+
+        .insight-track {
+          gap: 12px;
+          padding-right: var(--grid-gutter);
+        }
+      }
+
+      @media (max-width: 719px) {
+        .insight-carousel {
+          margin-top: clamp(36px, 10vw, 48px);
+        }
+
+        .insight-card {
+          height: 430px;
+          flex-basis: min(84vw, 360px);
+          padding: 24px;
+        }
+
+        #false-transformation .insight-card {
+          height: 410px;
+        }
+
+        .insight-card h3 {
+          font-size: clamp(28px, 8vw, 36px);
+        }
+
+        .insight-label {
+          margin-top: 20px;
+        }
+
+        .insight-toggle {
+          right: 24px;
+          bottom: 24px;
+        }
+
+        .emphasis-line {
+          width: 100%;
+          margin-top: clamp(36px, 10vw, 48px);
+          font-size: clamp(20px, 6vw, 24px);
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         html {
           scroll-behavior: auto;
@@ -1786,6 +2057,10 @@
           animation-duration: 1ms !important;
           animation-iteration-count: 1 !important;
           transition-duration: 1ms !important;
+        }
+
+        .insight-track {
+          scroll-behavior: auto;
         }
       }
     </style>
@@ -2088,22 +2363,70 @@
               层级不是排行榜，也不是分数越高越好。它描述的是一个人如何从默认脚本，逐步走向更有意识的生活系统。
             </p>
           </div>
-          <div class="levels">
-            <article class="level reveal">
-              <span class="level-code">Level 1.0</span>
-              <h3>按照默认脚本生活。</h3>
-              <p class="small-copy">更多依赖外部规则、权威、惯性和他人的期待。</p>
-            </article>
-            <article class="level reveal delay-1">
-              <span class="level-code">Level 2.0</span>
-              <h3>开始自己选择。</h3>
-              <p class="small-copy">追求突破、成就和独立判断，但也可能太执着于自己的方式。</p>
-            </article>
-            <article class="level reveal delay-2">
-              <span class="level-code">Level 3.0</span>
-              <h3>有意识地设计生活系统。</h3>
-              <p class="small-copy">能整合复杂现实，理解不同视角，并建立适合自己的系统。</p>
-            </article>
+          <div class="insight-carousel reveal" data-card-carousel>
+            <div class="insight-track" id="levels-track" data-card-track role="region" aria-label="Human 3.0 成长层级" tabindex="0">
+              <article class="insight-card level-card" data-card-name="Level 1.0">
+                <span class="insight-symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="1"></circle></svg>
+                </span>
+                <span class="insight-label">Level 1.0</span>
+                <h3>按照默认脚本生活</h3>
+                <div class="insight-content">
+                  <p class="insight-summary small-copy">更多依赖外部规则、权威、惯性和他人的期待。</p>
+                  <div class="insight-more" id="level-1-more" aria-hidden="true">
+                    <dl>
+                      <div><dt>核心状态</dt><dd>按照默认脚本生活</dd></div>
+                      <div><dt>常见局限</dt><dd>依赖外部规则、权威、惯性和他人的期待</dd></div>
+                      <div><dt>发展方向</dt><dd>开始自己选择</dd></div>
+                    </dl>
+                  </div>
+                </div>
+                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="level-1-more" aria-label="展开 Level 1.0 补充说明"></button>
+              </article>
+              <article class="insight-card level-card" data-card-name="Level 2.0">
+                <span class="insight-symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></svg>
+                </span>
+                <span class="insight-label">Level 2.0</span>
+                <h3>开始自己选择</h3>
+                <div class="insight-content">
+                  <p class="insight-summary small-copy">追求突破、成就和独立判断，但也可能太执着于自己的方式。</p>
+                  <div class="insight-more" id="level-2-more" aria-hidden="true">
+                    <dl>
+                      <div><dt>核心状态</dt><dd>开始自己选择</dd></div>
+                      <div><dt>常见局限</dt><dd>可能太执着于自己的方式</dd></div>
+                      <div><dt>发展方向</dt><dd>有意识地设计生活系统</dd></div>
+                    </dl>
+                  </div>
+                </div>
+                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="level-2-more" aria-label="展开 Level 2.0 补充说明"></button>
+              </article>
+              <article class="insight-card level-card" data-card-name="Level 3.0">
+                <span class="insight-symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></svg>
+                </span>
+                <span class="insight-label">Level 3.0</span>
+                <h3>有意识地设计生活系统</h3>
+                <div class="insight-content">
+                  <p class="insight-summary small-copy">能整合复杂现实，理解不同视角，并建立适合自己的系统。</p>
+                  <div class="insight-more" id="level-3-more" aria-hidden="true">
+                    <dl>
+                      <div><dt>核心状态</dt><dd>有意识地设计生活系统</dd></div>
+                      <div><dt>常见局限</dt><dd>需要整合复杂现实与不同视角</dd></div>
+                      <div><dt>发展方向</dt><dd>建立适合自己的系统</dd></div>
+                    </dl>
+                  </div>
+                </div>
+                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="level-3-more" aria-label="展开 Level 3.0 补充说明"></button>
+              </article>
+            </div>
+            <div class="insight-carousel-foot">
+              <span class="insight-status" data-card-status aria-live="polite">01 / 03</span>
+              <div class="insight-controls" aria-label="层级卡片导航">
+                <button class="insight-arrow" type="button" data-card-prev aria-label="上一张层级卡片" disabled>←</button>
+                <button class="insight-arrow" type="button" data-card-next aria-label="下一张层级卡片">→</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -2113,22 +2436,55 @@
           <div class="turning-title reveal">
             <h2>你可能只是把“理解”误认为“改变”。</h2>
           </div>
-          <div class="transformation-grid">
-            <article class="transformation reveal">
-              <span class="index">01</span>
-              <h3>Knowledge</h3>
-              <p class="small-copy">你知道什么。你读过、听过、理解过，但它还没有进入你的行为。</p>
-            </article>
-            <article class="transformation reveal delay-1">
-              <span class="index">02</span>
-              <h3>Experience</h3>
-              <p class="small-copy">你做过什么。你尝试过，也经历过，但还不一定能稳定复现。</p>
-            </article>
-            <article class="transformation reveal delay-2">
-              <span class="index">03</span>
-              <h3>Skill</h3>
-              <p class="small-copy">你真正掌握什么。你能在现实压力下，持续、稳定、反复做到。</p>
-            </article>
+          <div class="insight-carousel reveal" data-card-carousel>
+            <div class="insight-track" id="transformation-track" data-card-track role="region" aria-label="知识到技能的三个阶段" tabindex="0">
+              <article class="insight-card transformation-card" data-card-name="Knowledge">
+                <span class="insight-symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>
+                </span>
+                <span class="insight-label">01</span>
+                <h3>Knowledge</h3>
+                <p class="transformation-key">你知道什么</p>
+                <div class="insight-content">
+                  <p class="insight-summary small-copy">你读过、听过、理解过，但它还没有进入你的行为。</p>
+                  <p class="insight-more" id="knowledge-more" aria-hidden="true">自我观察：你读过、听过、理解过的内容，是否已经进入你的行为？</p>
+                </div>
+                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="knowledge-more" aria-label="展开 Knowledge 补充说明"></button>
+              </article>
+              <article class="insight-card transformation-card" data-card-name="Experience">
+                <span class="insight-symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"></circle><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path><circle cx="18" cy="5" r="3"></circle></svg>
+                </span>
+                <span class="insight-label">02</span>
+                <h3>Experience</h3>
+                <p class="transformation-key">你做过什么</p>
+                <div class="insight-content">
+                  <p class="insight-summary small-copy">你尝试过，也经历过，但还不一定能稳定复现。</p>
+                  <p class="insight-more" id="experience-more" aria-hidden="true">自我观察：你尝试过、经历过的改变，现在是否已经能够稳定复现？</p>
+                </div>
+                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="experience-more" aria-label="展开 Experience 补充说明"></button>
+              </article>
+              <article class="insight-card transformation-card" data-card-name="Skill">
+                <span class="insight-symbol" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="m2 9 3-3 3 3"></path><path d="M13 18H7a2 2 0 0 1-2-2V6"></path><path d="m22 15-3 3-3-3"></path><path d="M11 6h6a2 2 0 0 1 2 2v10"></path></svg>
+                </span>
+                <span class="insight-label">03</span>
+                <h3>Skill</h3>
+                <p class="transformation-key">你真正掌握什么</p>
+                <div class="insight-content">
+                  <p class="insight-summary small-copy">你能在现实压力下，持续、稳定、反复做到。</p>
+                  <p class="insight-more" id="skill-more" aria-hidden="true">自我观察：你是否能在现实压力下，持续、稳定、反复做到？</p>
+                </div>
+                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="skill-more" aria-label="展开 Skill 补充说明"></button>
+              </article>
+            </div>
+            <div class="insight-carousel-foot">
+              <span class="insight-status" data-card-status aria-live="polite">01 / 03</span>
+              <div class="insight-controls" aria-label="改变阶段卡片导航">
+                <button class="insight-arrow" type="button" data-card-prev aria-label="上一张改变阶段卡片" disabled>←</button>
+                <button class="insight-arrow" type="button" data-card-next aria-label="下一张改变阶段卡片">→</button>
+              </div>
+            </div>
           </div>
           <p class="emphasis-line reveal delay-3">
             HUMAN 3.0 关心的不是你知道多少。而是你是否真的变成了那样的人。
@@ -2582,7 +2938,7 @@
         { threshold: 0.16, rootMargin: "0px 0px -10% 0px" },
       );
 
-      document.querySelectorAll(".reveal, .level").forEach((node) => {
+      document.querySelectorAll(".reveal").forEach((node) => {
         revealObserver.observe(node);
       });
 
@@ -2612,6 +2968,70 @@
           const isOpen = option.classList.toggle("is-open");
           option.setAttribute("aria-expanded", String(isOpen));
         });
+      });
+
+      const setCardExpanded = (card, isExpanded) => {
+        const toggle = card.querySelector("[data-card-toggle]");
+        const detailId = toggle?.getAttribute("aria-controls");
+        const detail = detailId ? document.getElementById(detailId) : null;
+        if (!toggle || !detail) return;
+        const cardName = card.dataset.cardName || "当前卡片";
+        card.classList.toggle("is-expanded", isExpanded);
+        toggle.setAttribute("aria-expanded", String(isExpanded));
+        toggle.setAttribute("aria-label", `${isExpanded ? "收起" : "展开"} ${cardName} 补充说明`);
+        detail.setAttribute("aria-hidden", String(!isExpanded));
+      };
+
+      document.querySelectorAll("[data-card-toggle]").forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const card = toggle.closest(".insight-card");
+          const carousel = toggle.closest("[data-card-carousel]");
+          if (!card || !carousel) return;
+          const willExpand = !card.classList.contains("is-expanded");
+          carousel.querySelectorAll(".insight-card.is-expanded").forEach((openCard) => {
+            if (openCard !== card) setCardExpanded(openCard, false);
+          });
+          setCardExpanded(card, willExpand);
+        });
+      });
+
+      document.querySelectorAll("[data-card-carousel]").forEach((carousel) => {
+        const track = carousel.querySelector("[data-card-track]");
+        const previous = carousel.querySelector("[data-card-prev]");
+        const next = carousel.querySelector("[data-card-next]");
+        const status = carousel.querySelector("[data-card-status]");
+        const cards = Array.from(carousel.querySelectorAll(".insight-card"));
+        if (!track || !previous || !next || !status || cards.length === 0) return;
+
+        const cardDistance = () => {
+          const card = track.querySelector(".insight-card");
+          const gap = parseFloat(getComputedStyle(track).columnGap || "0");
+          return card ? card.getBoundingClientRect().width + gap : track.clientWidth * 0.86;
+        };
+        const updateControls = () => {
+          const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+          previous.disabled = track.scrollLeft <= 2;
+          next.disabled = track.scrollLeft >= maxScroll - 2;
+          const currentIndex = Math.min(
+            cards.length - 1,
+            Math.max(0, Math.round(track.scrollLeft / cardDistance())),
+          );
+          status.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
+        };
+        const scrollCards = (direction) => {
+          const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          track.scrollBy({
+            left: direction * cardDistance(),
+            behavior: reducedMotion ? "auto" : "smooth",
+          });
+        };
+
+        previous.addEventListener("click", () => scrollCards(-1));
+        next.addEventListener("click", () => scrollCards(1));
+        track.addEventListener("scroll", updateControls, { passive: true });
+        window.addEventListener("resize", updateControls, { passive: true });
+        updateControls();
+        requestAnimationFrame(updateControls);
       });
 
       document.querySelectorAll('[role="radiogroup"]').forEach((group) => {

@@ -423,3 +423,71 @@
 - 修改文件：`components/PrintableResultReport.tsx`、`components/ResultReport.tsx`、`lib/stage-format.ts`、`app/prototype.css`、`tests/e2e/assessment-flow.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/TODO.md`。
 - 当前风险：当前自动化已确认不裁切，但版式美感仍需要 UI 窗口二次复核。
 - 下一步建议：重新打开原预览入口交给 UI 视觉窗口复核，确认 Page 1 不再裁切后再进入同步。
+
+### PDF 版式回退和手机端菜单修复
+
+- 完成：用户否决“无 marker + MUJI 三级分隔线”试验后，已手工精确撤销该轮未提交 CSS 和 E2E 改动，恢复上一版无数字圆点和原有单层横线样式；未使用 `git reset`、`git checkout` 或整库回滚。
+- 保留：两页 A4 黑底独立报告、Page 1 无裁切、当前模式/核心卡点位于 Page 2、Phase 去重、所有页右上角无 stage code、普通网页结果页交互式待办按钮和手机端菜单修复。
+- 完成：确认 PDF 页眉右上角 stage code 已全部移除，正文和元信息区仍保留必要阶段信息。
+- 完成：修复首页手机端菜单不可用问题。根因是首页 `/` 直接渲染静态 HTML 后，原型中的菜单按钮和菜单 DOM/脚本没有作为 React 可执行交互接入。
+- 完成：在首页静态原型渲染中注入移动端菜单 DOM，并新增 `HomePrototypeMenuController` 负责汉堡打开、一级模块、二级横向进入、返回、关闭、链接关闭和 body 滚动锁。
+- 完成：共享导航 `SiteNav` 的手机端菜单已用新增 E2E 覆盖，确认 `/assessment` 下可打开、进入二级、返回、关闭和解除 body 滚动锁。
+- 完成：E2E 恢复为无数字圆点样式断言，并继续校验两页无裁切、PDF 下载和手机菜单；运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 11 个端到端测试全部通过。
+- 修改文件：`app/page.tsx`、`app/prototype.css`、`components/HomePrototypeMenuController.tsx`、`components/PrintableResultReport.tsx`、`tests/e2e/assessment-flow.spec.ts`、`tests/e2e/mobile.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/RELEASE_1_0.md`、`docs/TODO.md`。
+- 当前风险：自动化已覆盖 Chromium 移动视口和恢复后的 PDF 版式，真实 iPhone Safari / Android Chrome 仍需要人工检查菜单触控和 PDF 下载表现；恢复效果仍需用户确认。
+- 下一步建议：让用户刷新本地预览，确认 PDF 已回到上一版，再决定是否提出新的、单独可预览的横线调整方案。
+
+### PDF 小节标题圆点移除
+
+- 完成：按用户最新标注，统一移除 `.pdf-section-title` 前置圆点，覆盖“当前模式、核心卡点、优势、盲点、7 / 30 / 90 天建议、四象限状态摘要”等所有同类 PDF 小节标题。
+- 完成：标题容器不再保留 marker 占位或 `gap`，标题文字直接左对齐；正文列表的无数字圆点保持不变，恢复后的原有横线状态保持不变。
+- 完成：E2E 增加全部 PDF 小节标题 marker 缺失和左对齐断言，同时确认正文列表 4px 圆点仍存在，并继续检查两页 A4 无裁切。
+- 修改文件：`app/prototype.css`、`tests/e2e/assessment-flow.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/RELEASE_1_0.md`。
+- 当前风险：仍需用户刷新 PDF 预览确认标题左对齐后的视觉节奏；真机 PDF 下载体验仍需人工验收。
+- 下一步建议：用户确认本轮标题调整后再决定是否同步 GitHub；本轮不推送。
+
+### 首页跨页返回一致性修复
+
+- 复现：真实 Chromium 直接打开首页时 Canvas 为 `1280 × 936`、粒子数为 `9000`；从 `/assessment` 或 `/result` 经 Next.js 软导航返回后 Canvas 退回默认 `300 × 150`、粒子状态为空；移动菜单返回首页锚点同样未初始化粒子。
+- 根因：首页直接渲染静态原型 HTML，其中 Canvas 和动画依赖内嵌脚本。浏览器完整加载会解析执行脚本，但 React/Next.js 软导航通过 `dangerouslySetInnerHTML` 插入内容时不会重新执行该脚本。
+- 完成：新增 `FullDocumentLink`，保留 `next/link` 语义和修饰键行为，普通点击时调用 `window.location.assign`；`SiteNav` 的品牌、桌面菜单和移动菜单中所有 `/`、`/#...` 入口使用该组件完整加载，普通产品路由继续使用标准 `next/link`。结果空态“返回首页”同步改为完整加载。
+- 完成：品牌/Home 返回首页顶部；首页锚点在完整加载和布局稳定后落到对应 section；首页内部锚点行为不变。
+- 完成：E2E 比较直接打开与从测评页、结果页返回时的 Canvas 尺寸、粒子数、section、导航和滚动状态，并覆盖移动菜单返回 `/#why` 后的粒子、锚点和 body 滚动锁恢复。
+- 完成：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 13 个端到端测试全部通过；PDF 标题无 marker、列表圆点保留和两页无裁切断言同步通过。
+- 修改文件：`components/FullDocumentLink.tsx`、`components/SiteNav.tsx`、`components/ResultReport.tsx`、`tests/e2e/assessment-flow.spec.ts`、`tests/e2e/mobile.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/RELEASE_1_0.md`。
+- 当前风险：自动化覆盖 Chromium 桌面与移动视口；iPhone Safari 和 Android Chrome 的原生锚点时序仍需真机复核。
+- 下一步建议：用户本地先检查从测评/结果返回首页，再做真机复核；本轮不推送 GitHub。
+
+### 首页 Levels 与 Transformation 横向卡片重构
+
+- 完成：只在 `ui-prototypes/human-3-ui-v2.html` 重构 `#levels` 与 `#false-transformation`，`app/page.tsx` 继续直接读取静态原型，没有创建第二套 React 首页。
+- 完成：两组复用 `.insight-carousel / .insight-track / .insight-card` 和统一 `[data-card-*]` 脚本，支持独立横向滚动、箭头、`01 / 03` 索引、移动 scroll-snap、同组最多展开一张、动态 aria-label/expanded/controls 和 reduced-motion。
+- 完成：Levels 保留 Level 1.0/2.0/3.0 原有标题与说明，展开只重组现有核心状态、局限和发展方向；Transformation 保留 Knowledge/Experience/Skill、中英文关键句、原说明及底部总结，展开只将现有内容改写为自我观察问句。
+- 完成：使用本地 Lucide 对应图标的静态 SVG 节点：CircleDot、GitBranch、Network、BookOpen、Route、Repeat2；stroke 为 `1.5`、无填充、`currentColor`，不依赖 Apple 私有资源或新增大型运行时。
+- 完成：Levels 使用 `#111/#000` 和桌面 470px 卡高；Transformation 使用 `#000/#121212` 和桌面 420px 卡高；移动端分别为 430px/410px，8px 圆角、无阴影/渐变/发光。
+- 验证：真实 Chromium 在 1440×900、1024×768、390×844、320×568 下页面均无横向溢出；1440 三卡完整显示且导航禁用，1024 显示约 2.5 卡，390/320 下一卡分别露出约 34px/23px；展开前后卡高不变。
+- 验证：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 15 个端到端测试全部通过；新增用例覆盖两组同组单开、固定卡高、独立箭头/索引、唯一 ID、移动 scroll-snap 和页面无横向溢出。
+- 修改文件：`ui-prototypes/human-3-ui-v2.html`、`tests/e2e/assessment-flow.spec.ts`、`tests/e2e/mobile.spec.ts`、`ui-prototypes/README.md`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/RELEASE_1_0.md`。
+- 当前风险：真实 iPhone Safari/Android Chrome 的横滑惯性与触控手感仍需真机验收；用户/UI 窗口仍需确认最终视觉密度。
+- 下一步建议：先本地视觉验收，不同步 GitHub。
+
+### 移动 carousel 卡片 reveal P0 修复
+
+- 根因：六张 `.insight-card` 继承全局 `.reveal`，IntersectionObserver 阈值为 16%；390px/320px 下下一卡仅露出约 34px/23px，未达阈值，因此保持透明和位移。`translateY(12px)` 还扩大了轨道纵向滚动范围。
+- 完成：移除所有卡片自身的 `reveal/delay`，将 reveal 提升到两个 `.insight-carousel` 容器；卡片固定为 `opacity:1; transform:none`，不修改全局阈值。
+- 完成：保留两组展开互斥、aria、索引、箭头、scroll-snap、固定卡高、reduced-motion 和首页完整加载/Canvas 生命周期修复。
+- 验证：390×844 下下一卡露出约 34.4px，320×568 下约 23.2px；两组下一卡均为 `opacity:1/transform:none`；第二卡停靠后第三卡可见；两组轨道 `scrollHeight === clientHeight`；页面无横向溢出。
+- 验证：运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 15 个端到端测试全部通过。
+- 修改文件：`ui-prototypes/human-3-ui-v2.html`、`tests/e2e/mobile.spec.ts`、`docs/DEVELOPMENT_LOG.md`、`docs/HANDOFF.md`、`docs/TODO.md`、`docs/DECISIONS.md`、`docs/TECHNICAL_ARCHITECTURE.md`、`docs/RELEASE_1_0.md`。
+- 当前风险：真实 iPhone Safari/Android Chrome 的触控惯性仍需真机验收；1440px 无溢出时箭头是否完全隐藏属于 P2，本轮按要求不处理。
+- 下一步建议：用户刷新移动预览检查下一卡边缘，确认后再决定后续 P2；本轮不推送 GitHub。
+
+### 正式产品发布范围收口
+
+- 日期：2026-07-04。
+- 完成：整理首页静态 UI、Canvas/完整加载修复、`#levels` / `#false-transformation` 卡片、移动菜单、结果页、分享卡和 PDF 的稳定产品改动，准备作为同一批次同步。
+- 最新需求：页面模板化已暂停并降为末级 backlog；模板目录、组件、样式、Debug 路由、测试、演示资源及仅为模板产生的配置改动全部排除在本次发布之外。
+- 范围约束：不改题库、评分算法和结果口径；`lib/report-pdf 2.ts` 旧副本不提交；混合文件只提交可明确拆分的正式产品部分。
+- 验证：已在独立临时工作树对精确提交快照运行 `pnpm check`，数据校验、4 个文件共 63 个单元测试、lint、生产构建和 15 个正式产品 E2E 全部通过；远程继续以 GitHub Actions 为复核。
+- 剩余风险：真实 iPhone Safari / Android Chrome 的触控、Canvas 重载和下载体验仍需人工验收；模板工作区内容仍保留在本地但不会进入本次提交。
+- 下一步：完成精确暂存和快照验证后同步 `main`，观察 GitHub Actions 与 Vercel；核心产品发布收口后再决定后续需求。

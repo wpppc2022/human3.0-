@@ -119,7 +119,6 @@ export function PrintableResultReport({
 
         <section className="pdf-block">
           <div className="pdf-section-title">
-            <span>01</span>
             <h2>四象限状态摘要</h2>
           </div>
           <div className="pdf-overview">
@@ -176,7 +175,6 @@ export function PrintableResultReport({
         <section className="pdf-block pdf-two">
           <div>
             <div className="pdf-section-title">
-              <span>02</span>
               <h2>当前模式</h2>
             </div>
             <p className="pdf-body-copy">{result.summary}</p>
@@ -189,7 +187,6 @@ export function PrintableResultReport({
           </div>
           <div>
             <div className="pdf-section-title">
-              <span>03</span>
               <h2>核心卡点</h2>
             </div>
             <p className="pdf-body-copy">{result.coreProblem}</p>
@@ -200,7 +197,6 @@ export function PrintableResultReport({
         <section className="pdf-block pdf-two">
           <div>
             <div className="pdf-section-title">
-              <span>04</span>
               <h2>优势</h2>
             </div>
             <ul className="pdf-list">
@@ -211,7 +207,6 @@ export function PrintableResultReport({
           </div>
           <div>
             <div className="pdf-section-title">
-              <span>05</span>
               <h2>盲点</h2>
             </div>
             <ul className="pdf-list">
@@ -224,7 +219,6 @@ export function PrintableResultReport({
 
         <section className="pdf-block">
           <div className="pdf-section-title">
-            <span>06</span>
             <h2>7 / 30 / 90 天建议</h2>
           </div>
           <div className="pdf-actions">

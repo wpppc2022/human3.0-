@@ -30,6 +30,9 @@
 - 体验细节：已补充首页信任提示、答题页保存/选择提示、结果页顶部速览、分享入口说明和异常状态操作入口。
 - UI v2：已将 `ui-prototypes/` 静态原型的黑白灰视觉方向、Apple 式全屏移动端菜单、问卷大题居中布局、结果报告式结构整合进 Next.js 页面。
 - UI v2 第一轮小修：移动端菜单已锁定 body 滚动；问卷页移动端选项改为单列行按钮并隐藏技术标签和可见数字；下一步行动已改为自定义圆点待办控件。
+- 首页返回一致性：共享导航中品牌、首页及首页锚点使用完整文档加载，修复从测评页、结果页或移动菜单返回时 Canvas 粒子脚本不重新初始化的问题；品牌返回顶部，锚点入口在完整加载后定位到对应 section。
+- 首页层级卡片：`#levels` 与 `#false-transformation` 已改为共享横向卡片系统，支持独立箭头/索引、移动横滑、scroll-snap、同组单开详情和 reduced-motion；两个 section 用不同背景和卡高保持内容层级差异。
+- 卡片 reveal 修复：六张 `.insight-card` 始终可见且不做逐卡位移，reveal 只作用于两组 carousel 容器；移动端下一卡不再显示为空白边缘，轨道无纵向滚动。
 - API 边界：`/api/submit`、`/api/assessment/score`、`/api/share/encode`、`/api/share/decode` 和只读内容 API 已可用；当前均不写数据库。
 - 测试和校验：已有核心计分测试、结果生成测试、分享链接测试、Playwright 端到端测试和严格数据校验命令。
 - CI：已新增 GitHub Actions，在 push、pull request 和手动触发时运行 `pnpm check`。
@@ -41,7 +44,7 @@
 - `pnpm install` 通过。
 - `pnpm validate:data` 通过。
 - `pnpm test` 通过，63 个测试通过。
-- `pnpm test:e2e` 通过，9 个端到端测试通过。
+- `pnpm test:e2e` 通过，15 个端到端测试通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
 - `pnpm check` 通过，已串联数据校验、单元测试、代码检查、生产构建和端到端测试。
@@ -54,6 +57,10 @@
 - UI v2 第一轮小修后再次运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
 - 真实结果恢复和 API 接入后再次运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 9 个端到端测试全部通过。
 - PDF 导出版式重构后，`pnpm lint`、`pnpm test`、`pnpm build` 和 `pnpm test:e2e` 已通过；E2E 覆盖 PDF 预览入口、2 张 A4 sheet、黑底、两页均无 `scrollHeight > clientHeight` 裁切和 PDF 文件下载。
+- PDF 序号和手机端菜单修复后，`pnpm check` 通过：数据校验、63 个单元测试、lint、生产构建和 11 个端到端测试全部通过。
+- PDF 标题圆点和首页返回一致性修复后，`pnpm check` 通过：数据校验、63 个单元测试、lint、生产构建和 13 个端到端测试全部通过。
+- 首页双卡片 section 重构后，`pnpm check` 通过：数据校验、63 个单元测试、lint、生产构建和 15 个端到端测试全部通过。
+- 移动 carousel reveal P0 修复后再次运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 15 个端到端测试全部通过。
 
 ## 如何运行
 
@@ -134,6 +141,10 @@ pnpm check
 - `lib/constants.ts`：站点名称、答案选项、象限顺序、状态文案。
 - `lib/supabase.ts`：未来 Supabase 懒初始化入口，目前故意不接入。
 - `app/page.tsx`：首页入口。当前 P0 返工后直接读取 `ui-prototypes/human-3-ui-v2.html` 的原 `<style>` 和 `<body>`，只替换开始评估等静态链接到当前路由。不要再用组件重写首页视觉结构。
+- `ui-prototypes/human-3-ui-v2.html`：首页唯一视觉和交互源。Levels/Transformation 共享卡片系统、Lucide 静态 SVG、展开与横向滚动脚本都在此文件维护；不要在 React 层复制。
+- `components/HomePrototypeMenuController.tsx`：首页静态 HTML 移动菜单控制器。首页直接渲染原 HTML 后，菜单交互由该组件负责补齐。
+- `components/FullDocumentLink.tsx`：保留 `next/link` 语义和修饰键行为，但普通点击时用 `window.location.assign` 完整加载目标；首页 `/` 和 `/#...` 入口必须使用它。
+- `components/SiteNav.tsx`：除共享导航本身外，还负责区分首页目标与普通产品路由；首页目标使用 `FullDocumentLink`，避免静态原型脚本在软导航后失效。
 - `components/AssessmentFlow.tsx`：答题流程。
 - `components/SiteNav.tsx`：静态原型产品化后的共享导航，包含桌面四模块下拉导航和移动端 Apple 式两级全屏菜单。
 - `components/ResultClient.tsx`：结果页本地读取。正式 `/result` 不再使用视觉复核预设结果，没有真实 localStorage 结果时展示空态。
@@ -160,7 +171,7 @@ pnpm check
 - `docs/REMOTE_CI_STATUS.md`：远程推送和 GitHub Actions 首跑状态记录。
 - `docs/SOURCE_ALIGNMENT.md`：源头对齐审计和模型缺口说明。
 - `playwright.config.ts`：端到端测试配置，会在 `127.0.0.1:3100` 启动独立测试服务。
-- `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、脏缓存恢复、PNG 下载、PDF 下载、无本地结果、无效分享链接、提交 API、评分 API、分享编码/解码 API、分享链接和移动端核心控件。
+- `tests/e2e/`：端到端测试，覆盖完整测评流程、刷新恢复、脏缓存恢复、PNG 下载、PDF 下载、无本地结果、无效分享链接、提交 API、评分 API、分享编码/解码 API、分享链接、首页移动菜单、共享导航移动菜单和移动端核心控件。
 - `app/prototype.css`：问卷页/结果页仍使用从 `ui-prototypes/` 迁移的产品化样式。首页 `/` 现在额外直接注入 `human-3-ui-v2.html` 原始 `<style>`，以原文件为最高视觉基准。
 - `.github/workflows/ci.yml`：CI 工作流，使用 Node.js 22、pnpm 11.5.3、Playwright Chromium 和 `pnpm check`。
 
@@ -195,7 +206,12 @@ pnpm check
 - localStorage 清除后，答题进度和最近一次结果不可恢复。
 - 分享卡片 PNG 和两页 A4 PDF 已有桌面端 E2E 下载校验；移动端不同浏览器下载行为可能表现不同，仍需要真机验收。
 - PDF 当前是可预览的 2 页 A4 黑底报告版式；Page 1 裁切已修复并有 E2E 防回归断言，仍需要用户或 UI 窗口确认标题字号、四象限图大小、行动建议密度和免责声明长度。
-- 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、PDF 预览、PDF 下载、无本地结果、无效分享链接、提交 API、评分 API、分享编码/解码 API 和非法答案值；仍可继续扩展更多边界输入。
+- PDF 数字章节序号和所有小节标题前圆点均已移除，标题无空占位并直接左对齐；正文列表继续保留无数字圆点，横线保持恢复后的原有单层样式。用户否决的 MUJI 三级分隔线试验未重新引入，普通网页结果页不受影响。
+- 首页手机端菜单根因：直接套用静态 HTML 后缺少可执行菜单脚本和菜单 DOM。当前已由 `HomePrototypeMenuController` 补齐，并用 E2E 覆盖。
+- 首页跨页返回根因：服务端完整加载会执行静态原型内脚本，客户端软导航插入的脚本不会执行。当前所有共享导航首页入口已改为完整加载，并用 Canvas 尺寸、粒子状态、关键 DOM、滚动位置和移动端锚点 E2E 覆盖。
+- 首页两个卡片轨道已在 1440×900、1024×768、390×844、320×568 检查无页面级横向溢出；320px 下下一卡露出约 23px。真实 Safari/Chrome 触控惯性仍需真机复核。
+- 卡片级 reveal 与横向轨道冲突已修复：390px 下一卡约 34px、320px 约 23px，opacity 均为 1、transform 为 none；第二卡停靠后第三卡可见，两组轨道 `scrollHeight === clientHeight`。
+- 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、PDF 预览、PDF 下载、无本地结果、无效分享链接、提交 API、评分 API、分享编码/解码 API、非法答案值、首页移动菜单和共享导航移动菜单；仍可继续扩展更多边界输入。
 - GitHub CLI 已补齐 `workflow` scope，远程 `main` 已同步；GitHub Actions CI 已触发并在修复 pnpm 构建脚本审批配置后通过，详情见 `docs/REMOTE_CI_STATUS.md`。
 - Human 层级和阶段阈值已按 `docs/SCORING_MODEL_UPGRADE_SPEC.md` 升级，并用模拟画像和关键边界分数组合完成自动化校准；仍需要真实用户或产品团队样例继续复核。
 - 当前四象限定义仍是 1.0 评估版：Spirit 的关系/共同体、Mind 的情绪/信念/觉察、Vocation 的资源/系统/长期影响、Body 的在场/身体感知主要在文档中说明，尚未完整进入题库和结果建议。
@@ -225,3 +241,12 @@ pnpm check
 15. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
 16. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
 17. 实现复测记录。
+
+## 当前发布边界
+
+- 正式产品主线：静态首页、Canvas 完整加载、`#levels` / `#false-transformation` 卡片、问卷、真实评分与 API、结果页、分享卡、两页 A4 PDF 和移动菜单。
+- 最新需求：模板化已暂停并降为末级 backlog，本次不发布任何模板目录、模板组件、模板样式、Debug 路由、模板测试或演示资源。
+- 明确排除：`lib/report-pdf 2.ts` 旧副本，以及任何未授权的题库、评分算法或结果口径变化。
+- 验证：已在独立临时工作树对精确提交快照运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 15 个正式产品 E2E 全部通过；远程由 GitHub Actions 复核，公开环境由 Vercel Production 复核。
+- 风险：真实手机的触控惯性、Canvas 重载及 PNG/PDF 下载仍需人工检查。
+- 下一步：先完成 1.0 正式产品发布和真机验收；只有收到新授权后才重新评估模板化。

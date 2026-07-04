@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { PrintableResultReport } from "@/components/PrintableResultReport";
+import { FullDocumentLink } from "@/components/FullDocumentLink";
 import { SiteNav } from "@/components/SiteNav";
 import siteContent from "@/data/site-content.json";
 import { QUADRANT_ORDER } from "@/lib/constants";
@@ -164,9 +165,9 @@ export function ResultEmptyState({
           <Link className="button primary" href="/assessment">
             开始评估
           </Link>
-          <Link className="button" href="/">
+          <FullDocumentLink className="button" href="/" data-home-document-load>
             返回首页
-          </Link>
+          </FullDocumentLink>
         </div>
       </main>
     </div>

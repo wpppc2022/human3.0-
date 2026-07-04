@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { FullDocumentLink } from "@/components/FullDocumentLink";
+
 type MenuKey = "overview" | "assessment" | "result" | "support";
 
 const menuGroups: Array<{
@@ -138,6 +140,10 @@ const menuGroups: Array<{
   },
 ];
 
+function requiresHomeDocumentLoad(href: string) {
+  return href === "/" || href.startsWith("/#");
+}
+
 export function SiteNav({ current = "overview" }: { current?: MenuKey }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeKey, setActiveKey] = useState<MenuKey>("overview");
@@ -163,9 +169,9 @@ export function SiteNav({ current = "overview" }: { current?: MenuKey }) {
   return (
     <header className="topbar">
       <div className="topbar-inner">
-        <Link className="brand" href="/">
+        <FullDocumentLink className="brand" href="/" data-home-document-load>
           HUMAN 3.0
-        </Link>
+        </FullDocumentLink>
         <nav className="nav" aria-label="主导航">
           {menuGroups.map((group) => (
             <div className="nav-item" key={group.key}>
@@ -181,11 +187,21 @@ export function SiteNav({ current = "overview" }: { current?: MenuKey }) {
                   {group.columns.map((column) => (
                     <div className="submenu-column" key={column.title}>
                       <span>{column.title}</span>
-                      {column.links.map((link) => (
-                        <Link key={`${group.key}-${link.label}`} href={link.href}>
-                          {link.label}
-                        </Link>
-                      ))}
+                      {column.links.map((link) =>
+                        requiresHomeDocumentLoad(link.href) ? (
+                          <FullDocumentLink
+                            href={link.href}
+                            key={`${group.key}-${link.label}`}
+                            data-home-document-load
+                          >
+                            {link.label}
+                          </FullDocumentLink>
+                        ) : (
+                          <Link key={`${group.key}-${link.label}`} href={link.href}>
+                            {link.label}
+                          </Link>
+                        ),
+                      )}
                     </div>
                   ))}
                 </div>
@@ -251,16 +267,28 @@ export function SiteNav({ current = "overview" }: { current?: MenuKey }) {
                 key={group.key}
               >
                 {group.columns.flatMap((column) =>
-                  column.links.slice(0, 1).map((link) => (
-                    <Link
-                      className="mobile-subitem"
-                      href={link.href}
-                      key={`${group.key}-${column.title}`}
-                      onClick={closeMenu}
-                    >
-                      {link.label} <span>{link.tag ?? column.title}</span>
-                    </Link>
-                  )),
+                  column.links.slice(0, 1).map((link) =>
+                    requiresHomeDocumentLoad(link.href) ? (
+                      <FullDocumentLink
+                        className="mobile-subitem"
+                        href={link.href}
+                        key={`${group.key}-${column.title}`}
+                        onClick={closeMenu}
+                        data-home-document-load
+                      >
+                        {link.label} <span>{link.tag ?? column.title}</span>
+                      </FullDocumentLink>
+                    ) : (
+                      <Link
+                        className="mobile-subitem"
+                        href={link.href}
+                        key={`${group.key}-${column.title}`}
+                        onClick={closeMenu}
+                      >
+                        {link.label} <span>{link.tag ?? column.title}</span>
+                      </Link>
+                    ),
+                  ),
                 )}
               </div>
             ))}

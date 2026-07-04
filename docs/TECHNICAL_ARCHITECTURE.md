@@ -21,6 +21,7 @@
 - `RecommendationBlock`：7 天、30 天、90 天建议。
 - `ResultReport`：结果页报告结构、行动建议、分享卡片展示、分享链接和 PNG/PDF 下载入口。
 - `PrintableResultReport`：PDF 专用两页 A4 黑底报告版式，供浏览器预览和导出复用。
+- `HomePrototypeMenuController`：首页静态 HTML 的移动菜单控制器，补齐原型直接渲染后不会自动执行的菜单交互。
 
 ## 核心函数
 
@@ -76,6 +77,14 @@ PDF 预览入口：
 
 PDF 导出不再捕获 `.result-prototype main` 长页面，而是捕获 `PrintableResultReport` 里的两张 `[data-pdf-sheet]`。这样每张 sheet 对应 PDF 的一页，避免长截图切片造成的分页拼接感。E2E 会检查两张 sheet 的 `scrollHeight <= clientHeight`，防止模块被裁切。
 
+当前 PDF 已按用户要求撤销未通过的 MUJI 三级分隔线试验并恢复原有单层横线。所有 `.pdf-section-title` 已统一移除前置圆点和占位，标题文字直接左对齐；正文列表的无数字圆点继续保留。E2E 检查全部小节标题无 marker、正文列表 marker 未被误删，以及两页 A4 均不裁切；普通网页结果页不受影响。
+
+首页 `/` 的 Canvas 粒子和静态原型脚本依赖浏览器完整解析 HTML。直接加载时脚本正常执行；Next.js 客户端软导航返回首页时，`dangerouslySetInnerHTML` 插入的 `<script>` 不会再次执行，Canvas 会停在默认 `300 × 150` 且粒子运行时状态缺失。因此 `SiteNav` 中所有指向 `/` 或 `/#...` 的跨页入口，以及结果空态“返回首页”，必须使用 `FullDocumentLink` 调用 `window.location.assign` 触发完整文档加载；其他产品路由继续使用普通 `next/link`。首页内部 `#...` 锚点仍保持静态原型行为。E2E 会比较直接打开、从 `/assessment` 返回、从 `/result` 返回的 Canvas、粒子、section、导航和顶部滚动状态，并验证移动菜单完整加载后定位到目标锚点。
+
+首页 `#levels` 与 `#false-transformation` 卡片系统继续以 `ui-prototypes/human-3-ui-v2.html` 为唯一实现源，`app/page.tsx` 不复制 DOM/CSS/JS。两组使用共享的 `.insight-carousel / .insight-track / .insight-card` 样式和 `[data-card-*]` 脚本：每组独立维护滚动位置与 `01 / 03` 索引，同组最多展开一张，卡片外部高度固定。图标使用本地 `lucide-react` 包对应图标节点的静态 SVG 输出，不增加浏览器运行时依赖。差异 token：Levels 为 `#111` section、`#000` card、桌面 `470px`；Transformation 为 `#000` section、`#121212` card、桌面 `420px`。移动端分别为 `430px / 410px`，共享 8px 圆角、1px 7% 白色边界、scroll-snap 和 reduced-motion 规则。
+
+Carousel reveal 规则：`.insight-card` 不得参与全局逐项 `.reveal`，必须始终保持 `opacity: 1; transform: none`。进入视口动画只放在整个 `.insight-carousel` 容器上。原因是移动端下一卡只露出 23-35px，无法达到全局 IntersectionObserver 的 16% 阈值；逐卡 reveal 会让预览边缘透明，并由 translateY 扩大轨道 `scrollHeight`。E2E 在 390px/320px 检查下一卡及第三卡可见、无 transform、轨道 `scrollHeight === clientHeight`。
+
 `app/result/share/page.tsx` 是当前静态分享路由，不依赖数据库。它适合 MVP 验证，但 URL 中包含答案码；接入 Supabase 后应优先使用 `/result/[id]` 短链接。
 
 ## Supabase 接入方式
@@ -100,7 +109,7 @@ PDF 导出不再捕获 `.result-prototype main` 长页面，而是捕获 `Printa
 
 - `playwright.config.ts`：在 `127.0.0.1:3100` 启动独立 Next.js 开发服务，避免影响用户当前打开的 `localhost:3000`。
 - `tests/e2e/assessment-flow.spec.ts`：覆盖首页进入测评、刷新恢复、脏缓存恢复、无本地结果、完成 48 题、结果页、PNG 下载、PDF 预览、PDF 下载、无效分享链接、静态分享链接、提交 API、评分 API 和分享编码/解码 API。
-- `tests/e2e/mobile.spec.ts`：用移动端视口检查答题页核心控件和横向溢出。
+- `tests/e2e/mobile.spec.ts`：用移动端视口检查首页移动菜单、共享导航移动菜单、答题页核心控件和横向溢出。
 
 首次运行端到端测试前需要执行：
 
@@ -131,3 +140,9 @@ Playwright 浏览器目录会使用 Actions cache 缓存。首次远端运行仍
 
 - result-builder 快照测试。
 - 更多 API 和分享链接边界测试。
+
+## 暂停的架构方向
+
+配置驱动页面模板化已暂停并降为末级 backlog，不属于当前正式产品架构，也不进入本次发布。当前生产数据流仍为静态首页原型、React 问卷/结果组件、现有评分与分享 API、localStorage 和独立 PDF 导出链路。
+
+模板相关本地文件不会被删除，但在重新获得需求授权前，不得让其样式、路由、配置或测试进入生产提交。未来若重启该方向，应重新完成架构评审、生产环境隔离、数据契约和安全边界验证。
