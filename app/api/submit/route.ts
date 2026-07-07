@@ -1,46 +1,53 @@
 import { NextResponse } from "next/server";
 
-import questions from "@/data/questions.json";
-import quadrants from "@/data/quadrants.json";
-import recommendations from "@/data/recommendations.json";
-import templates from "@/data/result-templates.json";
-import stages from "@/data/stages.json";
-import { buildResult } from "@/lib/result-builder";
-import type {
-  Answers,
-  QuadrantDefinition,
-  Question,
-  RecommendationSet,
-  ResultTemplate,
-  StageDefinition,
-} from "@/lib/types";
+import {
+  AssessmentRequestError,
+  buildPublicAssessmentResult,
+} from "@/lib/assessment-api";
+import { AssessmentAnswerMismatchError } from "@/lib/assessment-input";
+import { AssessmentVersionError } from "@/lib/assessment-versions";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { answers?: Answers };
-
-    if (!body.answers) {
+    const body = (await request.json()) as unknown;
+    if (
+      typeof body !== "object" ||
+      body === null ||
+      Array.isArray(body) ||
+      !("answers" in body)
+    ) {
       return NextResponse.json({ error: "Missing answers." }, { status: 400 });
     }
-
-    const result = buildResult({
-      id: `api-${Date.now()}`,
-      questions: questions as Question[],
-      answers: body.answers,
-      stages: stages as StageDefinition[],
-      quadrants: quadrants as QuadrantDefinition[],
-      recommendations: recommendations as RecommendationSet[],
-      templates: templates as ResultTemplate[],
-    });
-
-    return NextResponse.json({ result });
+    const payload = buildPublicAssessmentResult(body);
+    return NextResponse.json({ result: payload.result, meta: payload.meta });
   } catch (error) {
+    if (error instanceof AssessmentAnswerMismatchError) {
+      return NextResponse.json(
+        {
+          error: {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+          },
+        },
+        { status: error.status },
+      );
+    }
+    const status =
+      error instanceof AssessmentVersionError || error instanceof AssessmentRequestError
+        ? error.status
+        : 400;
     return NextResponse.json(
       {
+        code:
+          error instanceof AssessmentVersionError ||
+          error instanceof AssessmentRequestError
+            ? error.code
+            : undefined,
         error:
           error instanceof Error ? error.message : "Unable to submit assessment.",
       },
-      { status: 400 },
+      { status },
     );
   }
 }

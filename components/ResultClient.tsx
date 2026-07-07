@@ -13,7 +13,11 @@ import recommendationsData from "@/data/recommendations.json";
 import templatesData from "@/data/result-templates.json";
 import stagesData from "@/data/stages.json";
 import { buildResult } from "@/lib/result-builder";
-import { loadResult, saveResult } from "@/lib/storage";
+import {
+  identifyStoredResultVersions,
+  loadResult,
+  saveResult,
+} from "@/lib/storage";
 import type {
   BuiltResult,
   QuadrantDefinition,
@@ -35,6 +39,17 @@ export function ResultClient() {
       );
       const stored = loadResult();
       if (!stored) {
+        setResult(null);
+        setIsLoaded(true);
+        return;
+      }
+
+      const versions = identifyStoredResultVersions(stored);
+      if (
+        !versions ||
+        versions.assessmentVersion !== "h3-a48-v1" ||
+        versions.resultVersion !== "h3-result-v1"
+      ) {
         setResult(null);
         setIsLoaded(true);
         return;

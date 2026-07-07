@@ -1,5 +1,27 @@
 # Development Log
 
+## 2026-07-05 - 32 题准确性研究无限期暂停
+
+- 最新决策：用户取消全部 32 题准确性研究，包括认知访谈、招募、48/32 配对、复测和晋级统计。
+- 产品状态：`h3-a48-v1` 继续作为唯一正式默认；`h3-a32-v1` 保留未验证 draft，无限期暂停，不上线、不切默认、不作准确性声明。
+- 资料状态：既有研究计划、访谈主持手册、题单、记录模板和校准报告模板仅作为 archive / optional 保留，不继续执行。
+- 边界：取消研究不等于准确性通过；既有 Accuracy-first 门槛未执行、未通过，只作为未来若重新授权时的归档规格。
+- 工程状态：版本隔离、严格输入、旧 v1 兼容、内部评分和自动化软件测试不受影响；软件测试通过不得写成测量准确性通过。
+- 修改文件：`docs/PRD.md`、`docs/PRODUCT.md`、`docs/MODEL.md`、`docs/TODO.md`、`docs/HANDOFF.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`，以及直接冲突的 32 题规格与研究档案状态说明。
+- 验证：仅做文档一致性检查；未修改代码、题库、API、UI 或模板，未运行工程测试。
+
+## 2026-07-05
+
+### Accuracy-first 32 题产品签署
+
+- 完成：审阅 `docs/QUESTION_BANK_32_CONTENT_SPEC.md`、`docs/ASSESSMENT_32_SCORING_SPEC.md` 与 32/48 版本兼容规格，确认两份规格使用同一候选题位、反向题、窄构念边界和等值计分语义。
+- 完成：产品、内容、模型共同签署候选规格，允许总控另行授权实现窗口建立隔离并行 draft；明确该结论不代表实现完成、准确性验证、稳定版或默认切换批准。
+- 完成：统一 `h3-a48-v1 stable`、`h3-a32-v1 draft / not-started`、32 题候选 4-6 分钟、精确同分并列和旧 v1 永久兼容口径。
+- 完成：明确 Spirit 关系连接单题和 Vocation 资源准备单题的结果解释上限；当时设定的认知访谈前置条件已被同日“全部准确性研究无限期暂停”决策取代。
+- 修改文件：`docs/ASSESSMENT_32_SCORING_SPEC.md`、`docs/QUESTION_BANK_32_CONTENT_SPEC.md`、`docs/DEBUG_AND_API_ARCHITECTURE.md`、`docs/PRD.md`、`docs/PRODUCT.md`、`docs/MODEL.md`、`docs/TODO.md`、`docs/HANDOFF.md`、`docs/DECISIONS.md`、`docs/DEVELOPMENT_LOG.md`。
+- 验证：仅做文档交叉核对和关键词一致性检查；未修改或运行题库、评分、API、UI、模板及业务测试。
+- 下一步建议：隔离 draft 已建立；后续准确性研究与晋级无限期暂停，除非用户重新明确授权。
+
 ## 2026-06-22
 
 ### 源头对齐审计
@@ -491,3 +513,30 @@
 - 验证：已在独立临时工作树对精确提交快照运行 `pnpm check`，数据校验、4 个文件共 63 个单元测试、lint、生产构建和 15 个正式产品 E2E 全部通过；远程继续以 GitHub Actions 为复核。
 - 剩余风险：真实 iPhone Safari / Android Chrome 的触控、Canvas 重载和下载体验仍需人工验收；模板工作区内容仍保留在本地但不会进入本次提交。
 - 下一步：完成精确暂存和快照验证后同步 `main`，观察 GitHub Actions 与 Vercel；核心产品发布收口后再决定后续需求。
+
+### Accuracy-first 32 题候选基础设施
+
+- 日期：2026-07-05。
+- 完成：新增 `data/assessment-versions.json`，固定 `h3-a48-v1 stable` 为唯一正式默认并绑定冻结 hash；新增 `h3-a32-v1 draft / not-started` 和 `h3-result-v2 draft`，所有公开权限关闭。
+- 完成：新增独立 32 题未验证工作稿资源，四象限各 8 题、各 2 道反向题；`questionSetHash=null`，未伪装为冻结题库。
+- 完成：新增版本 registry、严格完整 ID 集校验、32 题 `E_q=1.5*S_q` 内部评分、精确并列数组和 candidate envelope 测试草案；判定前不取整，Human 3.x / 3.3 门槛未放宽。
+- 完成：公开 questions/score/submit/share API 默认和显式稳定路径均固定 48 题；draft 返回 409，未知版本返回 404，缺失、多余、非法和跨版本答案拒绝。
+- 完成：旧 `v1.<48 digits>` 永久 fixture 和解码逻辑显式绑定 `h3-a48-v1 + h3-result-v1`；旧无版本 localStorage 固定识别为该组合。新增版本化 key/双写 helper，但正式 UI 尚未切换新 key，避免改变现有用户行为。
+- 完成：`ResultClient` 只允许旧/版本化记录解析为 `h3-a48-v1 + h3-result-v1` 后重建；32 题没有正式结果 builder 或 UI 回退。
+- 修改文件：`data/assessment-versions.json`、`data/assessment-versions/h3-a32-v1.questions.draft.json`、`lib/assessment-versions.ts`、`lib/assessment-input.ts`、`lib/versioned-scoring.ts`、`lib/candidate-share.ts`、`lib/assessment-api.ts`、`lib/types.ts`、`lib/share-link.ts`、`lib/storage.ts`、`components/ResultClient.tsx`、相关 API routes、`scripts/validate-data.mjs`、版本单测/E2E 和产品工程文档。
+- 验证：上一阶段 `pnpm validate:data`、6 个文件 106 个单测、`pnpm lint`、`pnpm build` 通过；正式 48 题流程、版本 API、旧分享和移动端共 17 个定向 E2E 通过。后续兼容性收口的最新结果见下一节。
+- 当前风险：32 题没有任何准确性证据，且研究已无限期暂停；`h3-result-v2` 只有版本规划，没有可公开的结果文案 builder。浏览器 localStorage 迁移和回滚仍属于工程兼容事项，不代表测量验证。
+- 下一步建议：保持 32 题未验证 draft 和所有公开权限关闭；继续保护正式 48 题默认、旧分享和旧存储。除非用户重新授权，不启动任何招募、访谈、配对、复测或晋级统计。
+
+### 422 API 契约与 h3-result-v1 冻结收口
+
+- 日期：2026-07-06。
+- 完成：评分、兼容提交和分享编码在答案缺失、多余、非法值或跨版本时统一返回 HTTP 422，结构为 `{ error: { code: "ASSESSMENT_ANSWER_MISMATCH", message, details } }`；details 包含 expected/received count 和 missing/extra/invalid IDs。
+- 保持：JSON 语法或字段结构错误为 400；未知版本为 404；draft/当前用途不可用或 assessment/result 不兼容为 409。
+- 完成：在 `data/assessment-versions.json` 冻结 `h3-result-v1` 的 stages、quadrants、result-templates、recommendations canonical SHA-256；`scripts/validate-data.mjs` 会拒绝未升级 resultVersion 的资源漂移。
+- 完成：新增 `tests/fixtures/h3-result-v1-core-snapshot.json` 和 `tests/result-v1-compatibility.test.ts`，以固定 48 答案锁定阶段、标题、主导/限制、四象限报告、行动建议、分享卡片和评分核心字段。
+- 产品状态：32 题准确性研究已取消；不推进招募、访谈、配对、复测、hash 冻结或晋级统计。候选保持 `draft / not-started / unvalidated`、无公开入口、永不切默认，除非用户未来另行授权。
+- 修改文件：`lib/types.ts`、`lib/assessment-input.ts`、`lib/assessment-api.ts`、`lib/versioned-scoring.ts`、`lib/candidate-share.ts`、score/submit/share encode routes、`data/assessment-versions.json`、候选工作稿警示、`scripts/validate-data.mjs`、API/结果 fixture 单测、相关 E2E 和工程文档。
+- 验证：`pnpm validate:data`、7 个文件 110 个单测、`pnpm lint`、`pnpm build` 全部通过；正式 48 题、旧分享、PNG/PDF、API、首页/问卷/结果和移动端共 18 个定向 E2E 全部通过。
+- 当前风险：正式 localStorage 新 key 的浏览器迁移/回滚演练仍未启用；32 题内部算法软件测试不能作为产品准确性证据。模板系统继续 paused，本轮未触碰其文件或测试。
+- 下一步建议：交工程 QA 复核 422 body、manifest hash 和 BuiltResult fixture；不安排任何 32 题产品准确性工作，不同步 GitHub。

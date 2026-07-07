@@ -26,6 +26,70 @@ export type AnswerValue = 1 | 2 | 3 | 4 | 5;
 
 export type Answers = Record<string, AnswerValue>;
 
+export type AssessmentVersionId = "h3-a48-v1" | "h3-a32-v1";
+export type ResultVersionId = "h3-result-v1" | "h3-result-v2";
+export type ContentSchemaVersion = "h3-content-schema-v1";
+export type AssessmentVersionStatus =
+  | "draft"
+  | "calibrating"
+  | "stable"
+  | "retired";
+export type AssessmentCalibrationStatus =
+  | "legacy-baseline"
+  | "not-started"
+  | "content-reviewed"
+  | "paired-validation"
+  | "qualified"
+  | "failed-revise";
+export type ResultVersionStatus = "draft" | "frozen";
+export type AssessmentScoringModel =
+  | "raw-12-per-quadrant"
+  | "equivalent-12-per-quadrant";
+
+export interface AssessmentVersionDefinition {
+  id: AssessmentVersionId;
+  status: AssessmentVersionStatus;
+  calibrationStatus: AssessmentCalibrationStatus;
+  questionCount: number;
+  questionSetHash: string | null;
+  questionSource: string;
+  resultVersion: ResultVersionId;
+  scoringModel: AssessmentScoringModel;
+  equivalentScoreMultiplier: number;
+  allowNewSessions: boolean;
+  allowPublicQuestions: boolean;
+  allowPublicScoring: boolean;
+  allowPublicShare: boolean;
+}
+
+export interface ResultVersionDefinition {
+  id: ResultVersionId;
+  status: ResultVersionStatus;
+  assessmentVersions: AssessmentVersionId[];
+  public: boolean;
+  resourceHashes: ResultResourceHashes | null;
+  compatibilityFixture: FrozenResourceReference | null;
+}
+
+export interface FrozenResourceReference {
+  source: string;
+  hash: string;
+}
+
+export interface ResultResourceHashes {
+  stages: FrozenResourceReference;
+  quadrants: FrozenResourceReference;
+  resultTemplates: FrozenResourceReference;
+  recommendations: FrozenResourceReference;
+}
+
+export interface AssessmentVersionManifest {
+  contentSchemaVersion: ContentSchemaVersion;
+  defaultAssessmentVersion: AssessmentVersionId;
+  assessments: AssessmentVersionDefinition[];
+  results: ResultVersionDefinition[];
+}
+
 export interface Question {
   id: string;
   quadrant: QuadrantId;
@@ -126,6 +190,53 @@ export interface ScoringResult {
   missingQuestionIds: string[];
 }
 
+export interface CandidateQuadrantScore extends QuadrantScore {
+  normalizedTotal: number;
+  equivalentScore: number;
+}
+
+export interface CandidateScoringResult {
+  assessmentVersion: "h3-a32-v1";
+  resultVersion: "h3-result-v2";
+  assessmentStatus: "draft";
+  calibrationStatus: "not-started";
+  questionSetHash: null;
+  quadrantScores: Record<QuadrantId, CandidateQuadrantScore>;
+  level: HumanLevel;
+  phase: PhaseId;
+  stage: HumanStageId;
+  dominantQuadrants: QuadrantId[];
+  weakQuadrants: QuadrantId[];
+  imbalanceScore: number;
+  averageScore: number;
+  minScore: number;
+  maxScore: number;
+  unstableCount: number;
+  formingOrBetterCount: number;
+  groundedOrBetterCount: number;
+  matureCount: number;
+  answeredCount: 32;
+  missingQuestionIds: [];
+}
+
+export interface AssessmentAnswerValidation {
+  valid: boolean;
+  answers: Answers | null;
+  expectedCount: number;
+  receivedCount: number;
+  missingQuestionIds: string[];
+  extraAnswerIds: string[];
+  invalidAnswerIds: string[];
+}
+
+export interface AssessmentAnswerMismatchDetails {
+  expectedCount: number;
+  receivedCount: number;
+  missingIds: string[];
+  extraIds: string[];
+  invalidIds: string[];
+}
+
 export interface QuadrantReport {
   quadrant: QuadrantDefinition;
   state: QuadrantStateId;
@@ -183,6 +294,19 @@ export interface StoredResult {
   answers: Answers;
   result: BuiltResult;
   createdAt: string;
+}
+
+export interface VersionedStoredAssessment extends StoredAssessment {
+  storageSchemaVersion: "h3-storage-v2";
+  assessmentVersion: AssessmentVersionId;
+  contentSchemaVersion: ContentSchemaVersion;
+}
+
+export interface VersionedStoredResult extends StoredResult {
+  storageSchemaVersion: "h3-storage-v2";
+  assessmentVersion: AssessmentVersionId;
+  contentSchemaVersion: ContentSchemaVersion;
+  resultVersion: ResultVersionId;
 }
 
 export interface SiteContent {

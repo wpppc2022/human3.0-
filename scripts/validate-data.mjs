@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 
 const expectedQuadrants = ["mind", "body", "spirit", "vocation"];
 const expectedStages = [
@@ -188,6 +189,44 @@ const quadrants = readJson("data/quadrants.json");
 const recommendations = readJson("data/recommendations.json");
 const resultTemplates = readJson("data/result-templates.json");
 const siteContent = readJson("data/site-content.json");
+const assessmentVersions = readJson("data/assessment-versions.json");
+const candidateQuestionSet = readJson(
+  "data/assessment-versions/h3-a32-v1.questions.draft.json",
+);
+const resultV1CompatibilityFixture = readJson(
+  "tests/fixtures/h3-result-v1-core-snapshot.json",
+);
+
+function canonicalize(value) {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonicalize(value[key])]),
+    );
+  }
+  return value;
+}
+
+function canonicalResourceHash(value) {
+  return `sha256:${createHash("sha256")
+    .update(JSON.stringify(canonicalize(value)))
+    .digest("hex")}`;
+}
+
+function questionSetHash(questionSet) {
+  const canonical = JSON.stringify(
+    questionSet.map(({ id, quadrant, dimension, text, reverseScored }) => ({
+      id,
+      quadrant,
+      dimension,
+      text,
+      reverseScored,
+    })),
+  );
+  return `sha256:${createHash("sha256").update(canonical).digest("hex")}`;
+}
 
 assert(Array.isArray(questions), "questions.json must be an array.");
 assert(questions.length === 48, "questions.json must contain exactly 48 questions.");
@@ -222,6 +261,148 @@ for (const quadrant of expectedQuadrants) {
   assert(counts[quadrant] === 12, `${quadrant} must have exactly 12 questions.`);
   assert(reverseCounts[quadrant] > 0, `${quadrant} must have at least one reverse-scored question.`);
 }
+
+assert(
+  assessmentVersions.contentSchemaVersion === "h3-content-schema-v1",
+  "assessment version manifest must use h3-content-schema-v1.",
+);
+assert(
+  assessmentVersions.defaultAssessmentVersion === "h3-a48-v1",
+  "h3-a48-v1 must remain the production default.",
+);
+assert(
+  Array.isArray(assessmentVersions.assessments) &&
+    assessmentVersions.assessments.length === 2,
+  "assessment version manifest must contain the stable 48 and draft 32 versions.",
+);
+assertUnique(
+  assessmentVersions.assessments.map((version) => version.id),
+  "assessment version manifest ids",
+);
+
+const stableAssessment = assessmentVersions.assessments.find(
+  (version) => version.id === "h3-a48-v1",
+);
+const candidateAssessment = assessmentVersions.assessments.find(
+  (version) => version.id === "h3-a32-v1",
+);
+assert(stableAssessment, "h3-a48-v1 must exist in the assessment manifest.");
+assert(candidateAssessment, "h3-a32-v1 must exist in the assessment manifest.");
+assert(stableAssessment.status === "stable", "h3-a48-v1 must remain stable.");
+assert(stableAssessment.questionCount === 48, "h3-a48-v1 must contain 48 questions.");
+assert(stableAssessment.questionSource === "data/questions.json", "h3-a48-v1 must bind data/questions.json.");
+assert(stableAssessment.resultVersion === "h3-result-v1", "h3-a48-v1 must bind h3-result-v1.");
+assert(stableAssessment.allowNewSessions === true, "h3-a48-v1 must allow new sessions.");
+assert(stableAssessment.allowPublicQuestions === true, "h3-a48-v1 questions must remain public.");
+assert(stableAssessment.allowPublicScoring === true, "h3-a48-v1 scoring must remain public.");
+assert(stableAssessment.allowPublicShare === true, "h3-a48-v1 sharing must remain public.");
+assert(
+  stableAssessment.questionSetHash === questionSetHash(questions),
+  "h3-a48-v1 question content or order changed without a new version.",
+);
+
+assert(candidateAssessment.status === "draft", "h3-a32-v1 must remain draft.");
+assert(candidateAssessment.calibrationStatus === "not-started", "h3-a32-v1 calibration must remain not-started.");
+assert(candidateAssessment.questionCount === 32, "h3-a32-v1 must contain 32 questions.");
+assert(candidateAssessment.questionSetHash === null, "h3-a32-v1 hash must remain unfrozen before interviews.");
+assert(candidateAssessment.resultVersion === "h3-result-v2", "h3-a32-v1 must bind the draft h3-result-v2.");
+assert(candidateAssessment.equivalentScoreMultiplier === 1.5, "h3-a32-v1 must use E_q = 1.5 * S_q.");
+assert(candidateAssessment.allowNewSessions === false, "h3-a32-v1 cannot allow public new sessions.");
+assert(candidateAssessment.allowPublicQuestions === false, "h3-a32-v1 questions cannot be public.");
+assert(candidateAssessment.allowPublicScoring === false, "h3-a32-v1 scoring cannot be public.");
+assert(candidateAssessment.allowPublicShare === false, "h3-a32-v1 sharing cannot be public.");
+
+assert(candidateQuestionSet.assessmentVersion === "h3-a32-v1", "candidate resource version mismatch.");
+assert(candidateQuestionSet.status === "draft", "candidate question resource must remain draft.");
+assert(candidateQuestionSet.calibrationStatus === "not-started", "candidate question resource calibration must remain not-started.");
+assert(candidateQuestionSet.questionSetHash === null, "candidate question resource hash must remain unfrozen.");
+assertString(candidateQuestionSet.contentNotice, "candidate question contentNotice");
+assert(Array.isArray(candidateQuestionSet.questions), "candidate questions must be an array.");
+assert(candidateQuestionSet.questions.length === 32, "candidate question resource must contain exactly 32 questions.");
+assertUnique(candidateQuestionSet.questions.map((question) => question.id), "candidate question ids");
+
+const candidateCounts = Object.fromEntries(expectedQuadrants.map((quadrant) => [quadrant, 0]));
+const candidateReverseCounts = Object.fromEntries(expectedQuadrants.map((quadrant) => [quadrant, 0]));
+for (const question of candidateQuestionSet.questions) {
+  assertFields(question, questionFields, `Candidate question ${question.id ?? "(missing id)"}`);
+  assert(expectedQuadrants.includes(question.quadrant), `Invalid candidate quadrant: ${question.quadrant}`);
+  assert(/^[MBSV]-C\d{2}$/.test(question.id), `Candidate question ${question.id} must use the working draft ID format M-C01.`);
+  assert(question.id.startsWith(questionPrefixByQuadrant[question.quadrant]), `Candidate question ${question.id} id prefix mismatch.`);
+  assertString(question.dimension, `Candidate question ${question.id}.dimension`);
+  assertString(question.text, `Candidate question ${question.id}.text`);
+  assert(typeof question.reverseScored === "boolean", `Candidate question ${question.id} reverseScored must be boolean.`);
+  candidateCounts[question.quadrant] += 1;
+  if (question.reverseScored) candidateReverseCounts[question.quadrant] += 1;
+}
+for (const quadrant of expectedQuadrants) {
+  assert(candidateCounts[quadrant] === 8, `${quadrant} candidate must have exactly 8 questions.`);
+  assert(candidateReverseCounts[quadrant] === 2, `${quadrant} candidate must have exactly 2 reverse-scored questions.`);
+}
+assert(
+  sameSet(
+    candidateQuestionSet.questions
+      .filter((question) => question.reverseScored)
+      .map((question) => question.id),
+    ["M-C04", "M-C05", "B-C04", "B-C06", "S-C04", "S-C07", "V-C04", "V-C06"],
+  ),
+  "candidate reverse-scored question IDs must match the signed content specification.",
+);
+for (const [quadrant, dimension] of Object.entries({
+  mind: "emotional-awareness",
+  body: "body-awareness",
+  spirit: "connection",
+  vocation: "resources",
+})) {
+  assert(
+    candidateQuestionSet.questions.some(
+      (question) =>
+        question.quadrant === quadrant &&
+        question.dimension === dimension &&
+        question.reverseScored === false,
+    ),
+    `${quadrant} candidate must include the signed positive new construct ${dimension}.`,
+  );
+}
+
+assert(Array.isArray(assessmentVersions.results), "result version manifest must be an array.");
+const resultV1 = assessmentVersions.results.find((version) => version.id === "h3-result-v1");
+const resultV2 = assessmentVersions.results.find((version) => version.id === "h3-result-v2");
+assert(resultV1?.status === "frozen" && resultV1.public === true, "h3-result-v1 must remain frozen and public.");
+assert(resultV2?.status === "draft" && resultV2.public === false, "h3-result-v2 must remain a private draft.");
+for (const [key, expected] of Object.entries({
+  stages: { source: "data/stages.json", value: stages },
+  quadrants: { source: "data/quadrants.json", value: quadrants },
+  resultTemplates: {
+    source: "data/result-templates.json",
+    value: resultTemplates,
+  },
+  recommendations: {
+    source: "data/recommendations.json",
+    value: recommendations,
+  },
+})) {
+  const frozen = resultV1.resourceHashes?.[key];
+  assert(frozen?.source === expected.source, `h3-result-v1 ${key} source mismatch.`);
+  assert(
+    frozen?.hash === canonicalResourceHash(expected.value),
+    `h3-result-v1 ${key} changed without a new result version.`,
+  );
+}
+assert(
+  resultV1.compatibilityFixture?.source ===
+    "tests/fixtures/h3-result-v1-core-snapshot.json",
+  "h3-result-v1 compatibility fixture source mismatch.",
+);
+assert(
+  resultV1.compatibilityFixture?.hash ===
+    canonicalResourceHash(resultV1CompatibilityFixture),
+  "h3-result-v1 compatibility fixture changed without a manifest update.",
+);
+assert(
+  resultV2.resourceHashes === null &&
+    resultV2.compatibilityFixture === null,
+  "h3-result-v2 must not claim frozen resources or a compatibility fixture.",
+);
 
 assert(Array.isArray(stages), "stages.json must be an array.");
 const stageIds = stages.map((stage) => stage.id).sort();

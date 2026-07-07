@@ -4,13 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HUMAN 3.0 首页原型</title>
+    <link rel="stylesheet" href="../styles/human3-system.css" />
     <style>
       :root {
         color-scheme: dark;
-        --black: #000;
-        --ink: #f5f5f7;
-        --muted: rgba(245, 245, 247, 0.68);
-        --soft: rgba(245, 245, 247, 0.48);
+        --black: var(--h3-page-bg);
+        --ink: var(--h3-text);
+        --muted: var(--h3-text-secondary);
+        --soft: var(--h3-text-muted);
         --silver: #d8dde7;
         --space-1: 4px;
         --space-2: 8px;
@@ -809,7 +810,7 @@
       }
 
       #levels {
-        background: #111;
+        background: var(--h3-section-bg);
       }
 
       .insight-carousel {
@@ -821,7 +822,7 @@
         display: flex;
         width: 100%;
         min-width: 0;
-        gap: 20px;
+        gap: var(--h3-card-gap);
         overflow-x: auto;
         overscroll-behavior-inline: contain;
         padding: 0 40px 10px 0;
@@ -844,10 +845,10 @@
         flex: 0 0 min(84vw, 360px);
         flex-direction: column;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        border-radius: 8px;
-        background: #000;
-        padding: 32px;
+        border: 1px solid var(--h3-border);
+        border-radius: var(--h3-card-radius);
+        background: var(--h3-card-bg);
+        padding: var(--h3-space-7);
         scroll-snap-align: start;
         scroll-snap-stop: always;
         opacity: 1;
@@ -858,11 +859,11 @@
 
       #false-transformation .insight-card {
         height: 420px;
-        background: #121212;
+        background: var(--h3-section-bg-alt);
       }
 
       .insight-card.is-expanded {
-        background: #050505;
+        background: var(--h3-card-hover);
       }
 
       #false-transformation .insight-card.is-expanded {
@@ -875,7 +876,7 @@
         height: 56px;
         flex: 0 0 auto;
         place-items: start;
-        color: #ededed;
+        color: var(--h3-text);
       }
 
       .insight-symbol svg {
@@ -895,7 +896,7 @@
 
       .insight-label {
         margin-top: 28px;
-        color: #878787;
+        color: var(--h3-text-muted);
         font-family: var(--mono);
         font-size: 13px;
       }
@@ -903,7 +904,7 @@
       .insight-card h3 {
         max-width: 12ch;
         margin: 12px 0 0;
-        color: #ededed;
+        color: var(--h3-text);
         font-size: clamp(30px, 3vw, 38px);
         font-weight: 650;
         letter-spacing: -0.04em;
@@ -920,7 +921,7 @@
 
       .transformation-key {
         margin: 12px 0 0;
-        color: #ededed;
+        color: var(--h3-text);
         font-size: clamp(18px, 1.8vw, 20px);
         line-height: 1.35;
       }
@@ -948,13 +949,13 @@
       }
 
       .insight-summary {
-        color: #a0a0a0;
+        color: var(--h3-text-secondary);
         opacity: 1;
         transform: translateY(0);
       }
 
       .insight-more {
-        color: #a0a0a0;
+        color: var(--h3-text-secondary);
         font-size: 13px;
         line-height: 1.45;
         opacity: 0;
@@ -987,7 +988,7 @@
       }
 
       .insight-more dt {
-        color: #878787;
+        color: var(--h3-text-muted);
         font-family: var(--mono);
       }
 
@@ -1003,10 +1004,10 @@
         width: 48px;
         height: 48px;
         place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.07);
+        border: 1px solid var(--h3-border);
         border-radius: 50%;
         background: transparent;
-        color: #ededed;
+        color: var(--h3-text);
         cursor: pointer;
         transition:
           background 220ms ease,
@@ -1014,22 +1015,19 @@
           transform 220ms ease;
       }
 
-      .insight-toggle::before,
-      .insight-toggle::after {
-        content: "";
-        position: absolute;
-        width: 16px;
-        height: 1px;
-        background: currentColor;
-      }
-
-      .insight-toggle::after {
-        transform: rotate(90deg);
+      .insight-toggle svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.5;
       }
 
       .insight-card.is-expanded .insight-toggle {
-        background: #ededed;
-        color: #000;
+        background: var(--h3-control-light);
+        color: var(--h3-control-dark);
         transform: rotate(45deg);
       }
 
@@ -1042,7 +1040,7 @@
       }
 
       .insight-status {
-        color: #878787;
+        color: var(--h3-text-muted);
         font-family: var(--mono);
         font-size: 12px;
       }
@@ -1057,10 +1055,10 @@
         width: 44px;
         height: 44px;
         place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.07);
+        border: 1px solid var(--h3-border);
         border-radius: 50%;
         background: transparent;
-        color: #ededed;
+        color: var(--h3-text);
         font-size: 20px;
         line-height: 1;
         cursor: pointer;
@@ -2355,7 +2353,7 @@
         </div>
       </section>
 
-      <section class="story" id="levels">
+      <section class="story h3-card-section h3-carousel-section" id="levels">
         <div class="section-inner">
           <div class="section-heading reveal">
             <h2>成长不是变得更忙。<br />而是变得更有意识。</h2>
@@ -2363,9 +2361,9 @@
               层级不是排行榜，也不是分数越高越好。它描述的是一个人如何从默认脚本，逐步走向更有意识的生活系统。
             </p>
           </div>
-          <div class="insight-carousel reveal" data-card-carousel>
-            <div class="insight-track" id="levels-track" data-card-track role="region" aria-label="Human 3.0 成长层级" tabindex="0">
-              <article class="insight-card level-card" data-card-name="Level 1.0">
+          <div class="insight-carousel h3-carousel reveal" data-card-carousel data-carousel>
+            <div class="insight-track h3-carousel__track" id="levels-track" data-card-track role="region" aria-label="Human 3.0 成长层级" tabindex="0">
+              <article class="insight-card level-card h3-card h3-card--expandable h3-carousel__item" data-card-name="Level 1.0" data-expanded="false">
                 <span class="insight-symbol" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="1"></circle></svg>
                 </span>
@@ -2381,9 +2379,9 @@
                     </dl>
                   </div>
                 </div>
-                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="level-1-more" aria-label="展开 Level 1.0 补充说明"></button>
+                <button class="insight-toggle h3-icon-button h3-icon-button--plus" type="button" data-card-toggle aria-expanded="false" aria-controls="level-1-more" aria-label="展开 Level 1.0 补充说明"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
               </article>
-              <article class="insight-card level-card" data-card-name="Level 2.0">
+              <article class="insight-card level-card h3-card h3-card--expandable h3-carousel__item" data-card-name="Level 2.0" data-expanded="false">
                 <span class="insight-symbol" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></svg>
                 </span>
@@ -2399,9 +2397,9 @@
                     </dl>
                   </div>
                 </div>
-                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="level-2-more" aria-label="展开 Level 2.0 补充说明"></button>
+                <button class="insight-toggle h3-icon-button h3-icon-button--plus" type="button" data-card-toggle aria-expanded="false" aria-controls="level-2-more" aria-label="展开 Level 2.0 补充说明"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
               </article>
-              <article class="insight-card level-card" data-card-name="Level 3.0">
+              <article class="insight-card level-card h3-card h3-card--expandable h3-carousel__item" data-card-name="Level 3.0" data-expanded="false">
                 <span class="insight-symbol" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></svg>
                 </span>
@@ -2417,28 +2415,28 @@
                     </dl>
                   </div>
                 </div>
-                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="level-3-more" aria-label="展开 Level 3.0 补充说明"></button>
+                <button class="insight-toggle h3-icon-button h3-icon-button--plus" type="button" data-card-toggle aria-expanded="false" aria-controls="level-3-more" aria-label="展开 Level 3.0 补充说明"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
               </article>
             </div>
-            <div class="insight-carousel-foot">
-              <span class="insight-status" data-card-status aria-live="polite">01 / 03</span>
-              <div class="insight-controls" aria-label="层级卡片导航">
-                <button class="insight-arrow" type="button" data-card-prev aria-label="上一张层级卡片" disabled>←</button>
-                <button class="insight-arrow" type="button" data-card-next aria-label="下一张层级卡片">→</button>
+            <div class="insight-carousel-foot h3-carousel__footer">
+              <span class="insight-status h3-carousel__status" data-card-status aria-live="polite">01 / 03</span>
+              <div class="insight-controls h3-carousel__controls" aria-label="层级卡片导航">
+                <button class="insight-arrow h3-icon-button" type="button" data-card-prev aria-label="上一张层级卡片" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+                <button class="insight-arrow h3-icon-button" type="button" data-card-next aria-label="下一张层级卡片"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 5 7 7-7 7"></path><path d="M5 12h14"></path></svg></button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="turning-point" id="false-transformation">
+      <section class="turning-point h3-card-section h3-card-section--inverse h3-carousel-section" id="false-transformation">
         <div class="section-inner">
           <div class="turning-title reveal">
             <h2>你可能只是把“理解”误认为“改变”。</h2>
           </div>
-          <div class="insight-carousel reveal" data-card-carousel>
-            <div class="insight-track" id="transformation-track" data-card-track role="region" aria-label="知识到技能的三个阶段" tabindex="0">
-              <article class="insight-card transformation-card" data-card-name="Knowledge">
+          <div class="insight-carousel h3-carousel reveal" data-card-carousel data-carousel>
+            <div class="insight-track h3-carousel__track" id="transformation-track" data-card-track role="region" aria-label="知识到技能的三个阶段" tabindex="0">
+              <article class="insight-card transformation-card h3-card h3-card--expandable h3-card--alternate h3-carousel__item" data-card-name="Knowledge" data-expanded="false">
                 <span class="insight-symbol" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>
                 </span>
@@ -2449,9 +2447,9 @@
                   <p class="insight-summary small-copy">你读过、听过、理解过，但它还没有进入你的行为。</p>
                   <p class="insight-more" id="knowledge-more" aria-hidden="true">自我观察：你读过、听过、理解过的内容，是否已经进入你的行为？</p>
                 </div>
-                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="knowledge-more" aria-label="展开 Knowledge 补充说明"></button>
+                <button class="insight-toggle h3-icon-button h3-icon-button--plus" type="button" data-card-toggle aria-expanded="false" aria-controls="knowledge-more" aria-label="展开 Knowledge 补充说明"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
               </article>
-              <article class="insight-card transformation-card" data-card-name="Experience">
+              <article class="insight-card transformation-card h3-card h3-card--expandable h3-card--alternate h3-carousel__item" data-card-name="Experience" data-expanded="false">
                 <span class="insight-symbol" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"></circle><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path><circle cx="18" cy="5" r="3"></circle></svg>
                 </span>
@@ -2462,9 +2460,9 @@
                   <p class="insight-summary small-copy">你尝试过，也经历过，但还不一定能稳定复现。</p>
                   <p class="insight-more" id="experience-more" aria-hidden="true">自我观察：你尝试过、经历过的改变，现在是否已经能够稳定复现？</p>
                 </div>
-                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="experience-more" aria-label="展开 Experience 补充说明"></button>
+                <button class="insight-toggle h3-icon-button h3-icon-button--plus" type="button" data-card-toggle aria-expanded="false" aria-controls="experience-more" aria-label="展开 Experience 补充说明"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
               </article>
-              <article class="insight-card transformation-card" data-card-name="Skill">
+              <article class="insight-card transformation-card h3-card h3-card--expandable h3-card--alternate h3-carousel__item" data-card-name="Skill" data-expanded="false">
                 <span class="insight-symbol" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="m2 9 3-3 3 3"></path><path d="M13 18H7a2 2 0 0 1-2-2V6"></path><path d="m22 15-3 3-3-3"></path><path d="M11 6h6a2 2 0 0 1 2 2v10"></path></svg>
                 </span>
@@ -2475,14 +2473,14 @@
                   <p class="insight-summary small-copy">你能在现实压力下，持续、稳定、反复做到。</p>
                   <p class="insight-more" id="skill-more" aria-hidden="true">自我观察：你是否能在现实压力下，持续、稳定、反复做到？</p>
                 </div>
-                <button class="insight-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="skill-more" aria-label="展开 Skill 补充说明"></button>
+                <button class="insight-toggle h3-icon-button h3-icon-button--plus" type="button" data-card-toggle aria-expanded="false" aria-controls="skill-more" aria-label="展开 Skill 补充说明"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
               </article>
             </div>
-            <div class="insight-carousel-foot">
-              <span class="insight-status" data-card-status aria-live="polite">01 / 03</span>
-              <div class="insight-controls" aria-label="改变阶段卡片导航">
-                <button class="insight-arrow" type="button" data-card-prev aria-label="上一张改变阶段卡片" disabled>←</button>
-                <button class="insight-arrow" type="button" data-card-next aria-label="下一张改变阶段卡片">→</button>
+            <div class="insight-carousel-foot h3-carousel__footer">
+              <span class="insight-status h3-carousel__status" data-card-status aria-live="polite">01 / 03</span>
+              <div class="insight-controls h3-carousel__controls" aria-label="改变阶段卡片导航">
+                <button class="insight-arrow h3-icon-button" type="button" data-card-prev aria-label="上一张改变阶段卡片" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+                <button class="insight-arrow h3-icon-button" type="button" data-card-next aria-label="下一张改变阶段卡片"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 5 7 7-7 7"></path><path d="M5 12h14"></path></svg></button>
               </div>
             </div>
           </div>
@@ -2977,6 +2975,7 @@
         if (!toggle || !detail) return;
         const cardName = card.dataset.cardName || "当前卡片";
         card.classList.toggle("is-expanded", isExpanded);
+        card.dataset.expanded = String(isExpanded);
         toggle.setAttribute("aria-expanded", String(isExpanded));
         toggle.setAttribute("aria-label", `${isExpanded ? "收起" : "展开"} ${cardName} 补充说明`);
         detail.setAttribute("aria-hidden", String(!isExpanded));
@@ -3010,6 +3009,7 @@
         };
         const updateControls = () => {
           const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+          carousel.dataset.overflow = maxScroll > 2 ? "true" : "false";
           previous.disabled = track.scrollLeft <= 2;
           next.disabled = track.scrollLeft >= maxScroll - 2;
           const currentIndex = Math.min(

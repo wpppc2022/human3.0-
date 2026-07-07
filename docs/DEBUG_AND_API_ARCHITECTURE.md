@@ -12,6 +12,204 @@
 - 不引入数据库、登录、付费或 AI 报告生成。
 - 不破坏现有 UI v2 收口。
 
+## Accuracy-first 评估版本兼容规格
+
+> 状态：2026-07-05 产品、内容、模型已共同签署候选规格；隔离 32 题工作稿、manifest、内部评分/候选编解码和兼容测试已实现。校准状态仍为 `not-started`，公开入口、正式结果和默认切换均未开放。
+
+48 题版本继续作为正式生产基准。32 题保留为未验证 `draft`，准确性研究与产品晋级无限期暂停，不进入 `calibrating`、`stable` 或公开默认。模板系统继续暂停。本节优先于本文后续仍以单一“当前题库”描述的旧方案，也取代“用当前题库或当前模板重算历史结果”的旧口径。
+
+产品侧统一口径：当前 48 题正式版维持既有入口和预计时长；32 题只有在内部候选入口可使用“约 4-6 分钟”。候选的精确同分必须并列展示；“相差 1.5 也算并列”尚未获批。Spirit 关系连接题和 Vocation 资源系统题都只能生成窄解释，不得由 API 或结果模板扩写成完整关系/共同体或财务/资源系统结论。
+
+### 三类版本字段
+
+| 字段 | 推荐首批值 | 职责 | 何时升级 |
+| --- | --- | --- | --- |
+| `assessmentVersion` | `h3-a48-v1`、候选 `h3-a32-v1` | 绑定题目 ID、顺序、题干、象限、维度、反向计分标记、评分算法和校准阈值 | 题目增删、重排、语义变化、反向标记或评分结果可能变化时新增版本，旧版本不可原地修改 |
+| `contentSchemaVersion` | `h3-content-schema-v1` | 描述 questions、stages、quadrants、templates、recommendations 等内容文件的结构契约 | 字段结构或必填关系变化时升级；纯文案版本不能只靠它区分 |
+| `resultVersion` | 48 题 `h3-result-v1`；32 题候选规划 `h3-result-v2` | 绑定结果构建器、阶段/象限解释、结果模板和推荐行动的不可变组合 | 同一答案可能生成不同阶段、标题、解释、并列结构或行动建议时新增版本 |
+
+禁止使用 `current`、`latest` 或单纯题量作为持久化版本。32 题数量只是校验条件，不是稳定身份。服务端维护版本清单，每个评估版本至少包含：
+
+```ts
+type AssessmentStatus = "draft" | "calibrating" | "stable" | "retired";
+
+interface AssessmentVersionManifest {
+  assessmentVersion: string;
+  contentSchemaVersion: string;
+  defaultResultVersion: string;
+  compatibleResultVersions: string[];
+  questionCount: number;
+  status: AssessmentStatus;
+  allowNewSessions: boolean;
+}
+```
+
+状态语义：
+
+- `draft`：内容未定，只允许本地数据校验，不进入公开 questions/score/share 流程。
+- `calibrating`：可由 Debug 或受控测试显式访问，不得成为服务端默认版本。
+- `stable`：通过数据、评分、真实样例、迁移和回滚验收后，才可服务新测评并成为默认候选。
+- `retired`：不再创建新测评，但题库、评分、结果构建和分享解码必须永久保留，用于历史重建。
+
+### 服务端默认版本与快速回滚
+
+- 客户端不得自行定义默认版本。省略版本时，由服务端配置解析 `defaultAssessmentVersion`。
+- 当前默认必须保持 `h3-a48-v1`。`h3-a32-v1` 在状态达到 `stable` 且完成校准验收前，服务端启动检查必须拒绝把它设为默认。
+- 推荐使用服务端环境配置加代码内安全回退：环境值无效、未知、非 `stable` 或 `allowNewSessions=false` 时，回退到冻结的 `h3-a48-v1`，并记录错误。
+- 切换默认只影响新会话。已有进度、结果和分享链接继续按自身版本处理。
+- 快速回滚只需把默认恢复为 `h3-a48-v1` 并停止 32 题新会话；不得删除 32 题已有进度，也不得改写任何历史结果。
+- 独立 manifest、候选资源和内部测试链路可以保留，工程软件测试继续维护；但用户已取消全部准确性研究，32 题不再从 `draft` 进入 `calibrating`，也不授权修改正式默认、公开分享或历史资源。
+
+### Questions API
+
+建议保留现有路径，通过查询参数增加版本选择：
+
+```text
+GET /api/content/questions
+GET /api/content/questions?assessmentVersion=h3-a48-v1
+GET /api/content/questions?assessmentVersion=h3-a32-v1
+```
+
+- 不传 `assessmentVersion`：返回服务端默认版本；当前必须是 `h3-a48-v1`。
+- 显式请求 `stable`：公开返回。
+- 显式请求 `calibrating`：仅本地 Debug 或受控环境允许；普通公开请求返回不可用。
+- `draft` 不对外返回；`retired` 只允许历史重建链路读取，不用于开始新测评。
+- 未知版本返回 `404 UNKNOWN_ASSESSMENT_VERSION`；版本存在但不允许当前用途时返回 `409 ASSESSMENT_VERSION_NOT_AVAILABLE`。
+
+建议响应：
+
+```json
+{
+  "data": [],
+  "meta": {
+    "assessmentVersion": "h3-a48-v1",
+    "contentSchemaVersion": "h3-content-schema-v1",
+    "status": "stable",
+    "questionCount": 48,
+    "defaultAssessmentVersion": "h3-a48-v1",
+    "readOnly": true
+  }
+}
+```
+
+后续可增加 `GET /api/content/assessment-versions` 返回不含题干的版本清单和状态，供 Debug 使用；本轮不实现。
+
+### Score API
+
+新客户端必须发送 `assessmentVersion`。普通新测评不自行指定 `resultVersion`，由服务端从版本清单解析固定搭配；只有历史重建可显式携带已保存的 `resultVersion`。
+
+```json
+{
+  "assessmentVersion": "h3-a48-v1",
+  "answers": { "M01": 4 },
+  "purpose": "new-assessment"
+}
+```
+
+历史重建请求可使用：
+
+```json
+{
+  "assessmentVersion": "h3-a48-v1",
+  "resultVersion": "h3-result-v1",
+  "answers": {},
+  "purpose": "historical-rebuild"
+}
+```
+
+兼容规则：
+
+- 过渡期旧客户端未传版本时，只有答案键集合与冻结的 48 题 v1 完全匹配，才可推断为 `h3-a48-v1`；响应标记 `inferredLegacyVersion: true`。不得根据当前默认版本猜测。
+- 服务端必须同时校验答案数量、完整 ID 集合、无额外 ID、值为 1 到 5。32 个答案不能提交给 `h3-a48-v1`，48 个答案也不能提交给 `h3-a32-v1`。
+- 数量、ID 集或答案值不匹配返回 `422 ASSESSMENT_ANSWER_MISMATCH`，并返回 `expectedCount`、`receivedCount`、`missingIds`、`extraIds`、`invalidIds`；不得进入评分函数。
+- 未知版本返回 404；非当前用途可评分状态返回 409；不兼容的 assessment/result 组合返回 `409 RESULT_VERSION_INCOMPATIBLE`。
+- `retired` 版本只接受 `historical-rebuild`，不接受新测评。
+
+响应和 `BuiltResult` 持久化包必须包含解析后的版本：
+
+```json
+{
+  "data": {},
+  "meta": {
+    "assessmentVersion": "h3-a48-v1",
+    "contentSchemaVersion": "h3-content-schema-v1",
+    "resultVersion": "h3-result-v1",
+    "assessmentStatus": "stable",
+    "questionCount": 48,
+    "inferredLegacyVersion": false,
+    "persisted": false
+  }
+}
+```
+
+### 分享编码与永久兼容
+
+现有格式 `v1.<48 digits>` 必须永久冻结：
+
+- `v1.` 后必须恰好是 48 个 `1-5` 字符。
+- 永久映射到 `assessmentVersion=h3-a48-v1` 和 `resultVersion=h3-result-v1`。
+- 48 位的题目顺序必须来自冻结的 v1 题库快照，不能读取“当前默认题库”。
+- 将来默认切到 32 题后，`v1` 解码语义仍完全不变；旧链接不得重编码、重定向到当前版本或失效。
+
+新格式不建议只用 `v2.32`，因为题量不能区分未来同为 32 题但顺序或评分不同的版本。建议使用带别名、结果版本和校验码的 envelope：
+
+```text
+v2.<assessmentAlias>.<resultAlias>.<payload>.<checksum>
+v2.a32v1.r2.<base64url-payload>.<checksum>
+```
+
+- `a32v1` 永久映射 `h3-a32-v1`，`r2` 永久映射 `h3-result-v2`；别名只新增不复用。32 题候选在校准通过前不开放公众编码。
+- payload 按该评估版本冻结的题目顺序编码；checksum 用于识别截断和误改，不作为安全签名。
+- encode 默认只允许 `stable` 且允许新会话的版本。校准环境可通过 Debug 专用入口生成候选码，不能混入公开分享。
+- decode 先按 `v1` / `v2` 解析，再由别名解析 assessment/result 版本，最后加载对应冻结题库和结果构建器。禁止 decode 后调用“当前默认版本”。
+- decode 响应必须返回 `assessmentVersion`、`resultVersion`、`contentSchemaVersion`、questionCount 和 answers，供后续 score/rebuild 原样传递。
+
+### localStorage 迁移
+
+新进度结构至少增加 `storageSchemaVersion`、`assessmentVersion` 和 `contentSchemaVersion`；新结果再增加 `resultVersion`。建议按评估版本分 key 保存进度，避免 48/32 并行测试互相覆盖：
+
+```text
+human-3-assessment-progress:h3-a48-v1
+human-3-assessment-progress:h3-a32-v1
+human-3-assessment-result
+```
+
+迁移规则：
+
+- 现有无版本进度来自产品唯一的旧流程，即使尚未答满 48 题，也按 `h3-a48-v1` 识别；先用冻结的 v1 题目 ID 校验已答子集和 currentIndex，再复制到版本化 key。
+- 现有无版本结果若包含合法 answers/result/createdAt，标记为 `h3-a48-v1`、`h3-content-schema-v1`、`h3-result-v1`。
+- 无版本数据不能按当前服务端默认推断，否则默认切到 32 后会误读历史数据。
+- 迁移失败时保留原 key 并返回可恢复错误，不写半成品；不要清空用户历史结果。
+- 为支持快速回滚，至少一个发布窗口内对 48 题保持“新 key 优先、旧 key 回退”的双读，并对 48 题进度做兼容双写；32 题数据绝不写入旧无版本 key。
+- 旧 key 在回滚窗口结束前不删除。结果记录必须把版本字段与结果对象一起保存，不能只依赖 API 响应 meta。
+
+### 历史结果重建
+
+结果重建的唯一合法入口是：
+
+```text
+rebuildResult(assessmentVersion, resultVersion, answers)
+```
+
+- 先按 `assessmentVersion` 选择冻结题库和评分实现，再按 `resultVersion` 选择兼容的 stages、quadrants、result templates、recommendations 和 builder。
+- 已保存完整 result 时优先原样展示；需要补字段或从分享答案重建时，必须使用记录内版本。
+- 缺少版本的旧结果只按上述 legacy 规则归入 48 题 v1。
+- 如果对应版本包暂时不可用，应显示“历史版本暂时无法重建”，不得退回当前题库或当前模板生成一个看似正常但错误的结果。
+- 冻结版本可标记 `retired`，但不得从构建产物、测试 fixture 或分享解码 registry 中删除。
+
+### 测试、发布与回滚门槛
+
+必须补齐以下自动化测试后，才允许实现默认切换：
+
+- Questions API：默认仍是 48；显式 48/32；四种状态权限；未知版本；服务端默认配置非法时安全回退。
+- Score API：正确版本成功；32/48 数量交叉提交失败；缺失/额外/非法 ID；legacy 无版本只推断 48；不兼容 resultVersion 拒绝。
+- Share：固定 v1 fixture 永久解码为同一 48 题答案和结果快照；v2 正常、未知别名、坏 checksum、截断、跨版本 payload 全部覆盖。
+- Storage：无版本未完成进度迁移、无版本完整结果迁移、损坏缓存、双读/双写、48/32 进度互不覆盖。
+- 历史重建：同一 v1 答案在默认版本切换前后生成相同阶段、标题、四象限和推荐；禁止当前版本 fallback。
+- E2E：旧 `v1.<48 digits>` 链接、旧 localStorage、48 新会话、32 受控会话、默认切换和回滚演练。
+
+32 题 Accuracy-first 晋级条件保留为归档规格，但当前不执行访谈、招募、配对、复测或晋级统计，也不存在升为 `stable` 的当前路径。数据校验、API 合约、版本兼容、分享/存储迁移等工程软件测试可继续，不得被表述为准确性验证或“下一版主测”证据。
+
 ## 现状判断
 
 当前项目已经具备适合 API 化的基础：
@@ -130,12 +328,12 @@ GET /api/content/version
 | `/` 首页 | 四象限说明 | `GET /api/content/quadrants` | 可现在实现接口，页面稍后接入 | 当前四象限来自 `data/quadrants.json`，适合独立维护 |
 | `/` 首页 | Human 1.1 到 3.3 层级/阶段说明 | `GET /api/content/stages` | 可现在实现接口，页面稍后接入 | 首页若展示模型说明或阶段列表，应从 `stages` 读取 |
 | `/` 首页 | 内容版本、题库版本提示 | `GET /api/content/version` | 可作为 Debug 和页脚元信息预留 | 不建议在正式 UI 里过度展示技术版本 |
-| `/assessment` 问卷页 | 48 道题、象限、维度、反向题信息 | `GET /api/content/questions` | UI v2 收口前可继续直接读 JSON，之后再接 | 题库读取和题库版本应从页面组件中抽离 |
+| `/assessment` 问卷页 | 按版本读取题目、象限、维度、反向题信息 | `GET /api/content/questions?assessmentVersion=...` | 版本兼容实现前继续使用 48 题基准 | 省略版本由服务端解析默认；当前默认必须保持 `h3-a48-v1` |
 | `/assessment` 问卷页 | 题库版本、内容 schema、分享码版本 | `GET /api/content/version` | 可现在作为开发态检查 | 用于确认用户作答时使用的是哪一版内容 |
 | `/assessment` 问卷页 | 本地进度保存 | 暂不走 API，继续用 `lib/storage.ts` 和 localStorage | 现在不 API 化 | 进度是本机体验能力，不应为了 Debug 引入服务端状态 |
 | `/assessment` 问卷页 | 提交/生成结果 | `POST /api/assessment/score` 或保留 `POST /api/submit` | 当前已有 `/api/submit`，建议后续命名收敛 | 如果只生成结果不写库，建议用 `/api/assessment/score`；若未来写库，`/api/submit` 可继续承担提交语义 |
-| `/result` 结果页 | 读取最近一次答案/结果 | 暂不走 API，继续 localStorage | 现在不改主流程 | 页面先从本地答案重建结果，避免数据库依赖 |
-| `/result` 结果页 | 用当前模板重建报告 | `POST /api/assessment/score` 或 `POST /api/debug/preview-result` | 正式页未来用 `score`，Debug 用 `preview-result` | 两者都应复用 `buildResult`，不能复制评分逻辑 |
+| `/result` 结果页 | 读取最近一次答案/结果 | 暂不走 API，继续 localStorage | 版本化存储实现前保持现状 | 新结构必须连同 `assessmentVersion + resultVersion` 保存 |
+| `/result` 结果页 | 按原版本重建报告 | `POST /api/assessment/score` 或 `POST /api/debug/preview-result` | 正式页使用 `score`，Debug 使用 `preview-result` | 必须按保存版本选择 builder 和内容，禁止当前版本 fallback |
 | `/result` 结果页 | 结果模板 | `GET /api/content/result-templates` | 页面稳定后接入 | 用于标题、Metatype、Core Problem、Cross-Quadrant Dynamics、朋友视角 |
 | `/result` 结果页 | 推荐行动 | `GET /api/content/recommendations` | 页面稳定后接入 | 由限制象限选择对应建议 |
 | `/result` 结果页 | 分享卡片内容 | 由 `buildResult` 返回 `shareCard`，必要时读取 `GET /api/content/version` | 当前保留组件内生成 PNG | 卡片绘制本身不需要 API，卡片数据应来自结果对象 |
@@ -240,6 +438,8 @@ POST /api/debug/preview-result
 
 动态接口只做结果生成、分享编码/解码和 Debug 预览，不写文件、不写数据库、不改评分规则。所有结果都应复用现有 `data/*.json`、`lib/result-builder.ts` 和 `lib/share-link.ts`。
 
+> 本节记录 2026-06-25 已实现的单一 48 题接口快照，便于理解迁移起点。未来契约以文首“Accuracy-first 评估版本兼容规格”为准；不得照抄本节无版本请求，也不得继续从单一 `data/questions.json` 解析历史分享或结果。
+
 ### `POST /api/assessment/score`
 
 用途：正式评估结果生成。它是当前 `POST /api/submit` 的更清晰命名版本，适合后续结果页和分享页统一调用。
@@ -277,20 +477,34 @@ POST /api/debug/preview-result
 }
 ```
 
-错误响应：
+答案集合错误响应：
 
 ```json
 {
-  "error": "Assessment is incomplete. Missing answers: M01",
-  "details": []
+  "error": {
+    "code": "ASSESSMENT_ANSWER_MISMATCH",
+    "message": "Answers do not match h3-a48-v1.",
+    "details": {
+      "expectedCount": 48,
+      "receivedCount": 47,
+      "missingIds": ["M01"],
+      "extraIds": [],
+      "invalidIds": []
+    }
+  }
 }
 ```
 
-状态码建议：
+当前状态码：
 
 - `200`：成功返回结果。
-- `400`：缺少答案、非法答案、答案不完整。
+- `400`：JSON 语法错误、请求体或字段结构错误。
+- `404`：未知 assessmentVersion。
+- `409`：draft/retired 当前用途不可用，或 resultVersion 不兼容。
+- `422`：答案缺失、多余、非法值或跨版本 ID 集不匹配。
 - `500`：内容文件缺失或结果模板不完整。
+
+`h3-result-v1` 的不可变输入由 manifest 中的 canonical hash 锁定：`stages.json`、`quadrants.json`、`result-templates.json`、`recommendations.json`。固定 48 答案的 `BuiltResult` 核心输出由 `tests/fixtures/h3-result-v1-core-snapshot.json` 锁定，防止历史结果随当前文件或 builder 漂移。
 
 迁移建议：先新增 `/api/assessment/score`，保留 `/api/submit`；实现稳定后可让 `/api/submit` 复用同一个 helper，避免两套结果生成逻辑。
 
@@ -474,7 +688,7 @@ POST /api/debug/preview-result
   "data": {
     "valid": false,
     "errors": [
-      "questions.json must contain exactly 48 questions."
+      "h3-a48-v1 expected 48 questions but received a different count."
     ]
   },
   "meta": {

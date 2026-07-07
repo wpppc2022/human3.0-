@@ -1,0 +1,74 @@
+{
+  "contentSchemaVersion": "h3-content-schema-v1",
+  "defaultAssessmentVersion": "h3-a48-v1",
+  "assessments": [
+    {
+      "id": "h3-a48-v1",
+      "status": "stable",
+      "calibrationStatus": "legacy-baseline",
+      "questionCount": 48,
+      "questionSetHash": "sha256:0983768f0c5a23fc2ed05084aafc1e2336c71356f8d17b66548ac1f0b2f10ed0",
+      "questionSource": "data/questions.json",
+      "resultVersion": "h3-result-v1",
+      "scoringModel": "raw-12-per-quadrant",
+      "equivalentScoreMultiplier": 1,
+      "allowNewSessions": true,
+      "allowPublicQuestions": true,
+      "allowPublicScoring": true,
+      "allowPublicShare": true
+    },
+    {
+      "id": "h3-a32-v1",
+      "status": "draft",
+      "calibrationStatus": "not-started",
+      "questionCount": 32,
+      "questionSetHash": null,
+      "questionSource": "data/assessment-versions/h3-a32-v1.questions.draft.json",
+      "resultVersion": "h3-result-v2",
+      "scoringModel": "equivalent-12-per-quadrant",
+      "equivalentScoreMultiplier": 1.5,
+      "allowNewSessions": false,
+      "allowPublicQuestions": false,
+      "allowPublicScoring": false,
+      "allowPublicShare": false
+    }
+  ],
+  "results": [
+    {
+      "id": "h3-result-v1",
+      "status": "frozen",
+      "assessmentVersions": ["h3-a48-v1"],
+      "public": true,
+      "resourceHashes": {
+        "stages": {
+          "source": "data/stages.json",
+          "hash": "sha256:b698ea4baf877dd74bcd76a0b4096f36b6e76c8e530a8c5f60943a83e58b047c"
+        },
+        "quadrants": {
+          "source": "data/quadrants.json",
+          "hash": "sha256:4839c99e856e2d84a11195d92fe8f00165388ec5d1303fe247d4dd0d471575f2"
+        },
+        "resultTemplates": {
+          "source": "data/result-templates.json",
+          "hash": "sha256:31b7866a13512092bf74e32f46359beb0d4ed9a1970ec9f33a1070791e71d45b"
+        },
+        "recommendations": {
+          "source": "data/recommendations.json",
+          "hash": "sha256:6c0eed8793a664ed7bd23ee88afcb6f5d6107a1d472bbaa02eb15ea8f92d1561"
+        }
+      },
+      "compatibilityFixture": {
+        "source": "tests/fixtures/h3-result-v1-core-snapshot.json",
+        "hash": "sha256:95d047b8f17da01b602a23b783a1f48bcc68adc5c22b3fd7492cdffd14d09837"
+      }
+    },
+    {
+      "id": "h3-result-v2",
+      "status": "draft",
+      "assessmentVersions": ["h3-a32-v1"],
+      "public": false,
+      "resourceHashes": null,
+      "compatibilityFixture": null
+    }
+  ]
+}

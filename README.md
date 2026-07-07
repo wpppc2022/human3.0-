@@ -85,6 +85,8 @@ public/images/          预留图片资源目录
 
 本次待同步的正式产品增量包括：首页静态 UI、Canvas 完整加载修复、`#levels` / `#false-transformation` 卡片、移动菜单，以及结果页、分享卡和 PDF 的稳定修复。题库、评分算法和结果口径不在本次变更范围。
 
+Accuracy-first 多版本基础设施已在本地建立：`h3-a48-v1` 仍是唯一正式默认，`h3-a32-v1` 是隔离的 `draft / not-started / unvalidated` 工作稿。32 题准确性研究已经取消，没有公开问卷、公开评分、正式结果或公开分享入口，并且不会切换默认；内部评分只用于软件工程兼容测试，不代表产品准确性。
+
 页面模板化工作已按最新需求暂停并降为末级 backlog。本次发布不包含模板目录、模板组件、模板样式、Debug 路由、模板测试或模板演示资源。
 
 ## 重要文件
@@ -98,13 +100,18 @@ public/images/          预留图片资源目录
 - `docs/MOBILE_QA_CHECKLIST.md`：1.0 发布前真实手机浏览器验收清单。
 - `docs/MOBILE_QA_REPORT.md`：本机移动端浏览器验收记录。
 - `docs/REMOTE_CI_STATUS.md`：远程推送和 GitHub Actions 首跑状态记录。
-- `data/questions.json`：48 道题，产品人员未来可优先维护这里。
+- `data/questions.json`：冻结的 48 题正式基准；原地修改会触发版本 hash 校验失败，应新建评估版本而不是覆盖。
+- `data/assessment-versions.json`：评估/结果版本清单，固定正式默认、状态、题量、hash、评分模型和公开权限。
+- `data/assessment-versions/h3-a32-v1.questions.draft.json`：32 题未验证工作稿；非正式题库，不得接入公众流程或作准确性声明。
 - `data/stages.json`：Human 1.1 到 Human 3.3 的阶段定义。
 - `data/quadrants.json`：Mind、Body、Spirit、Vocation 四象限定义。
 - `data/recommendations.json`：按限制象限生成 24 小时、7 天、30 天、90 天建议。
 - `data/result-templates.json`：结果标题、Metatype、生活方式原型、核心问题、象限互动、摘要和分享关键词模板。
 - `data/site-content.json`：首页产品文案。
 - `lib/scoring.ts`：计分逻辑。
+- `lib/assessment-versions.ts`：版本 registry、显式题库加载和公开/内部访问边界。
+- `lib/versioned-scoring.ts`：32 题等值计分与精确并列结果；当前仅供内部测试。
+- `lib/assessment-input.ts`：按版本严格校验完整题目 ID 集与答案值。
 - `lib/result-builder.ts`：把计分结果组合成中文报告。
 - `lib/types.ts`：核心类型定义。
 - `lib/storage.ts`：localStorage 保存、恢复和缓存结构校验。
@@ -114,6 +121,7 @@ public/images/          预留图片资源目录
 - `components/ResultClient.tsx`：结果页读取和展示。
 - `docs/HANDOFF.md`：AI 或开发者快速接手摘要。
 - `scripts/validate-data.mjs`：严格检查 `data/` 目录结构、题量、阶段覆盖、重复项、模板占位符和禁止使用的受保护人格测试名称。
+- `tests/fixtures/h3-result-v1-core-snapshot.json`：固定 48 答案对应的正式结果核心快照，保护历史结果语义。
 - `playwright.config.ts`：端到端测试配置，会在 3100 端口启动独立测试服务。
 - `tests/e2e/`：覆盖首页进入测评、刷新恢复、脏缓存恢复、完整答题、结果页、PNG 下载、异常状态、提交 API、分享链接和移动端核心控件。
 - `.github/workflows/ci.yml`：GitHub Actions 工作流，推送或 PR 到 `main` 时运行 `pnpm check`。
@@ -129,3 +137,4 @@ public/images/          预留图片资源目录
 7. 接入 Supabase，让 `/result/[id]` 支持短链接和服务端结果持久化。
 8. 实现复测记录和真实分享链接。
 9. 继续优先收口 1.0 正式产品；模板化保持暂停，仅在核心产品完成并获得新授权后再评估。
+10. 32 题准确性研究保持取消状态；保留 `questionSetHash=null` 和 `not-started`，不安排访谈、配对、复测或默认切换。

@@ -10,7 +10,7 @@
 - `text`：中文题干。
 - `reverseScored`：是否反向计分。
 
-产品人员可增删改题，但需要保持每个象限题量一致，且同步更新测试和计分假设。
+`data/questions.json` 已绑定 `h3-a48-v1` 并由 hash 冻结。产品人员如需改变题干、顺序、象限、维度或反向标记，必须创建新的 assessmentVersion，不能原地修改该文件后继续沿用旧版本号。
 
 当前数据校验要求：
 
@@ -19,6 +19,25 @@
 - 每个象限至少有 1 道反向计分题。
 - `id` 必须唯一，并使用象限前缀加两位数字，例如 `M01`、`B01`、`S01`、`V01`。
 - 字段集合必须与本节一致，不能新增未说明字段。
+
+## `data/assessment-versions.json`
+
+JSON-safe 评估/结果版本 manifest：
+
+- `contentSchemaVersion`：内容字段结构版本。
+- `defaultAssessmentVersion`：公开新会话默认版本；当前固定 `h3-a48-v1`。
+- `assessments[]`：评估版本定义，包含 `id`、状态、校准状态、题量、题集 hash、资源路径、结果版本、评分模型、等值倍率及公开权限。
+- `results[]`：结果版本定义，包含 `id`、`status`、兼容评估版本和是否公开。
+
+`h3-a48-v1` 必须保持 `stable`、48 题、`h3-result-v1` 和公开可用。`h3-a32-v1` 当前必须保持 `draft / not-started / unvalidated`、32 题、`questionSetHash=null`，并关闭新会话、公开题目、公开评分和公开分享。产品准确性研究已取消，没有新授权时不进入 `calibrating` 或 `stable`。
+
+## `data/assessment-versions/h3-a32-v1.questions.draft.json`
+
+32 题未验证工作稿资源。产品已取消全部准确性研究。顶层包含评估版本、状态、校准状态、未冻结 hash、内容警示和 `questions[]`。每道题沿用 `id / quadrant / dimension / text / reverseScored` 字段。
+
+`h3-result-v1` 还在 manifest 中冻结 `stages`、`quadrants`、`result-templates`、`recommendations` 四份构建输入的 canonical SHA-256，并绑定 `tests/fixtures/h3-result-v1-core-snapshot.json`。任何资源或核心结果变化都必须创建新 resultVersion，不能只更新 hash 掩盖历史漂移。
+
+当前校验要求：总计 32 题，四象限各 8 题、各 2 道反向题；四个新增窄构念题均为正向。该文件不能被正式 `/assessment` 或公开内容 API 读取。
 
 ## `data/quadrants.json`
 

@@ -361,9 +361,19 @@ test("submit API validates missing and invalid answers, then returns a result", 
     data: { answers: invalidAnswers },
   });
 
-  expect(invalidAnswersResponse.status()).toBe(400);
-  await expect(invalidAnswersResponse.json()).resolves.toMatchObject({
-    error: expect.stringContaining("invalid answers: M01"),
+  expect(invalidAnswersResponse.status()).toBe(422);
+  await expect(invalidAnswersResponse.json()).resolves.toEqual({
+    error: {
+      code: "ASSESSMENT_ANSWER_MISMATCH",
+      message: "Answers do not match h3-a48-v1.",
+      details: {
+        expectedCount: 48,
+        receivedCount: 48,
+        missingIds: [],
+        extraIds: [],
+        invalidIds: ["M01"],
+      },
+    },
   });
 
   const response = await request.post("/api/submit", {

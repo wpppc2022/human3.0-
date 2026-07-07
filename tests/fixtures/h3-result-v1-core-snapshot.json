@@ -1,0 +1,116 @@
+{
+  "fixtureVersion": "h3-result-v1-core-v1",
+  "assessmentVersion": "h3-a48-v1",
+  "resultVersion": "h3-result-v1",
+  "answerPayload": "555555555555444444444444333333333333222222222222",
+  "expected": {
+    "id": "fixture-h3-result-v1",
+    "stage": {
+      "id": "2.1",
+      "level": "2.0",
+      "phase": "1",
+      "code": "Human 2.1",
+      "name": "失调的个体化者",
+      "coreState": "想做自己，但容易混乱、反抗或耗散。"
+    },
+    "title": "Human 2.1｜认知很想突破、事业正在耗能的躁动探索者",
+    "metatype": "The Restless Explorer",
+    "lifestyleArchetype": "想做自己但能量分散的探索者",
+    "headline": "想做自己，但容易混乱、反抗或耗散。",
+    "summary": "你想走出默认路径，也愿意探索自己的方式。现在最需要的是收束能量，而不是继续打开更多方向。 当前最强支点是认知，最需要补足的是事业。这份结果不是身份标签，而是一次对当下系统状态的切片观察。",
+    "coreProblem": "你不是没有自我意识，而是探索太多、支撑太少，导致每个方向都在消耗你。",
+    "crossQuadrantDynamics": "认知让你有能力突破默认路径，但事业会让探索缺少承托，容易从自由变成耗散。",
+    "shareInsight": "你不是没有自我，而是同时打开了太多条路。",
+    "primaryBlock": "你的主要限制因素是 Vocation。这不代表你没有能力，而是技能、作品和现实产出还没有形成稳定的价值转化路径。",
+    "dominantQuadrant": {
+      "id": "mind",
+      "name": "认知"
+    },
+    "weakQuadrant": {
+      "id": "vocation",
+      "name": "事业"
+    },
+    "quadrantReports": [
+      {
+        "id": "mind",
+        "state": "grounded",
+        "stateLabel": "已有基础",
+        "developmentStage": "3.1",
+        "impact": "认知是你当前最容易调动的能力，它会影响你理解问题、安排生活和推进选择的方式。"
+      },
+      {
+        "id": "body",
+        "state": "grounded",
+        "stateLabel": "已有基础",
+        "developmentStage": "2.3",
+        "impact": "身体目前处于“已有基础”，它正在参与整体系统，但还需要和其他象限形成更清晰的配合。"
+      },
+      {
+        "id": "spirit",
+        "state": "forming",
+        "stateLabel": "正在形成",
+        "developmentStage": "2.2",
+        "impact": "意义目前处于“正在形成”，它正在参与整体系统，但还需要和其他象限形成更清晰的配合。"
+      },
+      {
+        "id": "vocation",
+        "state": "forming",
+        "stateLabel": "正在形成",
+        "developmentStage": "2.1",
+        "impact": "事业是当前最需要补足的支撑点。它不代表失败，而是提示这个系统还需要更稳定的节律和方法。"
+      }
+    ],
+    "recommendations": {
+      "immediateAction": "今天把一个想法压缩成最小可交付版本，并写清楚它要给谁解决什么问题。",
+      "sevenDays": [
+        "选一个最小作品或交付物，在 7 天内完成可展示版本。",
+        "写清楚你的能力正在为谁解决什么具体问题。",
+        "找一位真实用户、同事或朋友，获得一次明确反馈。"
+      ],
+      "thirtyDays": [
+        "建立一个作品或案例清单，每周至少推进一个可见产出。",
+        "围绕一个核心技能设计 30 天练习计划。",
+        "减少一个让你分心的新机会，把注意力放回主线。"
+      ],
+      "ninetyDays": [
+        "完成一个能代表当前能力的项目，并整理成可展示案例。",
+        "建立能力、作品、反馈和机会之间的循环。",
+        "验证你的产出是否能持续创造真实价值，而不只停留在想法层面。"
+      ]
+    },
+    "shareCard": {
+      "stageCode": "2.1",
+      "title": "认知很想突破、事业正在耗能的躁动探索者",
+      "chineseName": "躁动探索者",
+      "metatype": "The Restless Explorer",
+      "dominantQuadrant": "认知",
+      "weakQuadrant": "事业",
+      "insight": "你不是没有自我，而是同时打开了太多条路。",
+      "keywords": ["探索", "耗散", "收束"],
+      "siteName": "Human 3.0 自我发展评估"
+    },
+    "scoring": {
+      "quadrantScores": {
+        "mind": { "rawScore": 48, "state": "grounded", "developmentStage": "3.1" },
+        "body": { "rawScore": 42, "state": "grounded", "developmentStage": "2.3" },
+        "spirit": { "rawScore": 36, "state": "forming", "developmentStage": "2.2" },
+        "vocation": { "rawScore": 30, "state": "forming", "developmentStage": "2.1" }
+      },
+      "level": "2.0",
+      "phase": "1",
+      "stage": "2.1",
+      "dominantQuadrant": "mind",
+      "weakQuadrant": "vocation",
+      "imbalanceScore": 18,
+      "averageScore": 39,
+      "minScore": 30,
+      "maxScore": 48,
+      "unstableCount": 0,
+      "formingOrBetterCount": 4,
+      "groundedOrBetterCount": 2,
+      "matureCount": 0,
+      "answeredCount": 48,
+      "missingQuestionIds": []
+    }
+  }
+}

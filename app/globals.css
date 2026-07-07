@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "../styles/human3-system.css";
+@import "../styles/human3-templates.css";
 @import "./prototype.css";
 
 @custom-variant dark (&:is(.dark *));

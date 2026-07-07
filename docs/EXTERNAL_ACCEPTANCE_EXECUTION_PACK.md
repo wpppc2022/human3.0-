@@ -2,7 +2,7 @@
 
 ## 目标
 
-本文件是 HUMAN 3.0 1.0 候选版的外部验收执行包。目标是让测试者拿到公网链接后，可以直接开始真实用户反馈和真实手机验收。
+本文件是 HUMAN 3.0 1.0 候选版的历史外部验收执行包。用户已取消准确性研究和相关招募；其中真实用户反馈、访谈和阈值复核全部归档，不得执行。真机工程/UI 验收部分仍可使用。
 
 公网测试地址：
 
@@ -16,12 +16,14 @@ https://human3-0-phi.vercel.app/
 
 | 事项 | 建议执行者 | 回填位置 |
 | --- | --- | --- |
-| 真实用户反馈 | 产品负责人、总控指定访谈者或非开发执行者 | `docs/CONTENT_REVIEW.md`、`docs/SCORING_CALIBRATION.md`、`docs/RELEASE_1_0.md` |
+| 真实用户反馈 | `Cancelled / Archived`，不招募、不执行 | 不回填 |
 | iPhone Safari 真机验收 | 持有 iPhone 的 QA、产品或测试者 | `docs/MOBILE_QA_REPORT.md`、`docs/RELEASE_1_0.md` |
 | Android Chrome 真机验收 | 持有 Android 手机的 QA、产品或测试者 | `docs/MOBILE_QA_REPORT.md`、`docs/RELEASE_1_0.md` |
 | 发布判定 | 总控或产品负责人 | `docs/RELEASE_1_0.md` |
 
-## 真实用户反馈 Checklist
+## 真实用户反馈 Checklist（Cancelled / Archived）
+
+> 以下内容仅保留历史参考，不得招募、派发或执行，也不代表准确性已经验证。
 
 ### 测试前准备
 
@@ -202,7 +204,9 @@ android-chrome-04-share.png
 - 个别设备截图不够美观，但核心流程可用。
 - 用户希望增加更多解释、案例或后续功能。
 
-## 1.0 外部验收通过条件
+## 1.0 外部验收通过条件（用户研究条款已取消）
+
+> 下方涉及真实用户人数、贴合度和阈值复核的条款仅作历史参考，不再是发布前置；真机工程/UI 条款仍可执行。
 
 - 至少 3 位真实用户完成完整评估。
 - 大多数真实用户理解产品不是诊断或固定人格标签。

@@ -1,6 +1,6 @@
 # HUMAN 3.0 Living PRD
 
-最后更新：2026-06-22
+最后更新：2026-07-05
 
 ## 1. 产品概述
 
@@ -34,7 +34,8 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 
 核心体验：
 
-- 5-8 分钟完成测评。
+- 当前正式基准 `h3-a48-v1` 为 48 题，预计 5-8 分钟完成。
+- 候选 `h3-a32-v1` 原目标时长为 4-6 分钟；当前准确性研究和产品晋级无限期暂停，不提供内部受控测评或正式用户入口。
 - 不需要登录。
 - 不显示数字评分。
 - 输出一个有传播性的结果名和一份简短报告。
@@ -69,8 +70,8 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 
 - Mind：理解、判断、学习、问题拆解、信息验证和自我校正。
 - Body：睡眠、饮食、运动、精力、恢复、生活节律，以及身体对目标的支撑。
-- Spirit：价值、欲望、内在方向、意义感、长期选择，以及是否被外部评价驱动。
-- Vocation：技能、工作、作品、创造、现实产出和社会价值转化。
+- Spirit：当前主测以价值、欲望、内在方向、意义感、长期选择和外部评价影响为主；关系连接只做窄范围补充，不据此判断完整关系质量、共同体、服务或超越。
+- Vocation：当前主测以技能、工作、成果、创造、现实产出和社会价值转化为主；资源准备只做窄范围补充，不据此判断财务能力、完整资源系统、杠杆或长期影响。
 
 ### 三层级
 
@@ -90,13 +91,26 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 
 - Metatype：有传播性的整体状态名，例如 `The Wounded Builder`。
 - Lifestyle Archetype：当前生活方式原型。
-- Dominant Quadrant：当前最可调用、最能支撑用户的象限。
-- Weak Quadrant：当前最限制整体系统的象限。
+- Dominant Quadrant：当前最可调用、最能支撑用户的象限；候选 32 题精确同分时允许并列，不强制选一个。
+- Weak Quadrant：当前最限制整体系统的象限；候选 32 题精确同分时允许并列，不强制选一个。
 - Core Problem：当前最值得解决的一个根问题。
 - Cross-Quadrant Dynamics：象限之间如何互相增强或拖累。
 - Immediate Next Action：24 小时内可完成的行动。
 
 结果必须表达为“当前状态快照”，不能表达为固定人格或终身标签。
+
+### Accuracy-first 版本策略
+
+| 版本 | 状态 | 产品口径 |
+| --- | --- | --- |
+| `h3-a48-v1` | `stable` | 当前正式基准和生产默认；题库、评分、结果与旧分享永久兼容。 |
+| `h3-a32-v1` | `draft / not-started`，产品推进无限期暂停 | 隔离题库、manifest 和内部评分/兼容测试已实现；未做任何准确性研究，不上线、不切默认、不作准确性声明。 |
+
+用户已取消所有 32 题准确性研究，包括认知访谈、招募、48/32 配对、复测和晋级统计。`h3-a32-v1` 无限期保留为未验证 draft，不进入 `calibrating` 或 `stable`，不开放正式入口、结果、分享或默认切换。取消研究不等于准确性通过；当前没有证据支持“32 题与 48 题等效”或任何准确性声明。
+
+既有 Accuracy-first 阈值仅作为未来若用户重新授权研究时的归档标准，不是当前路线图。研究计划、主持手册、题单、记录模板和报告模板只作为 archive / optional 材料保留。工程软件测试不受本决策影响：版本隔离、严格输入、旧 v1 兼容和内部候选算法测试可以继续维护，但不能被表述为测量准确性验证。
+
+2026-07-05 共同签署只批准以下范围：建立独立候选题库资源、manifest、版本化评分/结果草案和内部受控测试链路。它不批准覆盖 `data/questions.json`、修改正式 48 题行为、开放 32 题公众分享或切换生产默认。旧 `v1.<48 digits>`、旧无版本 localStorage 和 `h3-result-v1` 必须永久按 48 题版本重建。
 
 ## 5. 免费 MVP 需求
 
@@ -104,6 +118,8 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 | --- | --- | --- |
 | 首页 | Done | 展示产品介绍、四象限简介、结果示例和免责声明。 |
 | 48 道题测评 | Done | Mind、Body、Spirit、Vocation 各 12 题，5 级选项。 |
+| 32 题候选规格 | Done | 内容、评分和版本兼容规格已共同签署；只表示可建立隔离 draft，不表示功能已实现。 |
+| 32 题候选基础设施 | Internal draft | 已建立独立 `h3-a32-v1` 工作稿资源、manifest、内部等值评分/并列结果、候选 envelope 和兼容测试；当前仍为 `draft / not-started`，无公开入口，不得覆盖 48 题或切换默认。 |
 | 本地保存进度 | Done | 使用 localStorage 保存答题进度，刷新后可恢复。 |
 | 本地结果保存 | Done | 最近一次结果保存在当前浏览器。 |
 | 结果页 | Done | 展示 Human 阶段、中文结果名、主导象限、限制象限、四象限状态、核心判断和行动建议。 |
@@ -121,7 +137,7 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 | CI 自动验收 | Done | GitHub Actions 已配置在 push、pull request 和手动触发时运行 `pnpm check`。 |
 | 内容内部审校 | Done | 已完成一轮题目、结果文案和敏感边界审校，记录在 `docs/CONTENT_REVIEW.md`。 |
 | 阶段阈值样例校准 | Done | 已用 12 个模拟画像校准当前启发式阈值，记录在 `docs/SCORING_CALIBRATION.md`。 |
-| 真实用户反馈执行指南 | Done | 已建立 `docs/USER_FEEDBACK_PLAN.md`，用于 1.0 发布前收集 3 到 5 位真实用户反馈和阈值复核样例。 |
+| 真实用户反馈执行指南 | Archived | 已建立 `docs/USER_FEEDBACK_PLAN.md`，但用户已取消准确性研究和相关招募；当前只作 optional/archive reference。 |
 | 真机移动端验收清单 | Done | 已建立 `docs/MOBILE_QA_CHECKLIST.md`，用于记录 iPhone Safari、Android Chrome 等真实设备验收。 |
 | 本机移动端验收 | Done | 已在 390x844 移动端 Chromium 上完成生产构建流程验收，记录在 `docs/MOBILE_QA_REPORT.md`。 |
 
@@ -185,8 +201,8 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 
 - `pnpm validate:data` 已通过。
 - `pnpm check` 已作为统一本地验收入口。
-- `pnpm test` 已通过，当前 63 个测试通过。
-- `pnpm test:e2e` 已通过，当前 15 个端到端测试通过。
+- `pnpm test` 已通过，当前正式/版本化链路共 7 个文件、110 个测试通过；暂停中的模板 `.tsx` 测试不计入本轮。
+- 本轮正式产品与版本兼容定向 E2E 已通过 18 项；模板 Gallery E2E 保持暂停。
 - `pnpm lint` 已通过。
 - `pnpm build` 已通过。
 - GitHub Actions CI 已配置并通过远程首跑；后续推送仍需继续观察。
@@ -200,6 +216,7 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 - 已有 README、产品说明、模型文档、计分规则、数据 schema、技术架构、决策记录、TODO、开发日志和交接文档。
 - 已有 `docs/RELEASE_1_0.md`、`docs/CONTENT_REVIEW.md`、`docs/SCORING_CALIBRATION.md`、`docs/USER_FEEDBACK_PLAN.md`、`docs/MOBILE_QA_CHECKLIST.md` 和 `docs/MOBILE_QA_REPORT.md`。
 - 已有 `docs/SOURCE_ALIGNMENT.md`，用于说明当前中文评估项目与 Dan Koe 原始 HUMAN 3.0 知识库的已对齐内容、缺口、主动改写、暂不纳入内容、命名风险、版权与安全边界。
+- 已完成 `docs/QUESTION_BANK_32_CONTENT_SPEC.md`、`docs/ASSESSMENT_32_SCORING_SPEC.md` 和 32/48 版本兼容规格的产品、内容、模型共同签署；隔离候选基础设施已实现。全部准确性研究和公开产品化已无限期暂停，研究材料仅作为可选档案保留。
 - 本文件 `docs/PRD.md` 从 2026-06-22 起作为产品事实来源。
 
 ## 8. 需求池
@@ -209,8 +226,6 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 - 根据 `docs/SOURCE_ALIGNMENT.md` 更新模型口径，明确当前产品只评估 Human 1.0-3.0，不评估 Level 4.0+。
 - 根据 `docs/SOURCE_ALIGNMENT.md` 补充四象限的源头收窄说明：Spirit、Mind、Vocation、Body 各自有哪些 1.0 未覆盖外延。
 - 根据 `docs/SOURCE_ALIGNMENT.md` 建立 Metatype / Lifestyle Archetype 命名表，避免借名后自由漂移。
-- 按 `docs/USER_FEEDBACK_PLAN.md` 找 3 到 5 位真实用户完成题目和结果阅读反馈。
-- 用真实用户或产品团队样例继续复核 Human 层级和阶段阈值。
 - 根据真实用户反馈继续审校免费结果系统文案：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action。
 - 继续增强分享卡片视觉，让它更适合朋友圈、小红书和社群传播。
 - 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收。
@@ -226,7 +241,7 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 
 - 把 Anti-vision、Writing Practice、Minimum Effective Development 转译成 1.1 行动建议库。
 - 在 2.0 AI 高级报告中加入 Problem hierarchy、Channels、Flow / attention / recovery 和 Digital Leverage Path。
-- 做更短的轻量版题库，用于 2-3 分钟传播测试。
+- 研究 2-3 分钟轻量传播题库；当前随 32 题研究路线一并暂停，不进入执行。
 - 增加中英文结果名并行展示。
 - 为结果页增加“朋友视角”或“别人如何与你协作”的轻社交模块。
 - 增加年度复盘模式。
@@ -235,6 +250,7 @@ HUMAN 3.0 是一个人生系统状态测评产品，帮助用户看见自己当�
 
 ### Rejected / Not Now
 
+- 32 题准确性研究和产品晋级无限期暂停。当前不做访谈、招募、配对、复测或晋级统计；保留未验证 draft，不上线、不切默认。
 - 页面模板化已暂停并降为末级 backlog；在 1.0 正式产品收口和用户重新授权前，不发布模板目录、组件、样式、Debug 路由、测试或演示资源。
 - 第一版不做登录。原因：降低 MVP 复杂度，先验证测评和结果是否有传播力。
 - 第一版不做支付。原因：付费前需要先验证免费结果页的吸引力和转化入口。

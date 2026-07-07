@@ -35,16 +35,28 @@
 - `downloadFullReportPdf`：逐页捕获 `PrintableResultReport` 的 `[data-pdf-sheet]`，写入 A4 PDF；不捕获当前长结果页。
 - `encodeAnswersForShare` / `decodeAnswersFromShare`：把 48 个答案编码进 URL，或从静态分享链接恢复答案。
 - `formatPhaseLabel`：格式化阶段显示，避免 `phaseName` 已含中英文时再次拼接中文造成重复。
+- `resolveAssessmentVersion` / `getAssessmentQuestions`：按用途解析版本并加载明确绑定的题库；公开用途会拒绝 draft。
+- `validateAnswersForQuestions`：严格校验目标版本的完整题号集合、额外题号和 1-5 整数答案。
+- `scoreAssessmentByVersion`：版本化评分入口；48 题复用原评分，32 题内部 draft 使用未取整的 `E_q = 1.5 * S_q` 并返回精确并列数组。
 
 ## 数据流
 
-1. 页面加载 `data/questions.json`。
+1. 正式页面继续加载冻结的 `data/questions.json`，它在 manifest 中明确绑定 `h3-a48-v1`。
 2. 用户在 `/assessment` 作答。
 3. `AssessmentFlow` 将答案保存到 localStorage。
 4. 完成 48 题后调用 `buildResult`。
 5. 结果保存到 localStorage。
-6. `/result` 读取最近一次结果的答案，并用当前数据模板重建结果后展示。这样模板升级后，旧浏览器结果也能迁移到新结构。
-7. 用户复制分享链接时，`lib/share-link.ts` 将答案按题目顺序编码为 `v1.<48 digits>`，路由 `/result/share?a=...` 再解码并重建结果。
+6. `/result` 读取最近一次结果；无版本旧数据固定识别为 `h3-a48-v1 + h3-result-v1`，非该组合不得退回当前模板伪造正式结果。
+7. 用户复制分享链接时，`lib/share-link.ts` 按冻结的 48 题顺序编码 `v1.<48 digits>`；解码也直接绑定 `h3-a48-v1 + h3-result-v1`，不读取未来默认版本。
+
+### Accuracy-first 版本层
+
+- `data/assessment-versions.json` 是 JSON-safe 版本事实源。
+- `lib/assessment-versions.ts` 是运行时 registry；默认硬性保持 48 题，按 `public-questions / public-scoring / public-share / internal-draft / historical-rebuild` 控制访问。
+- `lib/assessment-input.ts` 负责版本输入完整性，不允许缺失、多余、非法或跨版本答案。
+- `lib/versioned-scoring.ts` 提供纯内部 32 题评分，不接正式页面。
+- `lib/candidate-share.ts` 只提供标有 `candidate` 的内部 envelope 编解码测试；公开分享 API 不调用它。
+- `lib/storage.ts` 新增版本 key、旧数据识别和 48 双写 helper；当前正式 UI 仍使用旧 key，避免在未完成浏览器迁移演练前改变用户行为。
 
 ## 状态管理
 
@@ -63,10 +75,16 @@ localStorage key：
 
 当前正式流程还提供以下 API：
 
-- `app/api/assessment/score/route.ts`：正式评分接口，接收答案并返回 `BuiltResult`，不写数据库。
+- `app/api/assessment/score/route.ts`：正式评分接口，默认或显式接受 `h3-a48-v1`，严格校验题号和答案后返回原 `BuiltResult`；draft 返回 409，不写数据库。
 - `app/api/share/encode/route.ts`：分享码生成接口，复用 `lib/share-link.ts`。
 - `app/api/share/decode/route.ts`：分享码解析接口，复用 `lib/share-link.ts`。
 - `app/api/content/*`：只读内容接口，读取 `data/` 下的题库、象限、阶段、推荐、结果模板和站点文案。
+
+`GET /api/content/questions` 省略版本时仍返回 48 题；显式 `h3-a48-v1` 等价。`h3-a32-v1` 当前不对公众暴露，返回 `409 ASSESSMENT_VERSION_NOT_AVAILABLE`；未知版本返回 404。
+
+评分、提交和分享编码的答案集合错误统一返回 HTTP 422，body 为 `{ error: { code: "ASSESSMENT_ANSWER_MISMATCH", message, details } }`；`details` 固定包含 expected/received count、missing/extra/invalid IDs。JSON 或字段结构错误仍为 400，未知版本为 404，draft/不兼容为 409。
+
+`h3-result-v1` 采用双层冻结：`scripts/validate-data.mjs` 校验四份结果数据源的 canonical SHA-256；`tests/result-v1-compatibility.test.ts` 用固定 48 答案比对 `BuiltResult` 核心快照。该策略冻结历史语义，不要求直接 hash `result-builder.ts` 源文件，避免注释或无行为重构造成无意义版本升级。
 
 页面接入保持克制：`/assessment` 完成答题后优先调用评分 API，失败时回退本地 `buildResult`；`/result/share` 优先调用分享解码 + 评分 API，失败时回退本地解码和生成；复制分享链接优先调用分享编码 API，失败时回退本地编码。
 
@@ -101,7 +119,7 @@ Carousel reveal 规则：`.insight-card` 不得参与全局逐项 `.reveal`，�
 
 ## 测试
 
-当前使用 Vitest。`tests/scoring.test.ts` 覆盖核心计分，`tests/result-builder.test.ts` 覆盖免费结果字段、限制象限建议、分享卡片和缺失模板错误，`tests/share-link.test.ts` 覆盖静态分享链接编码和解码。
+当前使用 Vitest。`tests/scoring.test.ts` 覆盖核心计分，`tests/result-builder.test.ts` 覆盖免费结果字段、限制象限建议、分享卡片和缺失模板错误，`tests/share-link.test.ts` 覆盖静态分享链接编码和解码。`tests/assessment-versions.test.ts` 覆盖 manifest、32 题内部算法、旧分享 fixture 和存储识别；`tests/assessment-version-api.test.ts` 精确覆盖 422/404/409 契约；`tests/result-v1-compatibility.test.ts` 锁定正式 BuiltResult 核心快照。32 题相关测试只属于软件工程测试，不是产品准确性验证。
 
 数据校验使用 `scripts/validate-data.mjs`。它会检查 `data/` 目录的字段集合、题量、象限覆盖、阶段覆盖、重复项、推荐项数量、模板占位符和禁止使用的受保护人格测试名称。`pnpm check` 会串联运行数据校验、单元测试、代码检查、生产构建和端到端测试。
 

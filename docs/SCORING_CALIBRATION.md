@@ -1,5 +1,13 @@
 # Scoring Calibration
 
+## 32 题候选研究状态
+
+- 产品已取消 32 题认知访谈、48/32 配对、复测、招募和准确性晋级统计。
+- 当前状态为 `archived-cancelled / no-data`：`h3-a32-v1` 无限期保持 `draft / unvalidated`，`questionSetHash` 不为校准目的冻结。
+- 既有研究协议、匿名 CSV 表头和空白报告保留在 `docs/ASSESSMENT_32_RESEARCH_PLAN.md` 与 `docs/calibration/`，仅为 archive/optional，不得继续派发。
+- 本文件下方现有样例和结论只描述 48 题基准的模拟校准；软件测试也只验证工程规则，均不能作为 32 题准确性证据。
+- `h3-a48-v1` 继续作为 `stable` 正式默认。没有新的用户/总控授权时，不继续 32 题准确性工作。
+
 ## 目标
 
 本文件记录 Human 3.0 1.0 候选版的阶段阈值校准。校准目标不是证明测评具有临床或心理测量效度，而是确认当前启发式规则符合产品直觉：

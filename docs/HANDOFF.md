@@ -14,6 +14,31 @@
 
 ## 当前完成状态
 
+### 2026-07-05 Accuracy-first 版本决策
+
+- 48 题版本继续作为正式生产基准，规划版本名为 `h3-a48-v1`，当前公开默认不得改变。
+- 32 题版本名为 `h3-a32-v1`；隔离工作稿、manifest、内部等值评分和版本 API 边界已经建立，但准确性研究与产品晋级无限期暂停。它保持未验证 draft，不进入 `calibrating` 或 `stable`，不得公开。
+- 原 Accuracy-first 晋级条件保留为归档规格，但用户已取消全部准确性研究；当前不执行，也不存在标记 `stable` 或进入默认切换评审的路线。
+- 32 题内容候选、逐题矩阵、新构念题、反向题和用户侧文案见 `docs/QUESTION_BANK_32_CONTENT_SPEC.md`。该内容未做产品准确性验证，48 题继续正式使用。
+- 32 题等值计分、象限阶段、整体严格规则、离散边界、并列象限、缺失答案和软件测试矩阵见 `docs/ASSESSMENT_32_SCORING_SPEC.md`。当前校准状态为 `not-started / unvalidated`。
+- 既有 Accuracy-first 最低线仅作归档；用户已取消访谈、招募、配对、复测和晋级统计，因此当前没有升为 `stable` 的执行路径，也没有任何门槛通过结论。
+- 版本状态统一为 `draft`、`calibrating`、`stable`、`retired`。`retired` 只停止新会话，历史题库、评分、结果和分享解码仍永久可用。
+- 旧 `v1.<48 digits>` 分享链接永久绑定 48 题 v1；旧无版本 localStorage 数据永久按 48 题 v1 识别。历史结果禁止用当前默认题库或当前模板重算。
+- 完整 API、存储、分享和回滚规格见 `docs/DEBUG_AND_API_ARCHITECTURE.md` 的“Accuracy-first 评估版本兼容规格”。
+- 页面模板系统继续暂停，不与本轮题库版本工作并行推进。
+
+### 2026-07-05 产品、内容、模型共同签署
+
+- `docs/QUESTION_BANK_32_CONTENT_SPEC.md` 与 `docs/ASSESSMENT_32_SCORING_SPEC.md` 已通过候选规格一致性签署；随后已建立隔离的题库资源、manifest、内部评分/候选编解码与兼容测试。
+- `h3-a32-v1` 仍是 `draft / not-started`：基础设施“已实现”不等于题干已访谈、hash 已冻结、模型已校准、版本已 `stable` 或可以切换默认。
+- 当前正式用户口径仍是 48 题；32 题不提供用户入口，不再使用“正在与 48 题配对验证”等对外表述。
+- 32 题内部规则只对精确同分输出并列；相差 1.5 是否算实质并列未验证，且当前不安排研究。
+- Spirit 新题只支持“可获得的坦诚连接”解释，不支持完整关系质量、共同体、服务或超越判断。
+- Vocation 新题只支持“资源准备和协作支持”解释，不支持财务能力、完整资源系统、杠杆或长期影响判断。
+- 总控可另行安排实现窗口建立独立 manifest、候选资源、版本化评分/结果草案和内部测试链路；不得改正式默认、公开分享或旧版本资源。
+- 用户已取消全部 32 题准确性研究：不访谈、不招募、不配对、不复测、不做晋级统计。候选无限期停留在未验证 draft。
+- 已准备的访谈、题单、记录、配对和报告材料仅作为 archive / optional 保留，不执行也不代表任何准确性结论。
+
 已完成 1.0 候选版核心能力：
 
 - Living PRD：`docs/PRD.md` 已建立为单一产品事实来源，用于同步新需求、已完成功能、免费版和付费版规划。
@@ -36,20 +61,20 @@
 - API 边界：`/api/submit`、`/api/assessment/score`、`/api/share/encode`、`/api/share/decode` 和只读内容 API 已可用；当前均不写数据库。
 - 测试和校验：已有核心计分测试、结果生成测试、分享链接测试、Playwright 端到端测试和严格数据校验命令。
 - CI：已新增 GitHub Actions，在 push、pull request 和手动触发时运行 `pnpm check`。
-- 1.0 发布前材料：已新增真实用户反馈指南和真机移动端验收清单，但对应外部测试尚未实际执行。
+- 1.0 发布前材料：真实用户反馈指南现为 archive/optional；用户已取消准确性研究和招募。真机移动端工程/体验验收仍可独立执行。
 - 源头对齐：已新增 `docs/SOURCE_ALIGNMENT.md`，当前只做 1.0 边界说明；题库、结果模板和行动建议的源头维度扩展留到 1.1。
 
 最近一次交接审计结果：
 
 - `pnpm install` 通过。
 - `pnpm validate:data` 通过。
-- `pnpm test` 通过，63 个测试通过。
-- `pnpm test:e2e` 通过，15 个端到端测试通过。
+- `pnpm test` 通过，当前正式/版本化链路共 7 个文件、110 个测试通过；暂停中的 `.tsx` 模板测试不属于本轮。
+- 本轮定向 Playwright 回归通过 18 项，覆盖正式 48 题流程、结构化 422、版本 API、旧分享 fixture、PNG/PDF 和移动端；未继续执行暂停中的模板 Gallery E2E。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
-- `pnpm check` 通过，已串联数据校验、单元测试、代码检查、生产构建和端到端测试。
+- 本轮 `validate:data`、110 个单测、lint、生产 build 和 18 个相关 E2E 均通过。未运行会包含暂停模板用例的全量 `pnpm check`；此前正式产品快照的 `pnpm check` 记录保留如下。
 - GitHub Actions CI 已配置并已在远程触发首跑；首跑发现 pnpm 11 构建脚本审批配置问题，已在 `pnpm-workspace.yaml` 修复，修复后远程 CI 已通过。
-- 公网测试链接：`https://human3-0-phi.vercel.app/`，由 Vercel 从 GitHub `main` 部署，可用于手机和真实用户测试。
+- 公网地址：`https://human3-0-phi.vercel.app/`，由 Vercel 从 GitHub `main` 部署，可用于真机产品 QA；当前不用于招募准确性研究参与者。
 - 浏览器流程验证通过：首页进入测评、答题、上一题/下一题、刷新恢复、完成后进入结果页。
 - 浏览器结果页检查通过：Metatype、Lifestyle Archetype、Core Problem、Cross-Quadrant Dynamics、Immediate Next Action 和分享卡片可见，且不展示原始分数。
 - 移动端 390px 宽度检查通过：首页、答题页、结果页和分享页无横向溢出；结果速览和分享入口可见。
@@ -161,11 +186,17 @@ pnpm check
 - `app/api/share/decode/route.ts`：分享码解析接口，复用 `decodeAnswersFromShare`。
 - `scripts/validate-data.mjs`：严格检查数据文件结构、覆盖范围、重复项、模板占位符和禁止使用的受保护人格测试名称。
 - `docs/RELEASE_1_0.md`：1.0 候选发布清单和验收口径。
-- `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md`：外部验收执行包，包含公网链接、真实用户反馈 checklist、真机 QA checklist、记录表和阻塞标准。
+- `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md`：外部验收执行包；其中真实用户研究部分不再执行，真机 QA 部分仍可作为工程/体验参考。
 - `docs/CONTENT_REVIEW.md`：题目、结果文案和敏感边界审校记录。
 - `docs/QUESTION_BANK_SCORING_TABLE.md`：48 道题、反向题、分数映射和核心公式，供产品、内容和非技术评审快速核对模型口径。
+- `docs/QUESTION_BANK_32_CONTENT_SPEC.md`：32 题候选内容规格；包含保留/改写/移出矩阵、新题与反向题候选、结果和分享口径、配对验证及回退原则。当前未上线。
+- `docs/ASSESSMENT_32_SCORING_SPEC.md`：32 题候选模型归档规格；内部基础设施已实现，但准确性研究无限期暂停，未验证、未校准、未上线。
+- `docs/ASSESSMENT_32_RESEARCH_PLAN.md` 与 `docs/calibration/`：已取消的访谈/配对/复测研究方案和空白模板，仅作 archive/optional，不得执行或派发。
+- `docs/QUESTION_BANK_32_COGNITIVE_INTERVIEW_GUIDE.md`：可选认知访谈档案，包含招募、think-aloud、追问、隐私和非诊断边界；不再是晋级前置。
+- `docs/QUESTION_BANK_32_INTERVIEW_ITEMS.md`：研究员专用 32 题清单；构念和正反向信息不得向受访者显示。
+- `docs/QUESTION_BANK_32_INTERVIEW_RECORD_TEMPLATE.md`：匿名逐题记录、跨参与者汇总及 pass/revise/remove 规则模板。
 - `docs/SCORING_CALIBRATION.md`：12 个样例画像的阶段阈值校准记录。
-- `docs/USER_FEEDBACK_PLAN.md`：1.0 发布前真实用户反馈和阈值复核执行指南。
+- `docs/USER_FEEDBACK_PLAN.md`：已取消研究的状态说明与 archive/optional 反馈模板；不是当前招募或准确性执行指南。
 - `docs/MOBILE_QA_CHECKLIST.md`：1.0 发布前真实手机浏览器验收清单。
 - `docs/MOBILE_QA_REPORT.md`：本机移动端浏览器验收记录。
 - `docs/REMOTE_CI_STATUS.md`：远程推送和 GitHub Actions 首跑状态记录。
@@ -177,7 +208,9 @@ pnpm check
 
 ## 数据文件说明
 
-- `data/questions.json`：题库。产品人员改题优先改这里。
+- `data/questions.json`：冻结的 48 题正式基准，manifest 中以 hash 锁定内容和顺序；不得用 32 题直接覆盖或原地修改。
+- `data/assessment-versions.json`：评估/结果版本 manifest；当前默认固定 `h3-a48-v1`，32 题的所有公开权限为 false。
+- `data/assessment-versions/h3-a32-v1.questions.draft.json`：32 题未验证工作稿，`questionSetHash=null`；准确性研究已取消，只保留内部软件测试，不进入产品流程。
 - `data/stages.json`：Human 1.1 到 Human 3.3 阶段定义。
 - `data/quadrants.json`：四象限定义。
 - `data/recommendations.json`：按限制象限给出的 24 小时、7 天、30 天、90 天行动建议。
@@ -213,7 +246,7 @@ pnpm check
 - 卡片级 reveal 与横向轨道冲突已修复：390px 下一卡约 34px、320px 约 23px，opacity 均为 1、transform 为 none；第二卡停靠后第三卡可见，两组轨道 `scrollHeight === clientHeight`。
 - 端到端测试已覆盖核心流程、脏 localStorage、PNG 下载、PDF 预览、PDF 下载、无本地结果、无效分享链接、提交 API、评分 API、分享编码/解码 API、非法答案值、首页移动菜单和共享导航移动菜单；仍可继续扩展更多边界输入。
 - GitHub CLI 已补齐 `workflow` scope，远程 `main` 已同步；GitHub Actions CI 已触发并在修复 pnpm 构建脚本审批配置后通过，详情见 `docs/REMOTE_CI_STATUS.md`。
-- Human 层级和阶段阈值已按 `docs/SCORING_MODEL_UPGRADE_SPEC.md` 升级，并用模拟画像和关键边界分数组合完成自动化校准；仍需要真实用户或产品团队样例继续复核。
+- Human 层级和阶段阈值已按 `docs/SCORING_MODEL_UPGRADE_SPEC.md` 升级，并用模拟画像和关键边界分数组合完成软件验证；用户已取消进一步真实用户准确性复核，因此不得宣传为实证准确性结论。
 - 当前四象限定义仍是 1.0 评估版：Spirit 的关系/共同体、Mind 的情绪/信念/觉察、Vocation 的资源/系统/长期影响、Body 的在场/身体感知主要在文档中说明，尚未完整进入题库和结果建议。
 - 当前 `Metatype` / `Lifestyle Archetype` 可能与源头完整系统同名但不同义；后续 1.1 应决定保留并澄清，或改名为“状态名 / 生活模式 / Human Pattern”。
 - 首页已按用户 P0 返工要求改为“直接套用原 HTML 文件”：`/` 读取 `ui-prototypes/human-3-ui-v2.html`，保留原 DOM、class、CSS、section 顺序、脚本和静态文案，只把开始评估链接接到 `/assessment`。问卷页和结果页仍是静态原型产品化 React 版本。
@@ -221,26 +254,32 @@ pnpm check
 - 静态原型产品化已通过本地 `pnpm check`：数据校验、63 个单元测试、lint、生产构建和 9 个 E2E 均通过；仍需要 UI 视觉与交互窗口逐页对照原型做人工验收。
 - 真实结果恢复和 API 接入已通过本地 `pnpm check`：`/assessment` 提交优先走评分 API，`/result/share` 优先走分享解码 + 评分 API，复制分享链接优先走分享编码 API；正式结果页不再默认假结果。
 - 题目尚未经过正式心理测量或大样本验证，不能宣传为科学诊断。
+- 当前正式 API 仍只允许 48 题，但已返回明确的 `assessmentVersion=h3-a48-v1` / `resultVersion=h3-result-v1` 元数据，并严格拒绝 draft、未知或跨版本输入。旧无版本 localStorage 通过 helper 固定识别为 48 题 v1；正式页面现有读写行为不变。
+- 答案缺失、多余、非法值或跨版本 ID 集统一返回 HTTP 422 和 `ASSESSMENT_ANSWER_MISMATCH` 结构化详情；JSON/字段结构错误为 400，未知版本为 404，draft/结果版本不兼容为 409。
+- `h3-result-v1` 的 stages/quadrants/result-templates/recommendations canonical hash 已写入 manifest；固定 48 答案到 `BuiltResult` 核心快照位于 `tests/fixtures/h3-result-v1-core-snapshot.json`。
+- 32 题只有内部纯库评分与候选 envelope 测试，没有公开 questions/score/share 或正式结果页入口。`h3-result-v2` 仍只是 draft 版本规划，未建立可面向用户的结果文案 builder。
+- 早期“结果页用当前模板重建缓存答案”的实现口径已被 2026-07-05 版本决策取代。后续必须按历史 `assessmentVersion + resultVersion` 重建；缺失版本的旧数据固定归入 48 题 v1。
 
 ## 下一步建议
 
 1. 先阅读 `docs/PRD.md`，确认当前产品方向和需求状态。
-2. 阅读 `docs/RELEASE_1_0.md`，确认 1.0 候选版验收口径。
-3. 阅读 `docs/QUESTION_BANK_SCORING_TABLE.md`，让产品、内容或非技术评审先确认题库、反向题和公式解释是否清楚。
-4. 按 `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md` 组织外部验收，公网测试地址为 `https://human3-0-phi.vercel.app/`。
-5. 按 `docs/USER_FEEDBACK_PLAN.md` 组织 3 到 5 位真实用户反馈，并把结论回填到 `docs/CONTENT_REVIEW.md` 和 `docs/SCORING_CALIBRATION.md`。
-6. 用真实用户或产品团队样例继续复核 `lib/scoring.ts` 的层级和阶段阈值；当前升级规则和边界案例见 `docs/SCORING_CALIBRATION.md`。
-7. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
-8. 让 UI 视觉与交互窗口先重点核对首页：`file://.../ui-prototypes/human-3-ui-v2.html` 对照 `http://localhost:3000/`，确认首屏、导航、粒子、模型叙事、四象限、层级、流程、结果预览和 debug panel 已接近原文件。
-9. 再按静态 HTML 验收标准核对 `/assessment`、`/result`、`/result/share`，重点看问卷圆点选项、结果页四象限轴线图、下一步圆点待办和分享卡片。
-10. 让 UI 视觉窗口重新打开 `/result?pdfPreview=1` 或 `/result/share?a=v1.444444444444444444444444444444444444444444444444&pdfPreview=1`，确认 Page 1 不再裁切，并继续复核 PDF 版式。
-11. 让总控安排 GitHub/Vercel 同步窗口，把已通过本地验证的 PDF 预览/导出版本发布到远程。
-12. 继续扩展更细的边界输入端到端测试，尤其是非 JSON 请求体、极短/极长分享码和 API 回退路径。
-13. 1.1 再做源头维度扩展：题库版本、结果模板和行动建议补充 Spirit 关系/共同体、Mind 情绪/信念/觉察、Vocation 资源/系统/长期影响、Body 在场/身体感知。
-14. 2.0 再承接高级报告：Metacrisis、AI、Flow、Channels、Digital Leverage、完整 Archetype / Metatype 系统。
-15. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
-16. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
-17. 实现复测记录。
+2. 共同规格审阅已完成；如总控派发实现任务，只建立隔离的 `h3-a32-v1` draft，不创建正式 32 题流程，不切换默认。
+3. 阅读 `docs/RELEASE_1_0.md`，确认 1.0 候选版验收口径。
+4. 阅读 `docs/QUESTION_BANK_SCORING_TABLE.md`，让产品、内容或非技术评审先确认 48 题基准、反向题和公式解释是否清楚。
+5. 按 `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md` 组织外部验收，公网测试地址为 `https://human3-0-phi.vercel.app/`。
+6. 不组织准确性研究招募、用户访谈或阶段阈值复核；既有 `docs/USER_FEEDBACK_PLAN.md` 仅作 archive/optional reference。
+7. 继续将自动化边界测试视为工程验证，不把它表述为真实用户准确性证据。
+8. 按 `docs/MOBILE_QA_CHECKLIST.md` 完成真实 iPhone Safari 和 Android Chrome 验收，并记录分享卡片 PNG 的移动端下载表现；本机 Chromium 记录见 `docs/MOBILE_QA_REPORT.md`。
+9. 让 UI 视觉与交互窗口先重点核对首页：`file://.../ui-prototypes/human-3-ui-v2.html` 对照 `http://localhost:3000/`，确认首屏、导航、粒子、模型叙事、四象限、层级、流程、结果预览和 debug panel 已接近原文件。
+10. 再按静态 HTML 验收标准核对 `/assessment`、`/result`、`/result/share`，重点看问卷圆点选项、结果页四象限轴线图、下一步圆点待办和分享卡片。
+11. 让 UI 视觉窗口重新打开 `/result?pdfPreview=1` 或 `/result/share?a=v1.444444444444444444444444444444444444444444444444&pdfPreview=1`，确认 Page 1 不再裁切，并继续复核 PDF 版式。
+12. 让总控安排 GitHub/Vercel 同步窗口，把已通过本地验证的 PDF 预览/导出版本发布到远程。
+13. 继续扩展更细的边界输入端到端测试，尤其是非 JSON 请求体、极短/极长分享码和 API 回退路径。
+14. 32 题隔离 draft 基础设施保留但无限期暂停；不执行 hash 冻结、招募、访谈、配对、复测或晋级统计，不建立正式结果模板或行动建议。仅维护必要的软件兼容测试。
+15. 2.0 再承接高级报告：Metacrisis、AI、Flow、Channels、Digital Leverage、完整 Archetype / Metatype 系统。
+16. 接入 Supabase，落地 `assessment_submissions` 和 `assessment_versions`。
+17. 让 `/result/[id]` 读取数据库结果，并替代当前 URL 答案码分享方案。
+18. 实现复测记录。
 
 ## 当前发布边界
 

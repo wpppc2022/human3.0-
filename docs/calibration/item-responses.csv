@@ -1,0 +1,1 @@
+session_id,participant_id,assessment_version,candidate_revision,question_set_hash,item_order,item_id,quadrant,dimension,answer_raw,reverse_scored,answer_normalized,response_time_ms,answer_change_count,missing,data_quality_flags

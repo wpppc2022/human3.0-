@@ -1,0 +1,233 @@
+{
+  "assessmentVersion": "h3-a32-v1",
+  "status": "draft",
+  "calibrationStatus": "not-started",
+  "questionSetHash": null,
+  "contentNotice": "未验证工作稿：32 题准确性研究已取消，不得用于公开评估、分享、稳定结果解释或准确性声明。",
+  "questions": [
+    {
+      "id": "M-C01",
+      "quadrant": "mind",
+      "dimension": "structure",
+      "text": "遇到复杂问题时，我会先把它拆成几个可以处理的部分。",
+      "reverseScored": false
+    },
+    {
+      "id": "M-C02",
+      "quadrant": "mind",
+      "dimension": "verification",
+      "text": "看到符合自己原有看法的信息时，我仍会确认关键事实的来源。",
+      "reverseScored": false
+    },
+    {
+      "id": "M-C03",
+      "quadrant": "mind",
+      "dimension": "learning",
+      "text": "遇到失败或卡住后，我会调整下一次的做法。",
+      "reverseScored": false
+    },
+    {
+      "id": "M-C04",
+      "quadrant": "mind",
+      "dimension": "attention",
+      "text": "零碎信息一多，我就容易偏离原本要处理的问题。",
+      "reverseScored": true
+    },
+    {
+      "id": "M-C05",
+      "quadrant": "mind",
+      "dimension": "decision",
+      "text": "需要开始行动时，我容易因为反复权衡而推迟。",
+      "reverseScored": true
+    },
+    {
+      "id": "M-C06",
+      "quadrant": "mind",
+      "dimension": "self-correction",
+      "text": "发现原来的判断有误后，我会相应调整做法。",
+      "reverseScored": false
+    },
+    {
+      "id": "M-C07",
+      "quadrant": "mind",
+      "dimension": "focus",
+      "text": "处理重要问题时，我通常能先完成一件关键任务。",
+      "reverseScored": false
+    },
+    {
+      "id": "M-C08",
+      "quadrant": "mind",
+      "dimension": "emotional-awareness",
+      "text": "做重要决定前，我会留意当时的情绪是否正在影响判断。",
+      "reverseScored": false
+    },
+    {
+      "id": "B-C01",
+      "quadrant": "body",
+      "dimension": "sleep",
+      "text": "我大多数时候能保持相对稳定的睡眠和起床时间。",
+      "reverseScored": false
+    },
+    {
+      "id": "B-C02",
+      "quadrant": "body",
+      "dimension": "energy",
+      "text": "精力开始下降时，我通常能注意到。",
+      "reverseScored": false
+    },
+    {
+      "id": "B-C03",
+      "quadrant": "body",
+      "dimension": "movement",
+      "text": "我的一周里有固定的身体活动或训练安排。",
+      "reverseScored": false
+    },
+    {
+      "id": "B-C04",
+      "quadrant": "body",
+      "dimension": "recovery",
+      "text": "我通常要到已经很疲惫时，才会停下来调整。",
+      "reverseScored": true
+    },
+    {
+      "id": "B-C05",
+      "quadrant": "body",
+      "dimension": "nutrition",
+      "text": "忙碌时，我仍能保持基本的饮食节奏。",
+      "reverseScored": false
+    },
+    {
+      "id": "B-C06",
+      "quadrant": "body",
+      "dimension": "stress",
+      "text": "压力增加时，我原本的生活节奏容易明显变乱。",
+      "reverseScored": true
+    },
+    {
+      "id": "B-C07",
+      "quadrant": "body",
+      "dimension": "sustainability",
+      "text": "安排目标时，我会为休息和恢复留出时间。",
+      "reverseScored": false
+    },
+    {
+      "id": "B-C08",
+      "quadrant": "body",
+      "dimension": "body-awareness",
+      "text": "每天我会有一小段时间留意呼吸、肌肉紧张或疲劳。",
+      "reverseScored": false
+    },
+    {
+      "id": "S-C01",
+      "quadrant": "spirit",
+      "dimension": "values",
+      "text": "安排时间时，我会优先留给自己真正看重的事情。",
+      "reverseScored": false
+    },
+    {
+      "id": "S-C02",
+      "quadrant": "spirit",
+      "dimension": "direction",
+      "text": "做重要选择时，我会考虑它是否接近自己想过的生活。",
+      "reverseScored": false
+    },
+    {
+      "id": "S-C03",
+      "quadrant": "spirit",
+      "dimension": "desire",
+      "text": "面对很想要的机会时，我会先想清楚自己为什么想要它。",
+      "reverseScored": false
+    },
+    {
+      "id": "S-C04",
+      "quadrant": "spirit",
+      "dimension": "external-validation",
+      "text": "一件事没有得到别人认可时，我容易怀疑它是否值得继续。",
+      "reverseScored": true
+    },
+    {
+      "id": "S-C05",
+      "quadrant": "spirit",
+      "dimension": "meaning",
+      "text": "日常生活中，我有愿意持续投入的事情。",
+      "reverseScored": false
+    },
+    {
+      "id": "S-C06",
+      "quadrant": "spirit",
+      "dimension": "long-term",
+      "text": "短期机会与长期目标冲突时，我通常会按长期优先级选择。",
+      "reverseScored": false
+    },
+    {
+      "id": "S-C07",
+      "quadrant": "spirit",
+      "dimension": "avoidance",
+      "text": "遇到难做的重要选择时，我容易让其他忙碌把它往后拖。",
+      "reverseScored": true
+    },
+    {
+      "id": "S-C08",
+      "quadrant": "spirit",
+      "dimension": "connection",
+      "text": "遇到重要事情时，我知道可以和谁坦诚讨论。",
+      "reverseScored": false
+    },
+    {
+      "id": "V-C01",
+      "quadrant": "vocation",
+      "dimension": "skill",
+      "text": "我清楚自己目前最值得打磨的一项核心能力。",
+      "reverseScored": false
+    },
+    {
+      "id": "V-C02",
+      "quadrant": "vocation",
+      "dimension": "output",
+      "text": "近 4 周，我完成过至少一项能被别人使用或反馈的成果。",
+      "reverseScored": false
+    },
+    {
+      "id": "V-C03",
+      "quadrant": "vocation",
+      "dimension": "practice",
+      "text": "我有固定时间练习一项重要能力。",
+      "reverseScored": false
+    },
+    {
+      "id": "V-C04",
+      "quadrant": "vocation",
+      "dimension": "execution",
+      "text": "需要交付成果时，我容易一直停留在准备阶段。",
+      "reverseScored": true
+    },
+    {
+      "id": "V-C05",
+      "quadrant": "vocation",
+      "dimension": "market",
+      "text": "开始一项工作前，我会先确认它要解决谁的什么问题。",
+      "reverseScored": false
+    },
+    {
+      "id": "V-C06",
+      "quadrant": "vocation",
+      "dimension": "focus",
+      "text": "新机会出现时，我容易暂停原本重要的任务。",
+      "reverseScored": true
+    },
+    {
+      "id": "V-C07",
+      "quadrant": "vocation",
+      "dimension": "feedback",
+      "text": "完成一项工作后，我会主动向相关的人收集反馈。",
+      "reverseScored": false
+    },
+    {
+      "id": "V-C08",
+      "quadrant": "vocation",
+      "dimension": "resources",
+      "text": "开始重要工作前，我会确认所需的时间、工具或协作支持是否到位。",
+      "reverseScored": false
+    }
+  ]
+}

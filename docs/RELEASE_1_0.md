@@ -141,9 +141,8 @@ Human 3.0 自我发展评估 1.0 是一个可公开试用、可分享、可交�
 
 - 由 UI 视觉与交互窗口优先对照 `ui-prototypes/human-3-ui-v2.html` 和 `/` 做人工复核，确认首页已符合“直接套用原文件”的要求；再复核 `/assessment`、`/result`、`/result/share`。
 - 由总控安排 GitHub/Vercel 同步窗口，把本地已通过验证的真实结果和 API 接入版本发布到远程。
-- 按 `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md` 执行外部验收闭环，并回填结果。
-- 按 `docs/USER_FEEDBACK_PLAN.md` 找 3 到 5 位真实用户完成题目和结果阅读反馈。
-- 按 `docs/USER_FEEDBACK_PLAN.md` 用真实用户或产品团队样例继续复核阶段阈值的产品直觉。
+- `docs/EXTERNAL_ACCEPTANCE_EXECUTION_PACK.md` 仅执行工程/UI 真机验收部分；其中用户研究、招募和准确性复核部分已取消。
+- 用户已取消准确性研究和相关招募；`docs/USER_FEEDBACK_PLAN.md` 仅作 archive/optional reference，不属于当前发布前置。
 - 按 `docs/MOBILE_QA_CHECKLIST.md` 用真实 iPhone Safari 和 Android Chrome 检查答题页、结果页、分享卡片 PNG 和完整报告 PDF 下载体验。
 - 由用户或 UI 窗口确认两页 A4 PDF 预览版式，包括标题字号、四象限图大小、行动建议密度和免责声明长度。
 
@@ -159,3 +158,11 @@ Human 3.0 自我发展评估 1.0 是一个可公开试用、可分享、可交�
 - 验证：已在独立临时工作树对精确提交快照运行 `pnpm check`，数据校验、63 个单元测试、lint、生产构建和 15 个正式产品 E2E 全部通过；提交后由 GitHub Actions 和 Vercel Production 继续验证。
 - 剩余风险：真实 iPhone Safari / Android Chrome 的触控、Canvas 重载和文件下载仍需人工复核。
 - 下一步：优先完成 1.0 正式产品验收与发布收口；模板化仅在后续明确授权后重新排期。
+
+## 32 题候选基础设施边界（2026-07-05）
+
+- 本地已建立 `h3-a32-v1 draft / unvalidated` 的隔离题库、manifest、内部评分和兼容软件测试。
+- 该基础设施不是 1.0 公开功能：正式 `/assessment`、结果页、分享和默认版本仍全部使用 `h3-a48-v1 + h3-result-v1`。
+- 32 题无公开入口、无正式结果 builder、无公开分享，且 `questionSetHash` 未冻结；不能因本地测试通过而标记为可发布。
+- 产品已取消 32 题认知访谈、配对、复测、招募和晋级统计；这些不再是 1.0 发布任务。32 题无限期保持 draft，不上线、不切默认，也不得因软件测试通过而宣称准确性或等价性已验证。
+- 工程兼容性已补强：答案集合错误使用结构化 422 契约；`h3-result-v1` 的四份数据输入和固定 BuiltResult 核心快照已冻结。该改动不改变合法 48 题结果内容。
