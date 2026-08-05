@@ -548,3 +548,11 @@
 - 生产分支移除暂停模板/debug 路由、模板组件/样式/测试/演示资源、`TEMPLATE_GUIDE.md`、`docs/UI_DESIGN_SYSTEM.md` 和 `lib/report-pdf 2.ts`；正式首页、测评、结果和既有 API 保留。
 - 新增 `docs/DEPLOYMENT.md` 与 `docs/SERVER_HANDOFF_Lighthouse.md`。服务器侧已暂停 `luminghu-platform-browser` 与 `luminghu-listener` 并设置为不自动重启；Orbit/Caddy 未停止，HUMAN 尚未部署。
 - 本阶段只负责可审计发布源、文档和 Git；不在本分支执行腾讯云部署、DNS 或证书变更。
+
+### 2026-08-05 腾讯云 Lighthouse 公开部署
+
+- 已将 `release/human-production-20260805` 的 commit `456c7be` 部署到 `/home/ubuntu/human-3-deployment/releases/456c7be`，并通过 `human3.service` 运行。
+- HUMAN 仅监听 Docker proxy gateway 的 `172.18.0.1:3100`；Caddy 持有公网上的 80/443，并仅对 `human.wpppc.cn` 反向代理该服务。
+- 已添加 `human.wpppc.cn` DNS 记录，Caddy 自动签发 Let's Encrypt HTTPS 证书，有效期至 2026-11-03。
+- 公网验证：`/`、`/assessment`、`/result`、`/api/content/version` 均为 HTTP 200；`wpppc.cn`、`www.wpppc.cn`、`orbit.wpppc.cn` 也均为 HTTP 200。
+- 已更新服务器 `/home/ubuntu/SERVER_HANDOFF.md`、其历史副本和 `/home/ubuntu/human-3-deployment/RELEASE.md`。鹿鸣湖服务继续暂停，Orbit 配置未被替换。

@@ -273,3 +273,8 @@
 - 决策：HUMAN 后续复用现有 Lighthouse，但必须使用独立目录、独立进程、`127.0.0.1:3100` 和 `human.wpppc.cn` 独立 Caddy vhost；本阶段只准备发布源，不执行服务器、DNS 或证书变更。
 - 原因：服务器已有 Orbit/Caddy，且鹿鸣湖浏览器服务已暂停以释放资源；共享主机要求严格隔离和可回滚。
 - 影响：Orbit 的 `wpppc.cn`、`www.wpppc.cn`、`orbit.wpppc.cn` 路由保持不动；服务器地图与禁止操作记录在 `docs/SERVER_HANDOFF_Lighthouse.md`。
+
+- 日期：2026-08-05
+- 决策：将经用户真机验收的 `release/human-production-20260805` commit `456c7be` 部署到既有腾讯云 Lighthouse，并公开绑定 `human.wpppc.cn`。
+- 原因：发布分支已隔离暂停模板、Debug、Supabase、题库蓝图和 32 题草稿，仅保留正式 48 题产品链路和首页 P1 修复；服务器在暂停鹿鸣湖浏览器后有足够资源运行独立 HUMAN 服务。
+- 影响：HUMAN 由独立 `human3.service` 在 Docker proxy gateway 的 `172.18.0.1:3100` 提供服务，Caddy 仅新增 `human.wpppc.cn` vhost 并自动管理 Let’s Encrypt 证书。Orbit 三个既有域名完成发布后 smoke 并保持 HTTP 200；后续变更必须从干净发布提交或 artifact 部署。

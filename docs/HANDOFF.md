@@ -295,5 +295,5 @@ pnpm check
 - 已从 `origin/main` 建立独立 `release/human-production-20260805`，主工作树的混合改动不属于该分支。
 - 分支只加入已验收首页 P1：移动菜单 44px 命中区和 focus-visible、Escape 关闭并恢复焦点、Vocation 文字放大时不溢出，以及对应移动 E2E。
 - 分支排除暂停模板、Debug 路由、模板测试/演示资源、`lib/report-pdf 2.ts` 和未授权的 Supabase、题库、P3、32 题产品化改动。
-- 腾讯云部署尚未执行。服务器上鹿鸣湖浏览器与监听服务已暂停并设置为不自动重启，Orbit/Caddy 保持运行；HUMAN 计划使用独立目录、独立进程、`127.0.0.1:3100` 和 `human.wpppc.cn` 独立 vhost。
-- 详细部署和服务器交接见 `docs/DEPLOYMENT.md`、`docs/SERVER_HANDOFF_Lighthouse.md`。不得从 dirty worktree 部署，不得改 Orbit 路由、DNS 或证书。
+- 腾讯云 Lighthouse 已部署该发布分支，公开地址为 `https://human.wpppc.cn`。服务器上鹿鸣湖浏览器与监听服务继续暂停且不自动重启，Orbit/Caddy 保持运行；HUMAN 使用独立目录、独立 systemd 进程、Docker proxy gateway 的 `172.18.0.1:3100` 和 `human.wpppc.cn` 独立 vhost。
+- 首页、测评、结果、版本接口与 Orbit 三个既有域名均已完成 HTTP 200 公网 smoke。详细部署和服务器交接见 `docs/DEPLOYMENT.md`、`docs/SERVER_HANDOFF_Lighthouse.md`。不得从 dirty worktree 部署，不得改 Orbit 路由、DNS 或证书。

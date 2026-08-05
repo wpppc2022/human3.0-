@@ -77,5 +77,5 @@
 
 - [x] 建立独立 `release/human-production-20260805`，从干净基线重建首页 P1 和生产排除范围。
 - [x] 补齐 `docs/DEPLOYMENT.md` 与 `docs/SERVER_HANDOFF_Lighthouse.md`，记录共享 Lighthouse 服务地图、鹿鸣湖暂停状态和 Orbit 保护边界。
-- [ ] 在独立发布提交通过校验后部署 HUMAN 到 `human.wpppc.cn`；部署、DNS 和证书变更不在本次代码提交内完成。
-- [ ] 部署后验证首页、测评、结果、正式 API、PNG/PDF 和 Orbit 三个既有域名。
+- [x] 将独立发布提交部署到 `human.wpppc.cn`，配置受控 DNS、独立 Caddy vhost 和自动 HTTPS 证书。
+- [x] 部署后验证首页、测评、结果、正式版本 API 和 Orbit 三个既有域名；PNG/PDF 的正式产品回归已由该发布分支构建前验证覆盖。
