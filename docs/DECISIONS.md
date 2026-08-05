@@ -263,3 +263,13 @@
 - 原因：缺失、多余、非法值和跨版本答案属于语义正确但无法处理的评估实体，不应与 JSON/字段结构错误混为 400。只冻结题目顺序不足以保证历史结果，阶段、象限、模板、建议或 builder 行为漂移同样会改变旧报告。
 - 替代方案：继续全部返回 400 和字符串错误；直接 hash `result-builder.ts` 源文件；或只保存数据文件 hash、不验证最终结果。
 - 影响：客户端可稳定读取 expected/received count 与 missing/extra/invalid IDs；未知版本仍为 404，draft/不兼容仍为 409。`h3-result-v1` 的四份数据输入由 manifest 锁定，最终行为由固定 48 答案快照锁定；正式结果内容本轮不改变。
+
+- 日期：2026-08-05
+- 决策：建立独立 `release/human-production-20260805` 作为 HUMAN 生产发布源；正式发布分支只保留已验收首页 P1 和正式 48 题产品链路。
+- 原因：主工作树包含模板、Debug、Supabase、题库蓝图和其他并行改动，不能直接作为可审计部署源。暂停模板及其资源不进入正式域名。
+- 影响：发布分支移除 `app/debug`、`templates`、`components/human3`、`styles/human3-*`、模板测试/演示资源、`TEMPLATE_GUIDE.md`、`docs/UI_DESIGN_SYSTEM.md` 和 `lib/report-pdf 2.ts`；不改变主工作树，也不改变正式题库、评分和结果资源。
+
+- 日期：2026-08-05
+- 决策：HUMAN 后续复用现有 Lighthouse，但必须使用独立目录、独立进程、`127.0.0.1:3100` 和 `human.wpppc.cn` 独立 Caddy vhost；本阶段只准备发布源，不执行服务器、DNS 或证书变更。
+- 原因：服务器已有 Orbit/Caddy，且鹿鸣湖浏览器服务已暂停以释放资源；共享主机要求严格隔离和可回滚。
+- 影响：Orbit 的 `wpppc.cn`、`www.wpppc.cn`、`orbit.wpppc.cn` 路由保持不动；服务器地图与禁止操作记录在 `docs/SERVER_HANDOFF_Lighthouse.md`。

@@ -540,3 +540,11 @@
 - 验证：`pnpm validate:data`、7 个文件 110 个单测、`pnpm lint`、`pnpm build` 全部通过；正式 48 题、旧分享、PNG/PDF、API、首页/问卷/结果和移动端共 18 个定向 E2E 全部通过。
 - 当前风险：正式 localStorage 新 key 的浏览器迁移/回滚演练仍未启用；32 题内部算法软件测试不能作为产品准确性证据。模板系统继续 paused，本轮未触碰其文件或测试。
 - 下一步建议：交工程 QA 复核 422 body、manifest hash 和 BuiltResult fixture；不安排任何 32 题产品准确性工作，不同步 GitHub。
+
+### 2026-08-05 HUMAN 生产发布分支与服务器交接
+
+- 从真实 `origin/main` 基线建立独立 `release/human-production-20260805`，不读取或整理主工作树的混合 staging。
+- 仅加入已验收首页 P1：移动菜单 44px 命中区和焦点样式、Escape 关闭并恢复触发按钮焦点、Vocation 文字放大不溢出，以及对应移动 E2E。
+- 生产分支移除暂停模板/debug 路由、模板组件/样式/测试/演示资源、`TEMPLATE_GUIDE.md`、`docs/UI_DESIGN_SYSTEM.md` 和 `lib/report-pdf 2.ts`；正式首页、测评、结果和既有 API 保留。
+- 新增 `docs/DEPLOYMENT.md` 与 `docs/SERVER_HANDOFF_Lighthouse.md`。服务器侧已暂停 `luminghu-platform-browser` 与 `luminghu-listener` 并设置为不自动重启；Orbit/Caddy 未停止，HUMAN 尚未部署。
+- 本阶段只负责可审计发布源、文档和 Git；不在本分支执行腾讯云部署、DNS 或证书变更。

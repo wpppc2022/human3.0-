@@ -89,6 +89,8 @@ Accuracy-first 多版本基础设施已在本地建立：`h3-a48-v1` 仍是唯�
 
 页面模板化工作已按最新需求暂停并降为末级 backlog。本次发布不包含模板目录、模板组件、模板样式、Debug 路由、模板测试或模板演示资源。
 
+本次生产发布源为独立分支 `release/human-production-20260805`，来自 `origin/main` 的干净基线，只包含已验收首页 P1 和正式产品范围。腾讯云部署尚未在本分支执行；部署目标、服务器服务地图、鹿鸣湖暂停状态和 Orbit 保护边界见 `docs/DEPLOYMENT.md` 与 `docs/SERVER_HANDOFF_Lighthouse.md`。
+
 ## 重要文件
 
 - `docs/PRD.md`：Living PRD，产品事实来源，记录产品定位、功能状态、需求池和同步规则。

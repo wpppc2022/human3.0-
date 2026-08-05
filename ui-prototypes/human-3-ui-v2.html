@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HUMAN 3.0 首页原型</title>
-    <link rel="stylesheet" href="../styles/human3-system.css" />
     <style>
       :root {
         color-scheme: dark;
@@ -724,6 +723,7 @@
         overflow: hidden;
         display: grid;
         gap: var(--space-5);
+        min-width: 0;
         min-height: clamp(170px, 24vw, 260px);
         padding: clamp(26px, 4vw, 42px);
         border: 0;
@@ -777,21 +777,35 @@
 
       .quadrant-top {
         display: flex;
+        min-width: 0;
         align-items: start;
         justify-content: space-between;
         gap: 16px;
       }
 
+      .quadrant-top > div {
+        min-width: 0;
+      }
+
       .quadrant-name {
+        min-width: 0;
         font-size: clamp(28px, 5vw, 66px);
         font-weight: 720;
         letter-spacing: -0.06em;
         line-height: 0.98;
+        overflow-wrap: anywhere;
       }
 
       .quadrant-cn {
+        min-width: 0;
         color: var(--soft);
         font-size: var(--font-small);
+        overflow-wrap: break-word;
+      }
+
+      .quadrant-option .small-copy {
+        min-width: 0;
+        overflow-wrap: break-word;
       }
 
       .quadrant-more {

@@ -72,3 +72,10 @@
 - 页面模板化已按最新需求暂停，不属于当前 P0/P1，也不进入本次 GitHub/Vercel 发布。
 - 模板相关目录、组件、样式、Debug 路由、测试和演示资源保留在本地工作区，禁止与正式产品改动混合提交。
 - 仅在 1.0 正式产品收口、真实手机验收完成且用户重新授权后，再评估模板 schema、Gallery、CMS/API、编辑器和版本管理。
+
+## 2026-08-05 发布分支
+
+- [x] 建立独立 `release/human-production-20260805`，从干净基线重建首页 P1 和生产排除范围。
+- [x] 补齐 `docs/DEPLOYMENT.md` 与 `docs/SERVER_HANDOFF_Lighthouse.md`，记录共享 Lighthouse 服务地图、鹿鸣湖暂停状态和 Orbit 保护边界。
+- [ ] 在独立发布提交通过校验后部署 HUMAN 到 `human.wpppc.cn`；部署、DNS 和证书变更不在本次代码提交内完成。
+- [ ] 部署后验证首页、测评、结果、正式 API、PNG/PDF 和 Orbit 三个既有域名。

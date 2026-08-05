@@ -45,12 +45,15 @@ export function HomePrototypeMenuController() {
       setBodyLock(true);
     }
 
-    function closeMenu() {
+    function closeMenu({ restoreFocus = false }: { restoreFocus?: boolean } = {}) {
       menuEl.dataset.open = "false";
       menuEl.dataset.view = "root";
       buttonEl.setAttribute("aria-expanded", "false");
       document.body.classList.remove("menu-detail");
       setBodyLock(false);
+      if (restoreFocus) {
+        buttonEl.focus();
+      }
     }
 
     function backToRoot() {
@@ -64,16 +67,26 @@ export function HomePrototypeMenuController() {
       return () => module.removeEventListener("click", listener);
     });
 
+    const keydownListener = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || menuEl.dataset.open !== "true") return;
+
+      event.preventDefault();
+      closeMenu({ restoreFocus: true });
+    };
+    const closeMenuListener = () => closeMenu();
+
     buttonEl.addEventListener("click", openMenu);
-    closeButtonEl.addEventListener("click", closeMenu);
+    closeButtonEl.addEventListener("click", closeMenuListener);
     backButtonEl.addEventListener("click", backToRoot);
-    links.forEach((link) => link.addEventListener("click", closeMenu));
+    links.forEach((link) => link.addEventListener("click", closeMenuListener));
+    document.addEventListener("keydown", keydownListener);
 
     return () => {
       buttonEl.removeEventListener("click", openMenu);
-      closeButtonEl.removeEventListener("click", closeMenu);
+      closeButtonEl.removeEventListener("click", closeMenuListener);
       backButtonEl.removeEventListener("click", backToRoot);
-      links.forEach((link) => link.removeEventListener("click", closeMenu));
+      links.forEach((link) => link.removeEventListener("click", closeMenuListener));
+      document.removeEventListener("keydown", keydownListener);
       moduleListeners.forEach((remove) => remove());
       document.body.classList.remove("menu-open", "menu-detail");
       document.body.style.overflow = "";

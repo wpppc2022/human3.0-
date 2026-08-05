@@ -3,8 +3,14 @@ import { expect, test } from "@playwright/test";
 test("mobile home menu opens detail view and closes", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByRole("button", { name: "打开菜单" }).click();
+  const trigger = page.locator(".home-prototype .topbar .menu-button");
+  const triggerBox = await trigger.boundingBox();
+  expect(triggerBox?.width).toBeGreaterThanOrEqual(44);
+  expect(triggerBox?.height).toBeGreaterThanOrEqual(44);
+
+  await trigger.click();
   await expect(page.getByRole("navigation", { name: "移动端菜单" })).toBeVisible();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
   await expect
     .poll(() => page.evaluate(() => document.body.style.overflow))
     .toBe("hidden");
@@ -17,10 +23,61 @@ test("mobile home menu opens detail view and closes", async ({ page }) => {
   await page.getByRole("button", { name: /返回/ }).click();
   await expect(page.getByRole("button", { name: /概览/ })).toBeVisible();
 
-  await page.getByRole("button", { name: "关闭菜单" }).click();
+  await page.keyboard.press("Escape");
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
   await expect
     .poll(() => page.evaluate(() => document.body.style.overflow))
     .toBe("");
+  await expect.poll(() => page.evaluate(() => document.activeElement?.getAttribute("aria-label")))
+    .toBe("打开菜单");
+});
+
+test("mobile home quadrants avoid internal overflow under enlarged text", async ({ page }) => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 320, height: 568 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/#quadrants");
+    await page.addStyleTag({
+      content: `
+        #quadrants .quadrant-name {
+          font-size: clamp(60px, 22vw, 92px) !important;
+        }
+
+        #quadrants .quadrant-cn,
+        #quadrants .quadrant-option .small-copy {
+          font-size: 26px !important;
+          line-height: 40px !important;
+        }
+      `,
+    });
+
+    const vocationState = await page
+      .locator("#quadrants .quadrant-option")
+      .nth(3)
+      .evaluate((card) => {
+        const elements = Array.from(card.querySelectorAll<HTMLElement>("*"));
+        const cardRect = card.getBoundingClientRect();
+        const maxRight = Math.max(
+          cardRect.right,
+          ...elements.map((element) => element.getBoundingClientRect().right),
+        );
+
+        return {
+          cardClientWidth: card.clientWidth,
+          cardScrollWidth: card.scrollWidth,
+          descendantOverflow: maxRight - cardRect.right,
+          pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
+        };
+      });
+
+    expect(vocationState.cardScrollWidth).toBeLessThanOrEqual(
+      vocationState.cardClientWidth,
+    );
+    expect(vocationState.descendantOverflow).toBeLessThanOrEqual(0.5);
+    expect(vocationState.pageOverflow).toBe(0);
+  }
 });
 
 test("mobile shared nav menu opens detail view and closes", async ({ page }) => {
